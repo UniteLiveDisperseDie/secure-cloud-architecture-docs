@@ -1,17 +1,29 @@
-# Welcome to MkDocs
+# 뭉살흩죽 프로젝트
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+---
 
-## Commands
+### 프로젝트 개요
+본 프로젝트는 현대적인 클라우드 보안 위협에 대응하기 위해 AWS 침해사고 사례와 기존 보안 아키텍처를 분석하여 비즈니스 규모에 최적화된 보안 아키텍처를 제시하는 것을 목적으로 합니다.
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+### 📂 주요 섹션 안내
+아래 섹션을 통해 상세 내용을 확인하실 수 있습니다.
 
-## Project layout
+* **[침해사고 분석](./01-incident/case-01.md)**: 실제 발생했던 클라우드 보안 사고의 공격 기법과 대응 방안을 다룹니다.
+* **[인프라 분석](./02-infra/analysis-01.md)**: 현업에서 사용하는 클라우드 인프라를 보안 관점에서 분석합니다.
+* **[아키텍처 설계](./03-architecture/01-hobby.md)**: 비즈니스 성장 단계별로 적용 가능한 표준 보안 설계도를 제공합니다.
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+---
+
+### 👥 팀원 소개
+| 이름 | 담당 파트 | 비고 |
+| :--- | :--- | :--- |
+| **조휘정(PM)** | 침해사고 분석 (Lead) | AWS Security Specialist |
+| **김민수** | 인프라 분석 | DevSecOps Engineer |
+| **이지향** | 아키텍처 설계 | Cloud Architect |
+| **이호영** | 아키텍처 설계 | Cloud Architect |
+
+
+---
+
+!!! info "공지사항"
+    모든 분석 내용은 지속적으로 업데이트될 예정입니다.
