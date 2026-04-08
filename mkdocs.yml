@@ -1,1 +1,38 @@
-site_name: My Docs
+site_name: 보안 클라우드 아키텍처 문서화
+theme:
+  name: material
+  language: ko
+  palette: 
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo 
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs 
+    - navigation.sections 
+    - toc.follow  
+
+nav:
+  - Home: index.md
+  - 1. 침해사고 분석:
+      - "분석 사례 1": 01-incident/case-01.md
+      - "분석 사례 2": 01-incident/case-02.md
+  - 2. 인프라 분석:
+      - "보안 아키텍처 분석 1": 02-infra/analysis-01.md
+      - "보안 아키텍처 분석 2": 02-infra/analysis-02.md
+  - 3. 아키텍처 설계:
+      - "바이브 코딩 아키텍처 설계": 03-architecture/01-hobby.md
+      - "소규모 아키텍처 설계": 03-architecture/02-startup.md
+      - "중소규모 아키텍처 설계": 03-architecture/03-growth.md
+      - "중규모 아키텍처 설계": 03-architecture/04-enterprise.md
+      - "대규모 아키텍처 설계": 03-architecture/05-hyperscale.md
