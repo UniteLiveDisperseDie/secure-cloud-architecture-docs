@@ -1,6 +1,9 @@
 # 아키텍처 설계 제목 (예: 소규모 서비스를 위한 보안 아키텍처)
 
 ## 1. 전체 아키텍처
+
+![소규모 아키텍처](../images/architecture/startup/startup_architecture.png)
+
 ### 1.1 아키텍처 개요 및 설계 원칙
 내용을 입력하세요.
 
