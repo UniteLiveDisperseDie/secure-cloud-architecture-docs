@@ -26,7 +26,7 @@ nav:
   - Home: index.md
   - 침해사고 분석:
       - "Drizly": 01-incident/case-01-drizly.md
-      - "Capital One": 01-incident/case-02.md
+      - "Capital One": 01-incident/case-02-capitalone.md
   - 인프라 분석:
       - "UNiDAYS": 02-infra/analysis-01-unidays.md
       - "보안 아키텍처 분석 2": 02-infra/analysis-02.md
