@@ -9,6 +9,9 @@
 사고의 결과: 2021년 Uber에 인수되었으나, 지속적인 법적 리스크와 브랜드 신뢰도 하락으로 2024년 3월 서비스 공식 종료
 
 ## 2. 공격 분석
+
+![Drizly 공격 프로세스](../images/incident/case-01-drizly/process.png)
+
 **초기 침투**
 
 공격의 시작은 기술적인 해킹이 아닌 크리덴셜 스터핑(Credential Stuffing)이었습니다.
