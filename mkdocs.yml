@@ -25,7 +25,7 @@ theme:
 nav:
   - Home: index.md
   - 1. 침해사고 분석:
-      - "분석 사례 1": 01-incident/case-01.md
+      - "Drizly": 01-incident/case-01-drizly.md
       - "분석 사례 2": 01-incident/case-02.md
   - 2. 인프라 분석:
       - "UNiDAYS": 02-infra/analysis-01-unidays.md
