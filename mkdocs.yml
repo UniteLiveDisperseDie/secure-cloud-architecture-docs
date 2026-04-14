@@ -27,9 +27,11 @@ nav:
   - 침해사고 분석:
       - "Drizly": 01-incident/case-01-drizly.md
       - "Capital One": 01-incident/case-02-capitalone.md
+      - "AWS Community AMI": 01-incident/case-ami.md
+      - "Tesla": 01-incident/case-tesla.md
   - 인프라 분석:
       - "UNiDAYS": 02-infra/analysis-01-unidays.md
-      - "보안 아키텍처 분석 2": 02-infra/analysis-02.md
+      - "MADworld": 02-infra/analysis-madworld.md
   - 아키텍처 설계:
       - "바이브 코딩 아키텍처 설계": 03-architecture/01-hobby.md
       - "소규모 아키텍처 설계": 03-architecture/02-startup.md
