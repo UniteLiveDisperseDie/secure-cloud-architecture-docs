@@ -32,7 +32,6 @@ nav:
       - "Ubiquiti": 01-incident/case-ubiquiti.md
   - 인프라 분석:
       - "UNiDAYS": 02-infra/analysis-01-unidays.md
-      - "Infra Analysis Template": 02-infra/analysis-02.md
       - "MADworld": 02-infra/analysis-madworld.md
       - "Nintendo Systems": 02-infra/analysis-nintendosystem.md
       - "AMI Lineage": 02-infra/analysis-AmiLineage.md
