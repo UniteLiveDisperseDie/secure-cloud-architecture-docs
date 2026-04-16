@@ -32,6 +32,7 @@ nav:
   - 인프라 분석:
       - "UNiDAYS": 02-infra/analysis-01-unidays.md
       - "MADworld": 02-infra/analysis-madworld.md
+      - "AMI Lineage": 02-infra/analysis-AmiLineage.md
   - 아키텍처 설계:
       - "바이브코딩 아키텍처 설계": 03-architecture/01-hobby.md
       - "소규모 아키텍처 설계": 03-architecture/02-startup.md
