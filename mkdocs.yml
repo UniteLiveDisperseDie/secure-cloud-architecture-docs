@@ -1,26 +1,79 @@
 site_name: 클라우드 보안 아키텍처 문서화
+
 theme:
   name: material
   language: ko
-  palette: 
+  logo: assets/logo.png
+  favicon: assets/logo.png
+  font:
+    text: Noto Sans KR
+    code: JetBrains Mono
+
+  palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: indigo 
+      primary: indigo
       accent: indigo
       toggle:
         icon: material/brightness-7
-        name: Switch to dark mode
+        name: 다크 모드로 전환
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: indigo
       accent: indigo
       toggle:
         icon: material/brightness-4
-        name: Switch to light mode
+        name: 라이트 모드로 전환
+
   features:
-    - navigation.tabs 
-    - navigation.sections 
-    - toc.follow  
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - toc.integrate
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+    - content.tooltips
+
+markdown_extensions:
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      title: 목차
+  - pymdownx.highlight:
+      anchor_linenums: true
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.mark
+  - admonition
+
+plugins:
+  - search:
+      lang: ko
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/UniteLiveDisperseDie/secure-cloud-architecture-docs
+      name: GitHub
+  generator: false
+
+extra_css:
+  - stylesheets/extra.css
 
 nav:
   - Home: index.md
