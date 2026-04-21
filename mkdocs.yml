@@ -30,6 +30,11 @@ nav:
       - "AWS Community AMI": 01-incident/case-ami.md
       - "Tesla": 01-incident/case-tesla.md
       - "Ubiquiti": 01-incident/case-ubiquiti.md
+      - "Lastpass": 01-incident/case-lastpass.md
+      - "Onus": 01-incident/case-onus.md
+      - "Sisense": 01-incident/case-sisense.md
+      - "KiranaPro": 01-incident/case-kiranapro.md
+      - "Twilio": 01-incident/case-twilio.md
   - 인프라 분석:
       - "UNiDAYS": 02-infra/analysis-01-unidays.md
       - "MADworld": 02-infra/analysis-madworld.md
