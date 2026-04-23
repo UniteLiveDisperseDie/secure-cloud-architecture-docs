@@ -14,7 +14,7 @@
 
 ## About this Repository
 
-이 레포지토리는 **Baby Beavers** 클라우드 보안 **뭉살흩죽** 팀의 프로젝트 문서화 공간입니다.
+이 레포지토리는 **[Baby Beavers](https://baby.beaver-dam.net/kr)** 클라우드 보안 **뭉살흩죽** 팀의 프로젝트 문서화 공간입니다.
 
 AWS 침해사고 분석, 실제 인프라 아키텍처 분석, 기업 규모별 보안 아키텍처 설계 결과물을 **MkDocs**로 문서화하여 GitHub Pages를 통해 공개합니다.
 
