@@ -202,6 +202,21 @@ App Server는 프라이빗 서브넷의 DB에 접근하며, S3와의 통신은 V
 - **설계 이유**: 보안 위협 탐지에 직접 연관된 이벤트만 알람 대상으로 선정했습니다. Access Denied 임계값을 5회로 설정한 이유는 1회는 단순 설정 오류일 수 있지만 반복은 탈취된 크리덴셜로 권한 탐색을 시도하는 패턴일 가능성이 높기 때문입니다. EC2 CPU 알람을 3회 연속으로 설정한 이유는 일시적 부하 급증과 크립토재킹을 구분하기 위해서입니다. AssumeRole 같이 정상 작업에서도 발생하는 이벤트는 알람 대신 CloudTrail 사후 확인 방식을 선택하여 알람 피로도를 줄였습니다.
 - **반영된 보안 요소**: Root 로그인, MFA 미인증, 권한 없는 API, IAM/SG/S3 정책/Secrets Manager 변경을 실시간 탐지합니다. ALB 4xx/5xx 급증으로 스캐닝 및 DoS를 탐지하고, EC2 CPU 과부하로 악성코드 감염을 탐지합니다. 모든 알람은 SNS를 통해 이메일로 즉시 발송됩니다.
 
+## 선택 모듈
+
+> 아래 항목은 아키텍처 기본 구성에 포함되지 않으며 컨테이너 기반 배포를 채택하는 경우에 한해 추가 적용합니다.
+
+### ECR (Elastic Container Registry)
+
+- **설정 방식**: ECR 접근 인증을 세 가지 역할로 구성합니다.
+  - **EC2 Instance Profile**: EC2 인스턴스가 ECR에서 이미지를 Pull할 수 있도록 `AmazonEC2ContainerRegistryReadOnly` 권한을 포함한 IAM Role을 인스턴스 프로파일로 연결합니다.
+  - **ECR Repository Policy**: ECR 레포지터리 자체에 리소스 기반 정책을 설정하여 특정 계정 또는 역할만 이미지를 push/pull할 수 있도록 합니다.
+  - **GitHub Actions OIDC Role**: GitHub Actions에서 ECR로 이미지를 push할 때는 Access Key 대신 OIDC 기반 IAM Role을 사용합니다. 별도 IAM Role 및 Trust Policy 설정이 필요합니다.
+
+- **설계 이유**: GitHub Actions CI/CD 파이프라인을 통해 빌드된 컨테이너 이미지를 안전하게 저장하고, EC2 인스턴스가 해당 이미지를 신뢰할 수 있는 경로로 가져오기 위해 도입합니다. ECR은 AWS 계정 단위의 프라이빗 레지스트리이므로 인증된 IAM 주체만 이미지에 접근할 수 있습니다.
+
+- **반영된 보안 요소**: EC2는 ReadOnly 권한만 보유하며 push 권한은 GitHub Actions Role로 분리합니다. Instance Profile과 OIDC를 사용하여 장기 자격증명을 사용하지 않습니다. ECR Repository Policy로 허용 주체를 명시적으로 지정하고 GitHub Actions에서 빌드·검증된 이미지만 ECR에 저장하여 EC2는 해당 이미지만 사용합니다.
+
 ## 3. 위협 모델링
 
 ![위협 모델링 다이어그램](../images/architecture/startup/thread_modeling.png)
