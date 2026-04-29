@@ -220,17 +220,14 @@ jobs:
 [Role에 S3 업로드 정책을 부여한 코드]
 
 ```hcl
-resource "aws_iam_role_policy" "s3_upload" {
-  role = aws_iam_role.github_actions.name
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Effect   = "Allow"
-      Action   = ["s3:PutObject"]
-      Resource = "arn:aws:s3:::my-bucket/builds/*"
-    }]
-  })
+{
+  "Sid": "AllowGithubActionsRole",
+  "Effect": "Allow",
+  "Principal": {
+    "AWS": "arn:aws:iam::ACCOUNT_ID:role/github-actions-role"
+  },
+  "Action": ["s3:PutObject", "s3:GetObject"],
+  "Resource": "arn:aws:s3:::my-bucket/builds/*"
 }
 ```
 
