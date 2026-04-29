@@ -1,0 +1,1611 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../analysis-madworld/">
+      
+      
+        <link rel="next" href="../analysis-AmiLineage/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Nintendo Systems - 클라우드 보안 아키텍처 문서화</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="클라우드 보안 아키텍처 문서화" class="md-header__button md-logo" aria-label="클라우드 보안 아키텍처 문서화" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            클라우드 보안 아키텍처 문서화
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Nintendo Systems
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="다크 모드로 전환"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="다크 모드로 전환" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="라이트 모드로 전환"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="라이트 모드로 전환" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01-incident/case-01-drizly/" class="md-tabs__link">
+          
+  
+  
+  침해사고 분석
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../analysis-01-unidays/" class="md-tabs__link">
+          
+  
+  
+  인프라 분석
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../03-architecture/01-hobby/" class="md-tabs__link">
+          
+  
+  
+  아키텍처 설계
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="클라우드 보안 아키텍처 문서화" class="md-nav__button md-logo" aria-label="클라우드 보안 아키텍처 문서화" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    클라우드 보안 아키텍처 문서화
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    침해사고 분석
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    침해사고 분석
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-01-drizly/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drizly
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-02-capitalone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capital One
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-ami/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Community AMI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-tesla/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tesla
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-ubiquiti/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubiquiti
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-lastpass/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lastpass
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-onus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Onus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-sisense/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sisense
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-kiranapro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KiranaPro
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-twilio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Twilio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-teamtnt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TeamTNT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-liveactioneers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LiveAuctioneers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    인프라 분석
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    인프라 분석
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-01-unidays/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UNiDAYS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-madworld/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MADworld
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nintendo Systems
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nintendo Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 아키텍처 구성 요약
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 분석 목적
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-AmiLineage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AMI Lineage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-pallycon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PallyCon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-midasit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MIDAS IT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-banfico/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banfico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-rstudio_shiny/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RStudio/Shiny
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-artera/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Artera
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-SecurityResponseAuto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Response Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    아키텍처 설계
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-architecture/01-hobby/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    바이브코딩 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-architecture/02-startup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    소규모 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-architecture/03-growth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    중소규모 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-architecture/04-enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    중규모 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-architecture/05-hyperscale/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    대규모 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="네비게이션" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../analysis-01-unidays/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    인프라 분석
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<p>from https://aws.amazon.com/ko/solutions/case-studies/nintendo-systems-case-study/</p>
+<p><img src="https://velog.velcdn.com/images/alstnalstn2/post/7297b6ab-8e93-4bb2-9718-6c0d66bd7bd7/image.png" width="70%" height="50%"></p>
+<h1 id="1">1. 개요</h1>
+<h2 id="11">1.1 아키텍처 구성 요약</h2>
+<p><img alt="" src="https://velog.velcdn.com/images/alstnalstn2/post/f0037aa8-e346-4bfa-9ffe-b12111232d5a/image.png" /></p>
+<p>Nintendo Systems는 2023년 4월, Nintendo와 DeNA의 엔지니어들이 함께 설립한 회사로, Nintendo 계정과 게임 뉴스, Nintendo eShop 같은 네트워크 서비스의 개발과 운영을 담당합니다. 이 중 Nintendo eShop은 사용자가 소프트웨어를 다운로드하거나 추가 콘텐츠를 구매할 수 있는 온라인 스토어로, 여러 국가에서 운영되는 Nintendo의 핵심 디지털 서비스 중 하나입니다.</p>
+<p>이러한 Nintendo Systems 사례는 기존 Nintendo eShop 플랫폼을 현대화하는 과정에서 마이크로서비스 아키텍처와 플랫폼 엔지니어링 방식을 도입한 사례입니다. 본문에서는 서비스를 분리하고, 내부 개발자 플랫폼을 통해 애플리케이션과 인프라 구성을 다루는 구조를 설명합니다.</p>
+<p>애플리케이션 실행 환경으로는 Amazon ECS on AWS Fargate를 사용합니다. 또한 2023년 5월 게임 출시 대응 과정에서는 데이터베이스로 Amazon DynamoDB, 디지털 권리 관리를 위해 AWS CloudHSM을 사용합니다. 운영 구조 측면에서는 각 서비스에 전용 AWS 계정을 두고 있으며, 이후에는 Amazon ECS Service Connect와 Amazon VPC Lattice를 통해 계정 간 및 VPC 간 연결을 단순화하는 방향도 제시했습니다.</p>
+<h2 id="12">1.2 분석 목적</h2>
+<p>본 분석에서는 Nintendo Systems의 아키텍처를 단순히 서비스 구성만 정리하는 데서 끝내지 않고, 보안 관점에서 함께 분석할 것입니다. 본문에 나온 구조와 서비스 구성을 바탕으로, 이 아키텍처에서 어떤 위협이 발생할 수 있는지, 어떤 지점에 보안 통제가 필요할 수 있는지를 살펴보겠습니다.</p>
+<p>이 사례를 선택한 이유는 앞선 글에서 살펴본 <a href="https://velog.io/@alstnalstn2/%EB%B3%B4%EC%95%88-%EC%82%AC%EA%B3%A0-%EB%B6%84%EC%84%9D-2020-Ubiquiti">Ubiquiti 침해사고</a>에서 로깅 계정과 운영 계정을 나누는 것을 사후 조치 및 재발 방지 요소로 넣었었는데, 이 구조에서 그것이 잘 반영되어있는 것 같아 선정하게 되었습니다.  </p>
+<p>분석 범위는 Nintendo Systems가 설명하는 마이크로서비스 전환, 서비스별 AWS 계정 분리, Amazon ECS on AWS Fargate 기반 실행 환경, Amazon DynamoDB, AWS CloudHSM, 그리고 향후 연결 구조로 제시한 Amazon ECS Service Connect와 Amazon VPC Lattice 등 전반적으로 하고, 이를 바탕으로 구조적 특징을 정리하고, 각 구성 요소를 보안적으로 어떻게 볼 수 있는지 분석해보겠습니다.</p>
+<hr />
+<h1 id="2">2. 아키텍처 분석</h1>
+<h3 id="_1">아키텍처 진입점</h3>
+<ul>
+<li><strong>ALB</strong>는 사용자 요청을 처음 받아 뒤쪽 애플리케이션으로 전달하는 역할을 합니다. 이 그림에서 ALB는 CDN 뒤에 위치하고 있으며, 바로 뒤의 Fargate로 요청을 넘기는 구조로 보입니다.</li>
+<li><strong>Amazon ElastiCache</strong>는 일반적으로 세션 저장이나 반복 조회 데이터의 캐시에 많이 사용됩니다. 이 그림에서는 앞단의 ALB 및 Fargate와 가까운 위치에 배치되어 있어, 데이터베이스 보조용 캐시라기보다 사용자 요청 처리 과정에서 사용하는 세션 저장소 또는 앞단 캐시 계층으로 분석할 수 있을 것 같습니다. 다만 원 글에서는 ElastiCache의 역할을 직접 설명하지는 않습니다.</li>
+<li>이 구간의 <strong>Fargate</strong>는 ALB를 통해 들어온 요청을 실제로 처리하는 애플리케이션 실행 계층으로 보입니다. 일반적으로 Fargate는 서버를 직접 관리하지 않고 컨테이너를 실행할 수 있는 환경입니다. 여러 구성에서 fargate가 보이는데, 이 앞단의 Fargate는 사용자 요청을 받아 실제 애플리케이션 로직을 수행하고, 필요하면 뒤쪽 서비스나 데이터 계층으로 요청을 넘기는 역할을 하는 것으로 볼 수 있습니다.</li>
+</ul>
+<h3 id="aws-fargate">AWS Fargate</h3>
+<p>이 아키텍처는 하나의 큰 서비스가 아니라 여러 AWS 계정에 나뉜 서비스들이 각각 Fargate 위에서 동작하고, 필요한 데이터 저장소도 계정별로 분리해 두는 구조로 보입니다.
+앞서 말했듯이, 이 그림에서 가장 먼저 눈에 띄는 점은 서비스가 하나의 계정에 몰려 있지 않고, 여러 AWS 계정으로 나뉘어 배치되어 있다는 점입니다. 
+원 글에서도 Nintendo Systems는 거버넌스 목적으로 각 서비스에 전용 AWS 계정을 생성했다고 설명합니다. 또 AWS Organizations는 여러 계정을 중앙에서 관리하고 정책을 적용하는 데 쓰이는 서비스이므로, 이 구조는 서비스 운영 단위를 계정 수준에서 나눈 형태라고 파악할 수 있을 것 같습니다.</p>
+<ul>
+<li>여러 계정 안에는 공통적으로 AWS Fargate가 반복적으로 배치되어 있습니다. 원문에서도 Nintendo Systems는 애플리케이션 실행 환경으로 Amazon ECS on AWS Fargate를 사용한다고 설명합니다. AWS 공식 문서에 따르면 Fargate는 서버를 직접 관리하지 않고 웹 애플리케이션, API, 마이크로서비스를 실행할 수 있는 서버리스 컨테이너 환경입니다. 따라서 이 그림에서 Fargate가 여러 계정에 반복되는 것은, 하나의 실행 환경에 모든 애플리케이션을 몰아두기보다 서비스별로 나뉜 계정 안에서 각각 독립적으로 실행하는 구조로 볼 수 있습니다.</li>
+<li>일반적으로 마이크로서비스 구조에서는 서비스별로 배포, 확장, 장애 영향을 분리하는 것이 중요한데, Fargate는 컨테이너 단위로 실행과 확장이 가능하고 서버 관리 부담을 줄여 주기 때문에, 서비스 수가 많아지는 구조에서 반복적으로 쓰기 좋은 실행 환경입니다. </li>
+<li>이 사례에서도 Nintendo Systems는 모든 계정에서 Kubernetes를 운영하기 어렵고, 개발자도 쉽게 애플리케이션을 구축하고 운영할 수 있도록 ECS on Fargate를 선택한 것을 알 수 있습니다.</li>
+<li>
+<p>또한 여러 계정에 Aurora 혹은 DynamoDB를 모든 데이터를 한 종류의 DB에 넣기보다, 서비스 성격과 처리 방식에 따라 저장소를 나누는 형태임을 알 수 있습니다.</p>
+</li>
+<li>
+<p>계정 별로 서비스를 나눠서 운영하는 방식에 대해서는 3. 보안 관점 분석에서 그 특징을 더 자세히 알아보겠습니다. 이 아키텍처는 하나의 거대한 애플리케이션을 한 환경에 모아두는 구조라기보다, 서비스별 실행 환경과 데이터 저장소를 분리한 마이크로서비스형 운영 구조라고 할 수 있을 것 같습니다.</p>
+</li>
+</ul>
+<h3 id="_2">비동기 메시징과 이벤트 기반 처리 구조</h3>
+<p>그림에는 Amazon SNS, Amazon SQS, Amazon EventBridge, AWS Lambda가 여러 위치에 배치되어 있는데,이를 보면 요청을 바로 다음 서비스로 넘기는 방식만 사용하는 것이 아니라, 중간에 메시지 큐나 이벤트를 두고 처리 흐름을 나누는 구조도 함께 사용하고 있다고 볼 수 있습니다. 그 중에서도 일부만 보자면,</p>
+<ul>
+<li>그림 중앙 구간을 보면 Amazon SNS에서 Amazon SQS로 연결되는 흐름이 보입니다. 이 구조는 어떤 이벤트나 처리 요청을 바로 다음 서비스에 넘기기보다, 먼저 메시지 형태로 전달하고 이를 큐에서 받아 처리하는 방식이라고 생각했습니다. </li>
+<li>일반적으로 SNS는 이벤트나 알림을 발행하는 역할에 가깝고, SQS는 그 메시지를 받아 순차적으로 처리할 수 있도록 중간에 보관하는 역할이라고 이해하고 있는데, 이 흐름은 서비스 간 연결을 전부 직접 호출로 묶기보다, 중간에 큐를 두고 느슨하게 연결한 구조라고 해석할 수 있습니다. 또한 계정이 분리된 서비스 사이에서 이벤트를 넘기는 것을 알 수 있는데, 이런 구성은 서비스 간 결합을 줄이고, 바로 처리하지 않아도 되는 작업을 뒤로 미루도록 한 것으로 보입니다.</li>
+<li>또한 하단부에는 S3 → SNS → Lambda로 이어지는 흐름이 보이는데, S3에 저장된 데이터를 트리거로 삼아 후속 작업이 이어지는 구조를 통해서, 이렇게 서버리스로 가공된 최종 결과를 External Systems로 자연스럽게 연동하기 위한 파이프라인 역할로 보입니다.</li>
+</ul>
+<hr />
+<h1 id="3">3. 보안 관점 분석</h1>
+<h2 id="31-aws">3.1 서비스별 AWS 계정 운영 구조</h2>
+<p>이 아키텍처는 서비스를 여러 AWS 계정으로 나누어 운영할 뿐 아니라, 이를 AWS Organizations 아래에서 함께 관리하는 구조로 보입니다. 이 구조는 단순히 계정을 여러 개 만든 것이 아니라, 분리된 계정을 조직 단위로 묶어 중앙에서 관리한다는 점에 있습니다.</p>
+<ul>
+<li>이처럼 서비스별로 계정을 나누면 각 서비스가 하나의 AWS 환경을 공유하지 않게 됩니다. 따라서 특정 서비스에서 권한 오남용이나 설정 실수, 장애가 발생하더라도 다른 서비스까지 바로 영향을 주지 않도록 경계를 나눌 수 있습니다. 여기에 AWS Organizations를 함께 사용하면, 이렇게 나뉜 계정들을 제각각 운영하는 것이 아니라 공통된 관리 기준 아래에서 통제할 수 있다는 점이 추가됩니다.</li>
+<li>그림을 보면 각 계정 안에 Fargate와 데이터 저장소가 함께 배치되어 있습니다. 이를 보면 단순히 애플리케이션만 나눈 것이 아니라, 실행 환경과 데이터 계층까지 서비스 단위로 분리한 구조로 볼 수 있습니다. 이런 구조에서는 서비스별 책임 범위를 나누기 쉽고, 어떤 서비스가 어떤 리소스에 접근해야 하는지도 계정 단위로 더 분명하게 관리할 수 있습니다.</li>
+<li>이 구조에서는 IAM 설정도 중요하지만, Organizations를 사용하고 있다는 점을 고려하면 계정별 IAM만이 아니라 조직 차원의 SCP와 같은 공통 정책을 일관되게 적용하는 것이 중요할 수 있습니다. 공통적으로 지켜야할 상한선을 통제하고, 구체적인 역할에 따른 일부의 권한을 더하는 것이 바람직할 것입니다.</li>
+<li>또한 계정을 나누어 운영하면, 나중에 보안 사고나 설정 오류가 발생했을 때 어느 계정에서 어떤 일이 있었는지 추적할 수 있어야 합니다. 따라서 계정별 활동 기록과 변경 이력을 남기고, 필요하면 이를 중앙에서 함께 볼 수 있는 구조가 필요합니다. Organizations를 사용하는 환경이라면 이런 감사와 가시성도 개별 계정 수준이 아니라 조직 수준에서 함께 볼 수 있어야 할 것입니다.</li>
+</ul>
+<h2 id="32">3.2 추가되면 좋을 서비스</h2>
+<p>서비스별 AWS 계정 운영 구조에서는 계정 분리 자체만으로 보안이 완성되지는 않습니다. 앞서 말했듯, 계정 수가 많아질수록 누가 무엇을 변경했는지, 현재 설정이 어떤 상태인지, 문제가 어느 계정에서 발생했는지를 함께 볼 수 있어야 합니다. 따라서 이 구조에서는 계정 분리와 함께 감사, 로깅, 설정 추적, 위협 탐지 기능도 같이 필요합니다.</p>
+<ul>
+<li>먼저 AWS CloudTrail은 기본적으로 필요한 서비스입니다. CloudTrail은 AWS 계정에서 발생한 API 호출과 관리 활동을 기록하므로, 계정별 변경 이력과 사용자 행위를 추적하는 데 적합합니다. 여러 계정을 운영하는 구조에서는 나중에 사고를 분석하거나 설정 변경 이력을 확인할 때 CloudTrail이 가장 기본적인 근거가 됩니다.</li>
+<li>또한 <a href="https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html">AWS Config</a>도 함께 고려할 수 있습니다. Config는 각 계정의 리소스 구성이 현재 어떤 상태인지, 시간이 지나며 어떻게 바뀌었는지를 추적하는 데 유용합니다. 이 아키텍처처럼 계정마다 Fargate, 데이터 저장소, 메시징 구성이 나뉘어 있으면, 설정 오류나 정책 누락도 계정별로 다르게 나타날 수 있습니다. 따라서 Config를 사용하면 각 계정의 설정 상태를 더 일관되게 관리할 수 있습니다.</li>
+<li><a href="https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-v2-set-da.html">Security Hub</a>는 여러 계정에서 발생하는 보안 결과를 한곳에 모아 보는 용도로 적합합니다. 계정이 많아질수록 보안 상태도 계정마다 흩어지기 쉬운데, Security Hub를 사용하면 각 계정의 보안 결과를 모아서 우선순위를 정하고 확인할 수 있습니다. 이 구조처럼 서비스별 계정 운영을 전제로 한 환경에서는 개별 계정을 각각 보는 것보다 결과를 통합해 보는 계층이 필요합니다.</li>
+<li>GuardDuty 또한 고려해볼 수 있는데, GuardDuty는 계정과 워크로드에서 발생하는 이상 행위나 위협 징후를 탐지하는 데 사용할 수 있습니다. 서비스별로 계정이 나뉘어 있으면 계정마다 네트워크 활동과 API 사용 패턴도 달라질 수 있기 때문에, 정상 흐름과 다른 동작을 계정별로 확인할 수 있는 탐지 서비스가 있으면 운영상 도움이 될 수 있습니다.</li>
+</ul>
+<h2 id="33">3.3 추가로 고려할 점</h2>
+<p>AWS Organizations 기반의 다중 계정 구조는 서비스 경계를 나누는 데에는 유리하지만, 계정 수가 많아질수록 운영 복잡도도 함께 커집니다. 따라서 실제 운영에서는 계정을 나누는 것 자체보다, 새 계정이 추가되더라도 같은 기준으로 보안 설정이 적용되는 구조인지를 함께 봐야 합니다.</p>
+<p>또한 계정이 분리되어 있어도 서비스 간 연결이 많아지면 경계가 흐려질 수 있습니다. 특히 이 사례처럼 이후 Service Connect와 VPC Lattice를 통해 계정 간 및 VPC 간 연결을 단순화하려는 방향이 제시된 만큼, 연결이 쉬워지는 것과 권한이 넓어지는 것은 다른 문제로 봐야 합니다. 즉, 통신이 가능하다는 것과 통신을 허용해야 한다는 것은 구분해서 관리할 필요가 있습니다.</p>
+<p>마지막으로 이 구조에서는 사람의 접근 권한과 애플리케이션의 실행 권한을 계속 분리해서 볼 필요가 있습니다. 계정이 나뉘어 있고 Fargate 기반으로 서비스가 실행되더라도, 실제로 어떤 IAM 역할이 어떤 리소스에 접근하는지까지 점검하지 않으면 계정 분리의 효과가 흐려질 수 있습니다. 결국 이 구조에서 중요한 것은 계정을 많이 나누는 것보다, 나뉜 계정을 같은 기준으로 운영하고, 연결과 권한을 필요한 범위 안에서만 유지하는 것입니다.</p>
+<hr />
+<h3 id="ref">Ref</h3>
+<ul>
+<li>https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/elasticache-use-cases.html</li>
+<li>https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html</li>
+<li>https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-connect-concepts.html</li>
+<li>https://docs.aws.amazon.com/guardduty/latest/ug/maintaining-guardduty-organization-delegated-admin.html</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../analysis-madworld/" class="md-footer__link md-footer__link--prev" aria-label="이전: MADworld">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                MADworld
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../analysis-AmiLineage/" class="md-footer__link md-footer__link--next" aria-label="다음: AMI Lineage">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                AMI Lineage
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/UniteLiveDisperseDie/secure-cloud-architecture-docs" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate", "search.highlight", "search.suggest", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

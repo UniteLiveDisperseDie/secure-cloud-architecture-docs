@@ -1,0 +1,2414 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../analysis-AmiLineage/">
+      
+      
+        <link rel="next" href="../analysis-midasit/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>PallyCon - 클라우드 보안 아키텍처 문서화</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#aws-pallycon" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="클라우드 보안 아키텍처 문서화" class="md-header__button md-logo" aria-label="클라우드 보안 아키텍처 문서화" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            클라우드 보안 아키텍처 문서화
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PallyCon
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="다크 모드로 전환"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="다크 모드로 전환" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="라이트 모드로 전환"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="라이트 모드로 전환" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01-incident/case-01-drizly/" class="md-tabs__link">
+          
+  
+  
+  침해사고 분석
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../analysis-01-unidays/" class="md-tabs__link">
+          
+  
+  
+  인프라 분석
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../03-architecture/01-hobby/" class="md-tabs__link">
+          
+  
+  
+  아키텍처 설계
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="클라우드 보안 아키텍처 문서화" class="md-nav__button md-logo" aria-label="클라우드 보안 아키텍처 문서화" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    클라우드 보안 아키텍처 문서화
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    침해사고 분석
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    침해사고 분석
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-01-drizly/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drizly
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-02-capitalone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capital One
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-ami/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Community AMI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-tesla/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tesla
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-ubiquiti/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubiquiti
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-lastpass/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lastpass
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-onus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Onus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-sisense/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sisense
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-kiranapro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KiranaPro
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-twilio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Twilio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-teamtnt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TeamTNT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-liveactioneers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LiveAuctioneers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    인프라 분석
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    인프라 분석
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-01-unidays/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UNiDAYS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-madworld/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MADworld
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-nintendosystem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nintendo Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-AmiLineage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AMI Lineage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PallyCon
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PallyCon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 개요
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 아키텍처 분석
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 아키텍처 분석">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 구성 요소 분석
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.1 구성 요소 분석">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#edge-network-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Edge &amp; Network Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dmz-application-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DMZ &amp; Application Tier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-storage-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data &amp; Storage Tier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#management-devsecops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management &amp; DevSecOps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging &amp; Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 기본 트래픽 흐름
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 기본 트래픽 흐름">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-edge-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Edge Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-application-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Application Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-data-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Data Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-logging-analysis-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Logging &amp; Analysis Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 이외의 흐름
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 이외의 흐름">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 상단 관리 영역
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 자동 백업 흐름
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 애플리케이션 계층과 데이터 계층 사이의 세부 데이터 흐름
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 하단 스토리지 — 로그 생명주기 관리
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 우측 피어링 영역 — 리전별 역할 분담
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 보안 관점 분석
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 보안 관점 분석">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 엣지단 보안
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.1 엣지단 보안">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-shield-ddos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Shield (DDoS 방어)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-waf-web-application-firewall-l7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS WAF (Web Application Firewall, L7 방어)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#route-53-health-check-dns-level-failover-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Route 53 Health Check (DNS-level Failover &amp; Availability)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-dmz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 DMZ 보안
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 DMZ 보안">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alb-application-load-balancer-l7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ALB (Application Load Balancer) — L7 계층 보안 및 필터링
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 로그 기반 보안 탐지
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.3 로그 기반 보안 탐지">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#amazon-s3-access-log-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon S3 (Access Log Storage)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-lambda-security-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Lambda (Security Analysis)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-cloudwatch-alarm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon CloudWatch (Alarm)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-sns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon SNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 애플리케이션 계층 보안
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.4 애플리케이션 계층 보안">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#app-nat-private-subnet-nat-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        APP-NAT (Private Subnet &amp; NAT Gateway)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#web-ec2-auto-scaling-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web (EC2 Auto Scaling Group)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rest-api-amazon-ecs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rest API (Amazon ECS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#efs-elastic-file-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EFS (Elastic File System)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ecr-amazon-elastic-container-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ECR (Amazon Elastic Container Registry)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 데이터 계층 보안
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.5 데이터 계층 보안">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#amazon-aurora-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon Aurora &amp; Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#global-table-dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global Table (DynamoDB)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#redis-elasticache-logstash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Redis (ElastiCache) &amp; Logstash (로그 전송 보안)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-s3-glacier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon S3 &amp; Glacier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-lambda-redshift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Lambda &amp; Redshift
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-dr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 리전 간 보안 및 DR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.6 리전 간 보안 및 DR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vpc-peering-inter-region-peering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC Peering (Inter-Region Peering)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tokyo-disaster-recovery-dr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tokyo: Disaster Recovery (재해 복구, DR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oregon-replication-global-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Oregon: Replication — Global Service (데이터 무결성 유지)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#singapore-frankfurt-watermark-packaging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Singapore &amp; Frankfurt: Watermark Packaging (콘텐츠 보호 최적화)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 관리 및 감사 보안
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.7 관리 및 감사 보안">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#acm-aws-certificate-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ACM (AWS Certificate Manager)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-cloudtrail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS CloudTrail
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-iam-identity-and-access-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS IAM (Identity and Access Management)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-kms-key-management-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS KMS (Key Management Service)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-cloudwatch-events-lambda-ami-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event (CloudWatch Events) + Lambda + AMI Backup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-midasit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MIDAS IT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-banfico/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banfico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-rstudio_shiny/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RStudio/Shiny
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-artera/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Artera
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis-SecurityResponseAuto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Response Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    아키텍처 설계
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-architecture/01-hobby/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    바이브코딩 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-architecture/02-startup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    소규모 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-architecture/03-growth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    중소규모 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-architecture/04-enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    중규모 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-architecture/05-hyperscale/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    대규모 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="네비게이션" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../analysis-01-unidays/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    인프라 분석
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="aws-pallycon">AWS PallyCon 아키텍처 분석</h1>
+<h2 id="1">1. 개요</h2>
+<p><strong>PallyCon</strong>은 글로벌 OTT 및 미디어 시장을 겨냥한 <strong>Cloud-Native 멀티 DRM 및 포렌식 워터마킹 솔루션</strong>입니다.</p>
+<ul>
+<li>기존 온프레미스 구축 방식의 긴 도입 시간과 인력 소모 문제를 SaaS(Software as a Service) 형태로 전환하여 해결했습니다.</li>
+<li><strong>비즈니스 목표:</strong> 전 세계 어디서든 지연 없는 라이선스 발급과 콘텐츠 보호를 위해 AWS의 글로벌 리전(서울, 도쿄, 오레곤 등)을 활용한 다중 리전 아키텍처를 구현했습니다.</li>
+<li>트래픽 가변성이 큰 OTT 서비스 특성에 맞춰 Auto Scaling과 서버리스(Lambda)를 결합하여 비용 효율성과 확장성을 동시에 확보했습니다.</li>
+</ul>
+<hr />
+<h2 id="2">2. 아키텍처 분석</h2>
+<p><img alt="아키텍처" src="../../images/infra/analysis-pallycon/architecture.png" /></p>
+<h3 id="21">2.1 구성 요소 분석</h3>
+<h4 id="edge-network-security">Edge &amp; Network Security</h4>
+<p>외부 사용자가 가장 먼저 마주하는 구간으로 가용성 확보와 공격 차단 그리고 통신 암호화에 집중되어 있습니다.</p>
+<ul>
+<li><strong>Route 53 (Latency &amp; Geolocation &amp; Health Check):</strong> 사용자의 위치에 따라 가장 빠른 리전으로 연결하는 <strong>지연 시간 기반 라우팅</strong>을 수행합니다. 사용자가 속한 대륙이나 국가를 기준으로 라우팅하며 대상 그룹의 상태를 감시하여 장애 발생 시 정상 서버로만 트래픽을 보냅니다.</li>
+<li><strong>AWS Shield &amp; WAF:</strong> Shield는 인프라 수준의 <strong>DDoS 공격</strong>을 방어하고 WAF는 <strong>SQL Injection, XSS</strong> 등 L7 계층의 웹 공격을 차단하는 ACL 역할을 합니다.</li>
+<li><strong>CloudFront (CDN):</strong> 전 세계 Edge Location을 통해 정적 콘텐츠(보안 모듈, 라이브러리 등)를 캐싱하여 지연 시간을 줄이고 Origin 서버의 부하를 분산합니다.</li>
+<li><strong>ACM (AWS Certificate Manager):</strong> 서비스 전체에 필요한 <strong>SSL/TLS 인증서</strong>를 발급하고 관리합니다. CloudFront와 ALB에 적용되어 모든 통신 구간을 HTTPS로 암호화합니다.</li>
+</ul>
+<h4 id="dmz-application-tier">DMZ &amp; Application Tier</h4>
+<p>실질적인 DRM 라이선스 발급과 워터마킹 로직이 돌아가는 구간입니다.</p>
+<ul>
+<li><strong>ALB (Application Load Balancer):</strong> 호스트 이름, URL 경로, HTTP 헤더 등을 분석하여 트래픽을 Web 또는 ECS로 분기하며 접속 기록인 <strong>Access Log</strong>를 생성하여 S3에 저장합니다.</li>
+<li><strong>ECS &amp; ECR:</strong> ECR(Elastic Container Registry)에 저장된 이미지를 기반으로 ECS(Elastic Container Service)가 컨테이너를 실행합니다. 이는 DRM 라이선스 발급 로직을 마이크로서비스로 운영하는 엔진입니다.</li>
+<li><strong>EC2 (Web):</strong> 사용자 인터페이스나 관리 도구를 위한 웹 서버 그룹입니다. Auto Scaling을 통해 부하를 견딥니다.</li>
+<li><strong>APP-NAT (NAT Gateway):</strong> Private Subnet에 위치한 서버들이 보안 패치 등을 위해 <strong>인터넷으로 나가는 일방통행로</strong>를 제공합니다. 외부로부터의 직접적인 침입은 차단합니다.</li>
+<li><strong>EFS (Elastic File System):</strong> 여러 서버 인스턴스가 동시에 접근해야 하는 공유 설정 파일이나 콘텐츠 데이터를 저장합니다.</li>
+</ul>
+<h4 id="data-storage-tier">Data &amp; Storage Tier</h4>
+<ul>
+<li><strong>Amazon Aurora &amp; Snapshot:</strong> 고성능 RDBMS 및 시점 복구를 위한 스냅샷 관리입니다.</li>
+<li><strong>DynamoDB (Global Table):</strong> 전 세계 리전 간에 1초 미만의 속도로 데이터를 동기화하는 <strong>NoSQL</strong>입니다. 글로벌 사용자가 어느 리전에 접속하든 동일한 보안 정책과 세션을 유지할 수 있게 해줍니다.</li>
+<li><strong>VPC Peering:</strong> 서울 리전과 해외 리전(도쿄, 오레곤 등) 간의 사설 네트워크를 연결합니다. 이를 통해 공용 인터넷을 거치지 않고 안전하고 빠르게 데이터를 복제하고 관리합니다.</li>
+<li><strong>ElastiCache (Redis):</strong> 라이선스 토큰 정보나 빈번하게 조회되는 데이터를 메모리에 올려 초고속으로 처리합니다.</li>
+<li><strong>Amazon S3 &amp; Glacier:</strong> 원본 데이터 및 이벤트 로그는 S3에 저장하며 법적 근거 등을 위해 장기 보관해야 하는 로그는 저비용 저장소인 Glacier로 아카이빙합니다.</li>
+<li><strong>AMI Backup:</strong> DB와 서버의 특정 시점 상태를 백업합니다. 장애나 침해 사고 시 데이터 복구를 위한 필수 요소입니다.</li>
+</ul>
+<h4 id="management-devsecops">Management &amp; DevSecOps</h4>
+<p>인프라를 안전하게 관리하고 가시성을 확보하는 도구들입니다.</p>
+<ul>
+<li><strong>KMS (Key Management Service):</strong> DRM 솔루션에서 가장 중요한 <strong>암호화 키</strong>를 하드웨어 보안 모듈(HSM) 수준으로 안전하게 생성하고 관리합니다.</li>
+<li><strong>Terraform (IaC):</strong> 복잡한 인프라를 수동으로 구축하지 않고 <strong>코드로 관리</strong>합니다. 실수 방지는 물론 전 세계 리전에 동일한 환경을 즉시 배포할 수 있게 합니다.</li>
+<li><strong>CloudTrail &amp; IAM:</strong> 누가, 언제, 어떤 API를 호출했는지 모든 기록을 남기고 최소 권한 원칙에 따라 접근 제어를 수행합니다.</li>
+<li><strong>CloudWatch &amp; SNS:</strong> 시스템 지표를 실시간 모니터링(CloudWatch)하고 비정상 징후 발견 시 관리자에게 즉시 알림(SNS)을 보냅니다.</li>
+<li><strong>Lambda (Event Driven):</strong> S3에 로그가 쌓이거나 알람이 발생할 때 즉각적으로 코드를 실행하여 분석하거나 SNS를 통해 관리자에게 경보를 전송합니다.</li>
+</ul>
+<h4 id="logging-analysis">Logging &amp; Analysis</h4>
+<p>서비스 개선과 침해 사고 분석을 위한 파이프라인입니다.</p>
+<ul>
+<li><strong>Logstash &amp; Elasticsearch:</strong> 흩어져 있는 로그를 수집(Logstash)하고 실시간으로 검색 및 대시보드화(Elasticsearch)하여 서비스 상태를 한눈에 파악합니다.</li>
+<li><strong>Amazon Redshift:</strong> 대규모 데이터 웨어하우스로 결제 로그나 사용 패턴 등 비즈니스 분석(BI)을 위한 무거운 쿼리를 처리합니다.</li>
+</ul>
+<h3 id="22">2.2 기본 트래픽 흐름</h3>
+<h4 id="1-edge-layer">1. Edge Layer</h4>
+<p>사용자의 요청이 AWS 인프라로 들어오는 구간입니다.</p>
+<ul>
+<li><strong>Route 53:</strong> 글로벌 사용자가 접속하면 지연 시간(Latency)을 계산해 가장 가까운 리전으로 안내합니다. 서비스 가용성을 체크해 장애가 난 리전은 자동으로 배제합니다.</li>
+<li><strong>CloudFront &amp; ACM:</strong> 정적 리소스(스크립트, 보안 모듈 등)를 캐싱하여 응답 속도를 높입니다. 이때 <strong>ACM</strong> 인증서를 통해 모든 통신은 HTTPS로 암호화됩니다.</li>
+<li><strong>AWS Shield &amp; WAF:</strong> 요청이 내부로 들어오기 전 <strong>WAF</strong>가 악성 페이로드를 검사하고 <strong>Shield</strong>가 인프라 수준의 DDoS 공격을 방어하여 내부 서버의 부하를 원천 차단합니다.</li>
+</ul>
+<h4 id="2-application-layer">2. Application Layer</h4>
+<p>보안 검사를 마친 트래픽이 실질적인 비즈니스 로직을 처리하는 구간입니다.</p>
+<ul>
+<li><strong>ALB (Load Balancer):</strong> 들어온 요청의 URL이나 헤더를 보고 웹 페이지 요청이면 EC2(Web)로, DRM 라이선스 발급 API 요청이면 ECS(Rest API)로 정확히 전달합니다.</li>
+<li><strong>ECS &amp; ECR:</strong> <strong>ECR</strong>에서 검증된 최신 이미지를 가져와 <strong>ECS</strong> 컨테이너를 구동합니다. 마이크로서비스 구조 덕분에 라이선스 요청이 폭증해도 해당 컨테이너만 빠르게 확장(Auto Scaling)하여 대응할 수 있습니다.</li>
+<li><strong>APP-NAT:</strong> 내부망에 있는 ECS와 EC2가 외부 라이브러리 업데이트나 보안 패치를 내려받을 때 사용합니다. 외부에서 안으로 들어오는 통로는 막고 밖으로 나가는 통로만 열어두어 서버 노출을 최소화합니다.</li>
+</ul>
+<h4 id="3-data-layer">3. Data Layer</h4>
+<p>요청 처리에 필요한 정보를 참조하고 전 세계 리전에 데이터를 전파하는 구간입니다.</p>
+<ul>
+<li><strong>Aurora &amp; Redis:</strong> <strong>Aurora</strong>에서 사용자 권한과 결제 상태를 확인합니다. 자주 참조되는 라이선스 토큰 정보는 Redis(ElastiCache)에 올려두어 DB 부하를 줄이고 초고속으로 응답합니다.</li>
+<li><strong>DynamoDB &amp; VPC Peering:</strong> 새로 생성된 라이선스 정보나 세션 데이터는 <strong>DynamoDB</strong>에 저장됩니다. 이 데이터는 <strong>VPC Peering</strong>으로 연결된 전용 사설망을 타고 전 세계 리전(도쿄, 오레곤 등)으로 <strong>1초 미만</strong>에 동기화되어 사용자가 어디로 이동하든 끊김 없는 서비스를 제공합니다.</li>
+</ul>
+<h4 id="4-logging-analysis-layer">4. Logging &amp; Analysis Layer</h4>
+<p>처리가 완료된 후 운영 지표를 생성하고 침해 사고를 분석하는 구간입니다.</p>
+<ul>
+<li><strong>S3 &amp; Lambda:</strong> 서비스 결과와 각종 로그(Access/Billing Log)가 <strong>S3</strong>에 저장됩니다. 로그가 생성되는 순간 <strong>Lambda</strong>가 가동되어 데이터를 가공하거나 특정 조건(결제 오류 등) 발생 시 실행됩니다.</li>
+<li><strong>SNS &amp; Messengers:</strong> Lambda나 CloudWatch가 이상 징후를 감지하면 <strong>SNS</strong>를 통해 관리자에게 즉시 푸시 알림을 보냅니다.</li>
+<li><strong>ELK Stack &amp; Redshift:</strong> <strong>Logstash</strong>가 수집한 로그는 <strong>Elasticsearch</strong>에 쌓여 실시간 모니터링 대시보드를 구성합니다. 동시에 모든 데이터는 <strong>Redshift</strong>로 모여 비즈니스 매출 분석 및 보안 감사를 위한 장기 데이터로 활용됩니다.</li>
+</ul>
+<h3 id="23">2.3 이외의 흐름</h3>
+<h4 id="1_1">1. 상단 관리 영역</h4>
+<p>서비스가 가동되기 전 보안 정책과 자원 관리를 담당하는 제어 흐름입니다.</p>
+<ul>
+<li><strong>CloudTrail:</strong> AWS 계정 내에서 발생하는 모든 API 호출(누가, 언제, 무엇을 했는지)을 기록하여 보안 감사 및 추적을 수행합니다.</li>
+<li><strong>IAM:</strong> 서비스 간(예: ECS가 S3에 접근할 때) 혹은 관리자의 리소스 접근 권한을 제어합니다.</li>
+<li><strong>KMS:</strong> Aurora, DynamoDB 등에 저장된 데이터를 암호화하기 위한 마스터 키를 관리합니다.</li>
+<li><strong>Terraform:</strong> 이 모든 복잡한 인프라를 수동이 아닌 코드(IaC)를 통해 일관성 있게 생성하고 변경 관리합니다.</li>
+</ul>
+<h4 id="2_1">2. 자동 백업 흐름</h4>
+<p>인프라의 안정성을 위해 자동으로 실행되는 백업 및 이벤트 흐름입니다.</p>
+<ul>
+<li><strong>Event (CloudWatch) → AMI Backup:</strong> 정해진 스케줄이나 특정 이벤트가 발생하면 <strong>CloudWatch</strong>가 신호를 보내 현재 실행 중인 서버(EC2/ECS)의 상태를 <strong>AMI(이미지)</strong> 형태로 자동 백업합니다.</li>
+</ul>
+<h4 id="3">3. 애플리케이션 계층과 데이터 계층 사이의 세부 데이터 흐름</h4>
+<ul>
+<li><strong>EFS (Elastic File System):</strong> Web(EC2)과 Rest API(ECS)가 공동으로 사용하는 공유 파일 저장소입니다. 여러 서버가 동시에 같은 파일에 접근해야 할 때 사용합니다.</li>
+<li><strong>Aurora Snapshot:</strong> 데이터베이스(Aurora)의 데이터를 특정 시점에 <strong>스냅샷</strong>으로 찍어 보관함으로써 DB 장애 시 원하는 시점으로 복구할 수 있게 합니다.</li>
+</ul>
+<h4 id="4">4. 하단 스토리지 — 로그 생명주기 관리</h4>
+<p>로그의 저장부터 장기 보관까지의 생명주기 관리 흐름입니다.</p>
+<ul>
+<li><strong>ALB Access Log → S3:</strong> 사용자가 <strong>ALB</strong>를 통해 들어온 모든 접속 기록(Access Log)을 분석 및 보안 조사를 위해 <strong>S3</strong> 버킷에 저장합니다.</li>
+<li><strong>S3 → Lifecycle → Glacier:</strong> S3에 저장된 로그 중 시간이 오래되어 자주 확인하지 않는 데이터는 <strong>Lifecycle</strong> 정책에 따라 비용이 훨씬 저렴한 Glacier(장기 보관 저장소)로 자동 이동합니다.</li>
+</ul>
+<h4 id="5">5. 우측 피어링 영역 — 리전별 역할 분담</h4>
+<p>전 세계 리전별로 할당된 구체적인 역할 분담 흐름입니다.</p>
+<ul>
+<li><strong>VPC Peering:</strong> 서울 리전과 해외 각 리전을 사설망으로 연결합니다.<ul>
+<li><strong>Tokyo:</strong> Disaster Recovery (재해 복구용 백업 리전)</li>
+<li><strong>Oregon:</strong> Replication (글로벌 서비스 데이터 복제)</li>
+<li><strong>Singapore / Frankfurt:</strong> Watermark Packaging (각 대륙별 사용자에게 최적화된 워터마킹 작업 수행)</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="3_1">3. 보안 관점 분석</h2>
+<h3 id="31">3.1 엣지단 보안</h3>
+<p><img alt="엣지단 보안" src="../../images/infra/analysis-pallycon/edge_security.png" /></p>
+<h4 id="aws-shield-ddos">AWS Shield (DDoS 방어)</h4>
+<p>L3, L4에서 발생하는 DDoS 공격으로부터 인프라를 보호하여 서비스 가용성을 유지합니다.</p>
+<p>AWS Shield는 서비스의 정상적인 트래픽 패턴을 상시 학습해서 이를 초과하는 비정상적인 트래픽 유입 시 탐지 알고리즘을 바로 가동합니다. AWS 전 세계 엣지 네트워크에서 인라인 방식으로 공격 패킷을 필터링합니다. 유입되는 패킷의 시그니처를 분석해서 SYN Flood, UDP Reflection 등 알려진 공격 패킷을 드랍시키고 정상적인 트래픽만 전달합니다.</p>
+<p><strong>→ ALB, ECS에 도달하기 전 네트워크 단에서 공격을 차단해서 오토스케일링으로 인한 과도한 비용 발생도 막고 DRM 라이선스 발급 서비스의 가용성도 보장합니다.</strong></p>
+<h4 id="aws-waf-web-application-firewall-l7">AWS WAF (Web Application Firewall, L7 방어)</h4>
+<p>애플리케이션 계층의 웹 취약점 공격을 주로 탐지하고 차단합니다.</p>
+<p>AWS WAF는 HTTP/HTTPS 요청의 Header, Query String, Body 내용을 분석하여 사전에 정의된 규칙(Managed Rules나 Custom Rules)과 비교해서 SQLi, XSS 등 특정 패턴이 발견되면 요청을 차단합니다.</p>
+<p><strong>→ 애플리케이션 로직 내부로 악성 쿼리가 전달되는 것을 차단하여 데이터베이스 무결성을 보호하고 취약점을 이용한 권한 탈취 시도 등도 무력화합니다.</strong></p>
+<h4 id="route-53-health-check-dns-level-failover-availability">Route 53 Health Check (DNS-level Failover &amp; Availability)</h4>
+<p>웹 서버, 애플리케이션 등 공용 리소스의 가용성을 지속적으로 모니터링하여 장애 발생 시 자동으로 트래픽을 건강한 엔드포인트로 전환(DNS Failover)하거나 알림을 제공하는 서비스입니다.</p>
+<p>Route 53 Health Check는 설정된 엔드포인트(ALB 등)에 대해 HTTP/HTTPS 또는 TCP 기반의 상태 확인 패킷을 주기적으로 전송해서 응답 코드 및 성능을 모니터링합니다. 특정 리전의 엔드포인트가 Unhealthy로 판단되면 DNS 응답에서 해당 IP를 제외합니다.</p>
+<p>Latency와 Health Check 결과를 연동해서 정상 작동 중인 가용 구역 중 지연 시간이 가장 짧은 리전의 IP를 사용자에게 반환합니다.</p>
+<p><strong>→ 사용자에게 제일 빠른 서버가 어딘지 일단 Latency로 보고 가장 빠른 IP를 주지만 Health Check로 인하여 비정상인 서버라면 그 서버를 제외하고 그 다음 빠른 IP를 제공합니다.</strong></p>
+<h3 id="32-dmz">3.2 DMZ 보안</h3>
+<p><img alt="엣지단 보안" src="../../images/infra/analysis-pallycon/dmz.png" /></p>
+<p><strong>DMZ는 Public Subnet이며 유일하게 ALB만 배치되어 있습니다.</strong></p>
+<h4 id="alb-application-load-balancer-l7">ALB (Application Load Balancer) — L7 계층 보안 및 필터링</h4>
+<p>이미지에서 ALB는 <code>Firewall (Host, Path, IP, Http Header)</code>로 명시되어 있습니다.</p>
+<p>외부 트래픽을 받는 역할을 하고 비정상적인 접근을 애플리케이션 도달 전 단계에서 차단합니다.</p>
+<p>HTTP 헤더 정보나 URL 경로를 검사합니다. 예를 들어 공격자가 관리자 페이지(<code>/admin</code>)에 접근을 시도할 때 사전에 정의된 IP 대역이 아니면 즉시 차단하는 화이트리스트 기반 통제를 수행합니다.</p>
+<p>ALB는 자신의 보안 그룹을 가집니다. 특정 포트(80, 443) 이외의 모든 포트를 차단하고 오직 CloudFront의 IP 대역으로부터 오는 요청만 수용하도록 설정되어 공격 표면을 제한합니다.</p>
+<p>ACM과 연동하여 서버 전 구간의 암호화를 유지하고 TLS 1.2 이상을 강제하여 취약한 암호화 프로토콜을 사용하는 클라이언트를 차단합니다.</p>
+<p><strong>→ 백엔드 서버(ECS)의 직접적인 IP 노출을 방지하고 헤더 변조나 비정상적인 경로 접근을 차단하여 애플리케이션 로직 보호의 첫 번째 방어선을 만듭니다.</strong></p>
+<h3 id="33">3.3 로그 기반 보안 탐지</h3>
+<p><img alt="로그 기반 보안 탐지" src="../../images/infra/analysis-pallycon/log_monitoring.png" /></p>
+<h4 id="amazon-s3-access-log-storage">Amazon S3 (Access Log Storage)</h4>
+<p>ALB의 <strong>Access Log</strong>가 저장되는 곳입니다.</p>
+<p>ALB에서 발생하는 모든 HTTP/HTTPS 요청 상세 내역(출발지 IP, 요청 시간, 경로, 응답 코드 등)이 .gz 형태의 로그 파일로 S3 버킷에 저장됩니다.</p>
+<h4 id="aws-lambda-security-analysis">AWS Lambda (Security Analysis)</h4>
+<p>로그가 생성되자마자 즉시 분석을 수행하는 <strong>이벤트 기반 보안 엔진</strong>입니다.</p>
+<p>S3에 새로운 로그 파일이 생성되는 순간 Lambda 함수가 자동으로 트리거됩니다. Lambda는 로그를 파싱하여 미리 정의된 위험 패턴을 탐지합니다.</p>
+<h4 id="amazon-cloudwatch-alarm">Amazon CloudWatch (Alarm)</h4>
+<p>시스템의 가용성과 보안 지표를 감시합니다.</p>
+<p>Lambda 분석 결과나 인프라 지표(CPU 급증, 트래픽 폭주 등)를 수집하여 시각화하고 설정된 임계치를 넘어서면 <strong>Alarm</strong> 상태로 전환됩니다.</p>
+<h4 id="amazon-sns">Amazon SNS</h4>
+<p>탐지된 위협 정보를 전달하는 역할입니다.</p>
+<p>Lambda의 분석 결과나 CloudWatch Alarm으로부터 메시지를 전달받아 등록된 구독자(관리자 이메일, Slack 등)에게 메시지를 팬아웃 방식으로 전송합니다.</p>
+<h3 id="34">3.4 애플리케이션 계층 보안</h3>
+<p><img alt="애플리케이션 계층 보안" src="../../images/infra/analysis-pallycon/private.png" /></p>
+<h4 id="app-nat-private-subnet-nat-gateway">APP-NAT (Private Subnet &amp; NAT Gateway)</h4>
+<p>외부 인터넷과 격리된 Private Subnet입니다.</p>
+<p>외부에서는 이 구역의 IP로 직접 접속할 수 없도록 차단되어 있습니다. 내부에 위치한 <strong>Web</strong>이나 <strong>Rest API(ECS)</strong> 서버들은 공인 IP가 없습니다.</p>
+<p>서버 업데이트나 외부 API 호출이 필요할 때만 <strong>NAT Gateway</strong>를 거쳐 나가는데 이때 외부에서는 NAT Gateway의 IP만 보입니다. 외부에서 들어오는 연결 요청은 ALB를 통해서만 허용되고 그 외의 모든 직접 접근은 네트워크 레벨에서 차단됩니다.</p>
+<h4 id="web-ec2-auto-scaling-group">Web (EC2 Auto Scaling Group)</h4>
+<p>보안 그룹을 통한 <strong>최소 접근 제어</strong>를 수행합니다.</p>
+<p>이 서버들은 Security Group이라는 가상 방화벽 안에 있습니다. 오직 ALB로부터 오는 80/443 포트 트래픽만 받겠다는 규칙을 강제합니다. <strong>즉, 해커가 같은 네트워크 안에 침투하더라도 웹 서버로 직접 붙는 것을 방어합니다.</strong></p>
+<p>Auto Scaling을 통해 서버가 늘어나거나 줄어들 때도 이 보안 규칙은 동일하게 복제되어 적용됩니다.</p>
+<h4 id="rest-api-amazon-ecs">Rest API (Amazon ECS)</h4>
+<p><strong>프로세스 격리</strong>와 임시 자격 증명을 사용합니다.</p>
+<p>ECS는 애플리케이션을 컨테이너 단위로 실행합니다. 만약 하나의 API 프로세스가 해킹당하더라도 컨테이너 기술을 통해 호스트 서버나 다른 프로세스로 공격이 번지는 것을 차단합니다.</p>
+<p>서버에 고정된 비밀번호(Access Key)를 저장하지 않고 Task Role이라는 임시 권한을 사용하여 DynamoDB나 S3 같은 데이터 영역에 접근합니다. 이 권한은 짧은 시간만 유효하며 자동으로 갱신되어 키 탈취 위험을 낮춥니다.</p>
+<h4 id="efs-elastic-file-system">EFS (Elastic File System)</h4>
+<p><strong>전송 및 저장 데이터 암호화</strong>와 <strong>네트워크 레벨의 접근 통제</strong>를 적용합니다.</p>
+<p>데이터가 저장될 때와 서버 사이를 이동할 때 모두 암호화되어 물리적인 저장 장치가 탈취되거나 네트워크 패킷을 가로채더라도 내용을 알 수 없게 합니다.</p>
+<p><strong>EFS 마운트 타겟 보안 그룹</strong>을 사용하여 허가된 보안 그룹을 가진 Web/API 서버 외에는 저장소 근처에도 오지 못하게 막습니다.</p>
+<h4 id="ecr-amazon-elastic-container-registry">ECR (Amazon Elastic Container Registry)</h4>
+<p>이미지 취약점 스캔을 수행합니다.</p>
+<p>개발자가 코드를 짜서 이미지를 올리면 ECR이 그 안에 보안 약점이 있는지(예: 취약한 버전의 라이브러리 등)를 자동으로 전수 조사합니다. 심각한 취약점이 발견되면 배포를 중단합니다.</p>
+<h3 id="35">3.5 데이터 계층 보안</h3>
+<p><img alt="데이터 계층 보안" src="../../images/infra/analysis-pallycon/data.png" /></p>
+<h4 id="amazon-aurora-snapshot">Amazon Aurora &amp; Snapshot</h4>
+<p>데이터 유출 방지(기밀성) 및 재해 복구(가용성)에 집중합니다.</p>
+<p><strong>AWS KMS</strong>와 연동하여 모든 데이터 파일, 인덱스, 로그를 AES-256 방식으로 암호화합니다. 물리적 저장 장치가 탈취되어도 데이터를 읽을 수 없습니다.</p>
+<p>서버와 DB 사이의 모든 통신에 <strong>SSL/TLS</strong>를 강제하여 스니핑을 방어하며 주기적으로 데이터 상태를 백업하여 별도의 격리된 저장소에 보관합니다.</p>
+<h4 id="global-table-dynamodb">Global Table (DynamoDB)</h4>
+<p>지역적 재난 상황에서의 서비스 연속성(가용성)을 보장합니다.</p>
+<p>서울 리전뿐만 아니라 다른 리전(도쿄, 오레곤 등)에 동일한 데이터를 실시간 복제합니다. 특정 리전의 데이터 센터가 공격을 받거나 마비되어도 다른 리전의 데이터를 즉시 사용하여 서비스 중단을 막습니다.</p>
+<p><strong>IAM 기반 세밀한 접근 제어:</strong> 테이블 레벨이 아니라 <strong>행(Row) 또는 속성(Attribute) 레벨</strong>로 접근 권한을 제한하여 특정 API 서버가 탈취되어도 전체 데이터가 아닌 허가된 범위의 데이터만 접근할 수 있게 합니다.</p>
+<h4 id="redis-elasticache-logstash">Redis (ElastiCache) &amp; Logstash (로그 전송 보안)</h4>
+<p>과금 데이터의 누락 방지 및 전송 구간을 보호합니다.</p>
+<p>비밀번호 인증을 통해서만 ECS(Rest API)가 로그를 던질 수 있게 제한합니다. ECS 서버가 로그를 직접 DB에 쓰지 않고 Redis에 우선 적재함으로써 DB 부하로 인한 서비스 지연이나 로그 유실을 방지합니다. Redis에 쌓인 로그를 읽어가는 Logstash 역시 사설망 내부에 배치하여 외부 노출을 차단합니다.</p>
+<h4 id="amazon-s3-glacier">Amazon S3 &amp; Glacier</h4>
+<p>로그 변조 방지(무결성) 및 장기 감사(Audit) 대응을 목적으로 합니다.</p>
+<p><strong>Lifecycle Policy:</strong> 일정 기간이 지난 로그를 자동으로 비용이 저렴한 <strong>Glacier</strong>로 이관합니다.</p>
+<h4 id="aws-lambda-redshift">AWS Lambda &amp; Redshift</h4>
+<p>분석 데이터 접근 통제 및 감사 로그를 생성합니다.</p>
+<p><strong>Lambda:</strong> S3에 로그가 쌓이면 즉시 실행되어 민감 정보를 마스킹하거나 비식별화 처리한 후 Redshift로 보냅니다. 분석가가 원본 개인정보를 직접 보지 못하게 하는 보안 장치입니다.</p>
+<p><strong>Redshift:</strong> 특정 보안 담당자나 관리자만 과금 상세 내역을 볼 수 있도록 열(Column) 단위 권한 제어를 실시합니다.</p>
+<h3 id="36-dr">3.6 리전 간 보안 및 DR</h3>
+<p><img alt="VPC_Peering" src="../../images/infra/analysis-pallycon/vpc_peering.png" /></p>
+<h4 id="vpc-peering-inter-region-peering">VPC Peering (Inter-Region Peering)</h4>
+<p>서울 리전과 해외 리전(도쿄, 오레곤 등) 간의 데이터 전송 시 공용 인터넷망을 거치지 않고 <strong>AWS 내부 전용 망</strong>만을 사용합니다. AWS는 리전 간 통신 시 물리적 계층에서 모든 트래픽을 자동으로 암호화합니다.</p>
+<h4 id="tokyo-disaster-recovery-dr">Tokyo: Disaster Recovery (재해 복구, DR)</h4>
+<p>서울 리전의 주요 데이터와 서버 설정값(AMI, Snapshot 등)을 도쿄 리전에 실시간 또는 주기적으로 복제해 둡니다. 서울 리전에 대규모 물리적 재난이나 사이버 테러가 발생해 서비스가 마비될 경우 Route 53이 트래픽을 즉시 도쿄 리전으로 돌려 서비스를 재개합니다.</p>
+<h4 id="oregon-replication-global-service">Oregon: Replication — Global Service (데이터 무결성 유지)</h4>
+<ul>
+<li><strong>DynamoDB Global Tables:</strong> 서울에서 발생한 사용자 라이선스 정보를 오레곤(미국) 리전에 실시간으로 복사합니다.</li>
+<li><strong>보안 정책 동기화:</strong> 서울 리전에서 설정한 IAM 권한이나 KMS 암호화 정책이 해외 리전에도 동일하게 적용되도록 관리합니다.</li>
+</ul>
+<h4 id="singapore-frankfurt-watermark-packaging">Singapore &amp; Frankfurt: Watermark Packaging (콘텐츠 보호 최적화)</h4>
+<p>영상 콘텐츠에 시청자 정보를 담은 포렌식 워터마크를 입히는 작업을 사용자 근처 리전에서 수행합니다. 워터마킹 작업은 연산량이 많은데 이를 전 세계 리전으로 분산시켜 특정 서버의 과부하로 인한 보안 공백을 방지합니다. 콘텐츠가 최종 사용자에게 전달되기 직전 가장 가까운 곳에서 워터마킹을 완료함으로써 원본 콘텐츠가 보호되지 않은 상태로 먼 거리를 이동하는 시간을 최소화합니다.</p>
+<h3 id="37">3.7 관리 및 감사 보안</h3>
+<p><img alt="관리 및 감사 보안" src="../../images/infra/analysis-pallycon/service.png" /></p>
+<h4 id="acm-aws-certificate-manager">ACM (AWS Certificate Manager)</h4>
+<p>인증서의 발급, 배포, 갱신을 자동화합니다. 관리자가 갱신 시점을 놓쳐 보안 연결이 끊기거나 서비스가 중단되는 위험을 원천 방어합니다. ALB나 CloudFront와 직접 연동되어 서버 내부에 개인키를 저장할 필요 없이 안전하게 암호화 통신을 종료합니다.</p>
+<h4 id="aws-cloudtrail">AWS CloudTrail</h4>
+<p>AWS 계정 내에서 발생하는 모든 활동(누가, 언제, 어디서, 어떤 명령을 내렸는지)을 JSON 형태의 로그로 기록합니다. 로그 파일이 수정되거나 삭제되지 않았음을 증명하는 디지털 서명 기능을 제공하여 사고 후 포렌식 자료로서의 신뢰성을 확보합니다.</p>
+<h4 id="aws-iam-identity-and-access-management">AWS IAM (Identity and Access Management)</h4>
+<p>사용자(User), 그룹(Group), 역할(Role)로 나누어 필요한 만큼의 권한만 부여합니다. 특히 ECS나 Lambda 같은 서비스에 고정된 ID/PW가 아닌 특정 시간 동안만 유효한 임시 토큰을 부여하여 자격 증명 탈취 시의 피해를 최소화합니다.</p>
+<h4 id="aws-kms-key-management-service">AWS KMS (Key Management Service)</h4>
+<p><strong>중앙 집중식 키 관리:</strong> 하드웨어 보안 모듈(HSM)로 보호되는 마스터 키를 생성하고 관리합니다.</p>
+<p><strong>봉투 암호화(Envelope Encryption):</strong> 데이터를 암호화한 키(Data Key)를 다시 마스터 키(Master Key)로 암호화하는 방식을 사용하여 보안성을 극대화합니다. 모든 키 사용 이력은 CloudTrail에 기록됩니다.</p>
+<h4 id="event-cloudwatch-events-lambda-ami-backup">Event (CloudWatch Events) + Lambda + AMI Backup</h4>
+<p>자동화된 백업 체계 구축을 통한 <strong>가용성(Availability)</strong>을 확보합니다.</p>
+<ul>
+<li><strong>스케줄링:</strong> CloudWatch Event가 정해진 시간을 감지합니다.</li>
+<li><strong>자동 수행:</strong> 이벤트가 발생하면 Lambda 함수를 실행하여 현재 운영 중인 서버의 이미지(AMI)를 생성합니다.</li>
+<li><strong>데이터 보존:</strong> 생성된 AMI 백업본을 통해 랜섬웨어 공격이나 데이터 파손 시 즉시 시스템을 복구할 수 있는 무결성을 확보합니다.</li>
+</ul>
+<p><strong>참고 자료</strong></p>
+<p>https://aws.amazon.com/ko/partners/success/inka-entworks/</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../analysis-AmiLineage/" class="md-footer__link md-footer__link--prev" aria-label="이전: AMI Lineage">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                AMI Lineage
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../analysis-midasit/" class="md-footer__link md-footer__link--next" aria-label="다음: MIDAS IT">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                MIDAS IT
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/UniteLiveDisperseDie/secure-cloud-architecture-docs" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate", "search.highlight", "search.suggest", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
