@@ -89,6 +89,7 @@ nav:
       - "Twilio": 01-incident/case-twilio.md
       - "TeamTNT": 01-incident/case-teamtnt.md
       - "LiveAuctioneers": 01-incident/case-liveactioneers.md
+      - "Bybit/Safe{Wallet}": 01-incident/case-bybit.md
   - 인프라 분석:
       - "UNiDAYS": 02-infra/analysis-01-unidays.md
       - "MADworld": 02-infra/analysis-madworld.md
