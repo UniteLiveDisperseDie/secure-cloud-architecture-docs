@@ -23,6 +23,7 @@ AWS에서는 보안 이벤트를 신속하게 감지하고 대응하기 위한 �
 ## 아키텍처 분석
 
 ### 자동화 복구 흐름 (3단계)
+![SRA](../images/infra/analysis-SecurityResponseAuto/flow.png)
 
 AWS에서의 자동화 복구는 탐지(Detection) → 오케스트레이션(Orchestration) → 복구(Remediation) 단계로 구성됩니다.
 
@@ -52,6 +53,8 @@ AWS에서의 자동화 복구는 탐지(Detection) → 오케스트레이션(Orc
 
 CloudTrail 로깅은 모든 AWS 계정과 리전에 활성화되어야 합니다. 비활성화되면 자동으로 재활성화하고 보안 운영팀에게 알림을 발송합니다.
 
+![SRA](../images/infra/analysis-SecurityResponseAuto/workflow.png)
+
 #### Lambda 코드 핵심 로직
 
 **1. Finding에서 TrailARN 추출**
@@ -79,29 +82,30 @@ enablelogging = client.start_logging(Name=trailARN)
 ---
 
 ## 아키텍처 구성 요소
+![SRA](../images/infra/analysis-SecurityResponseAuto/architecture.png)
 
 ### Administrator Account
 
 **탐지 흐름**
 
-- AWS Config → AWS Security Hub → Finding 생성
-- Security Hub Custom Action(수동) 또는 Automatic Remediation EventBridge Rule(자동)을 통해 트리거합니다.
+- **①** AWS Config → AWS Security Hub → Finding 생성
+- **②** Security Hub Custom Action(수동) 또는 Automatic Remediation EventBridge Rule(자동)을 통해 트리거합니다.
 
-**오케스트레이션 흐름**
+**③④⑤ 오케스트레이션 흐름**
 
 - Orchestrator Lambda → SQS Queue → Scheduling Lambda → State Table(DynamoDB) → Orchestrator
 
-**로깅 및 모니터링**
+**⑧ 로깅 및 모니터링**
 
 - CloudTrail Events Log Group → ASR CloudWatch Dashboard & Alarm → SNS Topic
 
 ### Ticketing Blueprint Stack
 
-Finding 발생 시 외부 티켓 시스템으로 자동 티켓을 생성합니다. (보안 이벤트 추적 및 처리 기록 관리)
+**⑦** Finding 발생 시 외부 티켓 시스템으로 자동 티켓을 생성합니다. (보안 이벤트 추적 및 처리 기록 관리)
 
 ### Member Account
 
-**복구 실행 흐름**
+**⑥ 복구 실행 흐름**
 
 - Orchestrator IAM Role → Control Runbook SSM Document(검증) → Remediation Runbook SSM Document(실행) → Customer Resource
 - Remediation KMS Key를 통해 복구 작업 시 암호화를 보장합니다.
@@ -141,6 +145,7 @@ Remediation Runbook 실행 후 실제로 복구가 잘 됐는지 확인하는 �
 **1. 오탐 방지를 위한 맥락 기반 판단 추가**
 
 배포 스케줄, 변경 관리 시스템과 연동하고 AWS Config의 변경 타임라인과 비교하여 오탐을 방지할 수 있습니다.
+![SRA](../images/infra/analysis-SecurityResponseAuto/mitigation.png)
 
 **2. IAM 권한 최소화 자동화**
 
@@ -157,3 +162,7 @@ SQS 단일 큐 대신 Critical, High, Low Finding으로 나눠 심각도별 별�
 **5. 복구 후 자동 검증 추가**
 
 Step Functions로 대기 후 AWS Config로 현재 상태를 재확인하고, 정상이면 티켓을 닫고 비정상이면 재시도 또는 관리자 에스컬레이션을 진행합니다.
+
+[참고자료]
+
+https://aws.amazon.com/ko/blogs/security/how-get-started-security-response-automation-aws/

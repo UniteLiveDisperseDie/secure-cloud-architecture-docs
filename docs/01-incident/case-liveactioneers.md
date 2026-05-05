@@ -1,7 +1,7 @@
 # 침해 사고 분석 - LiveAuctioneers (2020)
 
 ## 1. 개요
-![liveactioneers](../images/incident/case-liveactioneers)
+![liveactioneers](../images/incident/case-liveactioneers/logo.png)
 ### 1.1 사고 배경
 
 LiveAuctioneers는 미국 뉴욕에 본사를 둔 온라인 경매 마켓플레이스로 예술품, 골동품, 보석, 수집품 등을 실시간 인터넷 경매로 거래하는 플랫폼입니다. AWS를 클라우드 인프라로 사용하며 다수의 외부 IT 공급업체를 활용합니다.
@@ -61,7 +61,7 @@ IT 공급업체 시스템 익스플로잇을 통해 source control key를 획득
 | 2020.07.15 | FBI에 사고 신고 및 수사 협조 |
 | 2020.08.03 | 나머지 전체 사용자에게 추가 통지 |
 
-![liveactioneers](../images/incident/case-liveactioneers)
+![liveactioneers](../images/incident/case-liveactioneers/email.png)
 ### 3.2 사후 조치 및 재발 방지
 
 1. 모든 사용자 계정 비밀번호를 즉시 만료하고 무단 접근을 차단합니다.
