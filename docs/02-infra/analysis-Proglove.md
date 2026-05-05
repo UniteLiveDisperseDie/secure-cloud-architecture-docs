@@ -33,7 +33,7 @@ AWS는 멀티 계정 전략을 권장합니다. 대규모 환경에서는 계정
 - 6000개의 테넌트 계정 중 50%가 활성 상태입니다.
 - 각각 여러 개의 AWS Lambda 함수와 지원 리소스를 갖춘 약 40개의 마이크로서비스가 운영됩니다.
 - CI/CD, 관찰 가능성 및 공유 도구를 위한 70개의 내부 계정이 존재합니다.
-[아키텍처](../images/infra/analysis-ProGlove/account.png)
+[계정](../images/infra/analysis-ProGlove/account.png)
 
 테넌트별 계정 모델의 장점은 다음과 같습니다.
 
@@ -54,7 +54,7 @@ AWS Cost Explorer를 이용하면 테넌트별 비용을 간편하게 보고하�
 
 자동화가 필요 없는 워크플로는 스크립팅 및 수동 작업을 통해 더 효율적으로 구현할 수 있습니다. 예를 들어 AWS Step Functions를 사용하여 계정 생성을 자동화하고, 계정 사용 중지 및 삭제는 정기적으로 실행하는 스크립트를 통해 수행할 수 있습니다.
 
-[아키텍처](../images/infra/analysis-ProGlove/manage_account.png)
+[관리자계정](../images/infra/analysis-ProGlove/manage_account.png)
 
 #### AWS Step Functions란?
 
@@ -101,7 +101,7 @@ AWS Organizations 태그 정책을 활용하여 메트릭과 로그에 AWS 계�
 
 각각의 파이프라인 실행은 여러 대상 계정을 병렬로 업데이트하고 중앙 계정에서는 단 한 번의 StackSet 업데이트 작업만 실행됩니다.
 
-[아키텍처](../images/infra/analysis-ProGlove/codePipe.png)
+[파이프라인](../images/infra/analysis-ProGlove/codePipe.png)
 
 **고려할 사항:**
 
