@@ -112,8 +112,8 @@ Route53에서 도메인을 ALB로 라우팅합니다. HTTP 80 요청은 ALB에�
       "Principal": {
         "AWS": "arn:aws:iam::ACCOUNT_ID:role/github-actions-role"
       },
-      "Action": ["s3:PutObject"],
-      "Resource": "arn:aws:s3:::my-bucket/*"
+      "Action": ["s3:PutObject", "s3:GetObject"],
+      "Resource": "arn:aws:s3:::my-bucket/builds/*"
     },
     {
       "Sid": "DenyNonHttps",
@@ -138,7 +138,7 @@ Route53에서 도메인을 ALB로 라우팅합니다. HTTP 80 요청은 ALB에�
 
 ### 2.4. IAM
 
-- **설정 방식**: 루트 계정은 MFA를 설정하고 Access Key를 생성하지 않으며 일상 작업에 사용하지 않습니다. 일상 작업용 IAM User 1개를 생성하고 MFA를 설정합니다. AdministratorAccess를 부여하되, MFA 인증이 없으면 모든 API를 Deny하는 정책을 추가로 연결합니다(aws:MultiFactorAuthPresent 조건 사용). 단, 이 Deny 정책을 적용하기 전에 반드시 MFA 설정을 먼저 완료해야 합니다. MFA가 설정되지 않은 상태에서 정책을 먼저 연결하면 MFA 설정 페이지 접근도 차단되어 계정이 잠깁니다. EC2에는 필요한 권한만 담긴 IAM Role을 Instance Profile로 부여합니다. 부여 권한은 AmazonSSMManagedInstanceCore와 특정 S3 버킷 ARN 지정 s3:PutObject, GetObject, DeleteObject로 한정합니다. Access Key를 EC2에 직접 넣는 방식은 사용하지 않습니다. GitHub Actions 배포에 사용하는 IAM User에는 ssm:SendCommand 권한을 별도로 부여해야 합니다. 이 권한이 없으면 GitHub Actions에서 EC2로 배포 명령을 전달할 수 없습니다.
+- **설정 방식**: 루트 계정은 MFA를 설정하고 Access Key를 생성하지 않으며 일상 작업에 사용하지 않습니다. 일상 작업용 IAM User 1개를 생성하고 MFA를 설정합니다. AdministratorAccess를 부여하되, MFA 인증이 없으면 모든 API를 Deny하는 정책을 추가로 연결합니다(aws:MultiFactorAuthPresent 조건 사용). 단, 이 Deny 정책을 적용하기 전에 반드시 MFA 설정을 먼저 완료해야 합니다. MFA가 설정되지 않은 상태에서 정책을 먼저 연결하면 MFA 설정 페이지 접근도 차단되어 계정이 잠깁니다. EC2에는 필요한 권한만 담긴 IAM Role을 Instance Profile로 부여합니다. 부여 권한은 AmazonSSMManagedInstanceCore와 특정 S3 버킷 ARN 지정 s3:PutObject, GetObject, DeleteObject로 한정합니다. Access Key를 EC2에 직접 넣는 방식은 사용하지 않습니다. GitHub Actions 배포는 IAM User 방식이 아닌 OIDC 기반 IAM Role을 사용합니다. Access Key를 GitHub Secrets에 저장하지 않고, GitHub Actions가 실행될 때 AWS가 발급하는 임시 자격증명으로 인증합니다. GitHub Actions Role에는 S3 builds/ 경로 업로드(s3:PutObject, s3:GetObject), SSM Run Command 전달(ssm:SendCommand), 배포 결과 조회(ssm:GetCommandInvocation, ssm:ListCommandInvocations, ssm:DescribeInstanceInformation) 권한만 부여합니다.
 
 [EC2 Instance Profile]
 
@@ -188,8 +188,8 @@ Route53에서 도메인을 ALB로 라우팅합니다. HTTP 80 요청은 ALB에�
 - **설정 방식**: GitHub Actions 워크플로우에 Semgrep을 연동하여 PR 생성 및 main 브랜치 push 시점에 자동으로 정적 분석(SAST)을 실행합니다. 적용 룰셋은 p/owasp-top-ten, p/secrets, p/default를 기본으로 사용합니다. 비용은 Semgrep OSS 무료, GitHub Actions 월 2,000분 무료 제공입니다.
 
 ```yaml
-# .github/workflows/semgrep.yml
-name: Semgrep SAST
+# .github/workflows/deploy.yml
+name: Deploy to EC2
 
 on:
   push:
@@ -197,40 +197,103 @@ on:
   pull_request:
 
 permissions:
+  id-token: write
   contents: read
+
+env:
+  AWS_REGION: ap-northeast-2
 
 jobs:
   semgrep:
+    name: Semgrep SAST Scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: semgrep/semgrep-action@v1
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run Semgrep
+        uses: semgrep/semgrep-action@v1
         with:
           config: >-
             p/owasp-top-ten
             p/secrets
             p/default
+
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    needs: semgrep
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Package & Upload to S3
+        run: |
+          zip -r app-${{ github.sha }}.zip . \
+            --exclude "*.git*" \
+            --exclude ".github/*" \
+            --exclude "*.md" \
+            --exclude "terraform/*"
+          aws s3 cp app-${{ github.sha }}.zip \
+            s3://${{ secrets.S3_BUCKET_NAME }}/builds/app-${{ github.sha }}.zip
+      - name: Deploy via SSM Run Command
+        run: |
+          COMMAND_ID=$(aws ssm send-command \
+            --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
+            --document-name "AWS-RunShellScript" \
+            --parameters commands='[
+              "set -e",
+              "aws s3 cp s3://${{ secrets.S3_BUCKET_NAME }}/builds/app-${{ github.sha }}.zip /tmp/app.zip",
+              "rm -rf /app && mkdir -p /app",
+              "unzip -o /tmp/app.zip -d /app/",
+              "rm -f /tmp/app.zip",
+              "docker build -t app:${{ github.sha }} /app/",
+              "docker stop app 2>/dev/null || true",
+              "docker rm app 2>/dev/null || true",
+              "docker run -d --name app --restart unless-stopped -p 80:8080 app:${{ github.sha }}",
+              "docker image prune -f"
+            ]' \
+            --region ${{ env.AWS_REGION }} \
+            --query "Command.CommandId" \
+            --output text)
+          echo "COMMAND_ID=$COMMAND_ID" >> $GITHUB_ENV
+      - name: Wait for deployment
+        run: |
+          aws ssm wait command-executed \
+            --command-id "$COMMAND_ID" \
+            --instance-id "${{ secrets.EC2_INSTANCE_ID }}" \
+            --region ${{ env.AWS_REGION }}
+      - name: Check deployment result
+        run: |
+          STATUS=$(aws ssm get-command-invocation \
+            --command-id "$COMMAND_ID" \
+            --instance-id "${{ secrets.EC2_INSTANCE_ID }}" \
+            --region ${{ env.AWS_REGION }} \
+            --query "Status" \
+            --output text)
+          if [ "$STATUS" != "Success" ]; then exit 1; fi
+          echo "배포 성공!"
 ```
 
 - **설계 이유**: 바이브코딩 특성상 인가 체크 누락, 하드코딩된 시크릿, 직접 파라미터 참조 등의 패턴이 코드에 포함될 가능성이 높습니다. Semgrep은 AST 기반 패턴 매칭으로 이러한 코드 구조를 커밋 시점에 탐지하며, p/secrets 룰셋으로 하드코딩된 시크릿까지 별도 도구 없이 단일 워크플로우에서 커버합니다. GitHub Actions 인증은 OIDC 방식을 사용하여 Access Key 없이 임시 자격증명으로 AWS 리소스에 접근합니다.
 
-- **반영된 보안 요소**: OWASP Top 10 주요 항목 코드 레벨 탐지, URL 파라미터를 인가 체크 없이 DB 쿼리에 직접 사용하는 IDOR 유발 패턴 탐지, API 키·시크릿·토큰 등 하드코딩 탐지, SQL Injection 유발 패턴 탐지, PR 단계 보안 게이트로 프로덕션 배포 전 취약점 사전 차단, OIDC 기반 Access Key 미사용 인증.
+- **반영된 보안 요소**: OWASP Top 10 주요 항목 코드 레벨 탐지, URL 파라미터를 인가 체크 없이 DB 쿼리에 직접 사용하는 IDOR 유발 패턴의 일부를 탐지할 수 있으나, IDOR은 로직 레벨 취약점 특성상 정적 분석만으로는 완전한 탐지가 불가, API 키·시크릿·토큰 등 하드코딩 탐지, SQL Injection 유발 패턴 탐지, PR 단계 보안 게이트로 프로덕션 배포 전 취약점 사전 차단, OIDC 기반 Access Key 미사용 인증.
 
 [Role에 S3 업로드 정책을 부여한 코드]
 
 ```hcl
-resource "aws_iam_role_policy" "s3_upload" {
-  role = aws_iam_role.github_actions.name
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Effect   = "Allow"
-      Action   = ["s3:PutObject"]
-      Resource = "arn:aws:s3:::my-bucket/builds/*"
-    }]
-  })
+{
+  "Sid": "AllowGithubActionsRole",
+  "Effect": "Allow",
+  "Principal": {
+    "AWS": "arn:aws:iam::ACCOUNT_ID:role/github-actions-role"
+  },
+  "Action": ["s3:PutObject", "s3:GetObject"],
+  "Resource": "arn:aws:s3:::my-bucket/builds/*"
 }
 ```
 

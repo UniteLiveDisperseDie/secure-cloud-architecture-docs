@@ -27,6 +27,8 @@ AWS에서는 보안 이벤트를 신속하게 감지하고 대응하기 위한 �
 
 AWS에서의 자동화 복구는 탐지(Detection) → 오케스트레이션(Orchestration) → 복구(Remediation) 단계로 구성됩니다.
 
+![자동화 복구 흐름](../images/infra/analysis-SecurityResponseAuto/flow.png)
+
 ### 핵심 서비스
 
 1. **AWS CloudTrail / AWS Config**: 사용자 활동 및 리소스 구성 변경 로그를 수집합니다.
@@ -53,7 +55,7 @@ AWS에서의 자동화 복구는 탐지(Detection) → 오케스트레이션(Orc
 
 CloudTrail 로깅은 모든 AWS 계정과 리전에 활성화되어야 합니다. 비활성화되면 자동으로 재활성화하고 보안 운영팀에게 알림을 발송합니다.
 
-![SRA](../images/infra/analysis-SecurityResponseAuto/workflow.png)
+![워크플로우](../images/infra/analysis-SecurityResponseAuto/workflow.png)
 
 #### Lambda 코드 핵심 로직
 
@@ -82,7 +84,8 @@ enablelogging = client.start_logging(Name=trailARN)
 ---
 
 ## 아키텍처 구성 요소
-![SRA](../images/infra/analysis-SecurityResponseAuto/architecture.png)
+
+![아키텍처](../images/infra/analysis-SecurityResponseAuto/architecture.png)
 
 ### Administrator Account
 
@@ -145,7 +148,8 @@ Remediation Runbook 실행 후 실제로 복구가 잘 됐는지 확인하는 �
 **1. 오탐 방지를 위한 맥락 기반 판단 추가**
 
 배포 스케줄, 변경 관리 시스템과 연동하고 AWS Config의 변경 타임라인과 비교하여 오탐을 방지할 수 있습니다.
-![SRA](../images/infra/analysis-SecurityResponseAuto/mitigation.png)
+
+![mitigation](../images/infra/analysis-SecurityResponseAuto/mitigation.png)
 
 **2. IAM 권한 최소화 자동화**
 
