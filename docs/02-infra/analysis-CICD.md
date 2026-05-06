@@ -26,7 +26,7 @@
 
 PR Merge event로 Jenkins를 트리거 → Docker 이미지 생성 후 ECR에 Push → ECS에서 해당 이미지 이용
 
-[jenkins](../images/infra/analysis-CICD/jenkins.png)
+![jenkins](../images/infra/analysis-CICD/jenkins.png)
 
 ### Self-hosted Runner 사용 경우
 
@@ -35,7 +35,7 @@ PR Merge event로 Jenkins를 트리거 → Docker 이미지 생성 후 ECR에 Pu
 - Runner가 Docker 이미지 빌드 후 ECR로 푸시
 - ECS가 ECR에서 새 이미지를 Pull하여 이용
 
-[self-hostedRunner](../images/infra/analysis-CICD/NoJenkins.png)
+![self-hostedRunner](../images/infra/analysis-CICD/NoJenkins.png)
 
 
 ---
@@ -76,13 +76,13 @@ ECR은 IAM으로 접근 제어를 통합 관리할 수 있습니다. ECS는 ALB�
 
 **Container Instance** - EC2 기반 배포 시 EC2 Instance를 의미합니다. 하나의 Cluster 안에 여러 Container Instance가 있을 수 있고, 하나의 Instance 안에 여러 Task가 있을 수 있습니다. Fargate 사용 시 Container Instance 개념은 사라집니다.
 
-[ECSCluster](../images/infra/analysis-CICD/ecsCluster.png)
+![ECSCluster](../images/infra/analysis-CICD/ecsCluster.png)
 
 ---
 
 ## 리소스 배치 및 흐름
 
-[selfhosted](../images/infra/analysis-CICD/NoJenkins.png)
+![selfhosted](../images/infra/analysis-CICD/NoJenkins.png)
 
 **Public Subnet:**
 

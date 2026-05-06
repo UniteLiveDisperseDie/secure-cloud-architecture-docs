@@ -16,7 +16,7 @@ AI Agent를 도입하기 이전에도 다양한 클라우드 데이터를 확인
 
 이를 해결하기 위해 AI Agent를 도입하여 관리자가 필요한 정보를 Agent가 수집하고 분석해 의미있는 정보를 제공하도록 했습니다.
 
-[ucmp](../images/infra/analysis-BedrockAgentCore/UCMP.png)
+![ucmp](../images/infra/analysis-BedrockAgentCore/UCMP.png)
 
 ---
 

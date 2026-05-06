@@ -106,6 +106,10 @@ nav:
       - "OLX Europe": 02-infra/analysis-olx.md
       - "Hitachi" : 02-infra/analysis-hitachi.md
       - "TP Link": 02-infra/analysis-tplink.md
+      - "Bedrock AgentCore": 02-infra/analysis-BedrockAgentCore.md
+      - "CI/CD": 02-infra/analysis-CICD.md
+      - "ProGlove": 02-infra/analysis-Proglove.md
+
   - 아키텍처 설계:
       - "바이브코딩 아키텍처 설계": 03-architecture/01-hobby.md
       - "소규모 아키텍처 설계": 03-architecture/02-startup.md
