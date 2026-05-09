@@ -103,5 +103,4 @@ OAuth 토큰이 많은 기업에서 사용되므로 철저히 관리해야 하�
 ---
 
 [참고자료]
-
-https://talk3130.tistory.com/entry/AWS-%EB%B3%B4%EC%95%88-%EC%B9%A8%ED%95%B4-%EC%82%AC%EA%B3%A0-%EC%82%AC%EB%A1%80-%EB%B6%84%EC%84%9D-npm
+https://inpa.tistory.com/entry/NODE-%F0%9F%93%9A-%EB%85%B8%EB%93%9C-npmnode-package-manager

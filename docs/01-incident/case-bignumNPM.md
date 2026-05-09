@@ -80,6 +80,4 @@ bignum 패키지 관리자는 오래된 바이너리를 호스팅하던 S3 버�
 
 [참고자료]
 
-https://talk3130.tistory.com/entry/AWS-%EB%B3%B4%EC%95%88-%EC%B9%A8%ED%95%B4-%EC%82%AC%EA%B3%A0-%EC%82%AC%EB%A1%80-%EB%B6%84%EC%84%9D-Bignum-NPM-%ED%8C%A8%ED%82%A4%EC%A7%80-%EC%95%85%EC%84%B1%EC%BD%94%EB%93%9C-%EC%A3%BC%EC%9E%85
-
 https://checkmarx.com/blog/hijacking-s3-buckets-new-attack-technique-exploited-in-the-wild-by-supply-chain-attackers/

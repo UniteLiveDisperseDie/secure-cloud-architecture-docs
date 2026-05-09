@@ -137,6 +137,6 @@ Self hosted runner → Nat GW → GitHub 명령을 가져옴 → ECR에 푸시 �
 
 CI/CD를 통해 기존에 새 코드를 commit에서 production으로 가져오는 데 필요했던 수동 개입을 자동화했습니다. 그 결과 다운타임을 최소화하고 코드 릴리스 주기가 단축되었으며, 코드의 업데이트와 변경 사항을 더욱 빠르게 통합할 수 있게 되었습니다.
 
-[참고자료]
 
-https://talk3130.tistory.com/entry/%EC%9D%B8%ED%94%84%EB%9D%BC-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C%EC%9D%98-CICD-%EA%B5%AC%EC%B6%95
+
+

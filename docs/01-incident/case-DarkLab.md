@@ -83,6 +83,4 @@ AWS Cloud 환경으로만 구성된 것이 아닌 GCP 와도 연동되어 Multi 
 
 \*\* 기본적인 보안 수칙인 패치, 키 관리, 로깅을 꼭 해야 합니다.
 
-[참고자료]
 
-https://talk3130.tistory.com/entry/AWS-%EB%B3%B4%EC%95%88-%EC%B9%A8%ED%95%B4-%EC%82%AC%EA%B3%A0-%EC%82%AC%EB%A1%80-%EB%B6%84%EC%84%9D-DarkLab-case-study
