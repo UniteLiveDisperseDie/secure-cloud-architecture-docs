@@ -92,6 +92,9 @@ nav:
       - "Bybit/Safe{Wallet}": 01-incident/case-bybit.md
       - "McGraw Hill": 01-incident/case-mcgrawhill.md
       - "Microsoft SAS Token Exposure": 01-incident/case-microsoft-sastoken.md
+      - "Bignum NPM": 01-incident/case-bignumNPM.md
+      - "DarkLab": 01-incident/case-DarkLab.md
+      - "NPM": 01-incident/case-NPM.md
   - 인프라 분석:
       - "UNiDAYS": 02-infra/analysis-01-unidays.md
       - "MADworld": 02-infra/analysis-madworld.md
