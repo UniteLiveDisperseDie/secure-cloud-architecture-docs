@@ -95,6 +95,12 @@ nav:
       - "Bignum NPM": 01-incident/case-bignumNPM.md
       - "DarkLab": 01-incident/case-DarkLab.md
       - "NPM": 01-incident/case-NPM.md
+      - "Codefinger": 01-incident/case-codefinger.md
+      - "FirstRepublicBank": 01-incident/case-firstrepublicbank.md
+      - "Juspay": 01-incident/case-juspay.md
+      - "Malindoair": 01-incident/case-malindoair.md
+
+
   - 인프라 분석:
       - "UNiDAYS": 02-infra/analysis-01-unidays.md
       - "MADworld": 02-infra/analysis-madworld.md
