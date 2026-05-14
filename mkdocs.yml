@@ -112,10 +112,15 @@ nav:
       - "Bedrock AgentCore": 02-infra/analysis-BedrockAgentCore.md
       - "CI/CD": 02-infra/analysis-CICD.md
       - "ProGlove": 02-infra/analysis-Proglove.md
+      - "Blux": 02-infra/analysis-blux.md
+      - "DreamSecurity": 02-infra/analysis-dreamsecurity.md
+      - "NPIXEL": 02-infra/analysis-npixel.md
+      - "OpenCampus": 02-infra/analysis-opencampus.md
+      - "Santander": 02-infra/analysis-santander.md
 
   - 아키텍처 설계:
       - "바이브코딩 아키텍처 설계": 03-architecture/01-hobby.md
       - "소규모 아키텍처 설계": 03-architecture/02-startup.md
-      - "중소규모 아키텍처 설계": 03-architecture/03-growth.md
-      - "중규모 아키텍처 설계": 03-architecture/04-enterprise.md
+      - "중규모 아키텍처 설계": 03-architecture/03-growth.md
+      - "중대규모 아키텍처 설계": 03-architecture/04-enterprise.md
       - "대규모 아키텍처 설계": 03-architecture/05-hyperscale.md
