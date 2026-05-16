@@ -77,6 +77,13 @@ extra_css:
 nav:
   - Home: index.md
 
+  - 보안 아키텍처 설계:
+      - "바이브코딩 아키텍처 설계": 03-architecture/01-hobby.md
+      - "소규모 아키텍처 설계": 03-architecture/02-startup.md
+      - "중규모 아키텍처 설계": 03-architecture/03-growth.md
+      - "중대규모 아키텍처 설계": 03-architecture/04-enterprise.md
+      - "대규모 아키텍처 설계": 03-architecture/05-hyperscale.md
+
   - 침해사고 사례 분석:
       - "IAM & 권한 오남용":
           - "Drizly": 01-incident/case-01-drizly.md
@@ -138,10 +145,3 @@ nav:
           - "Bedrock AgentCore": 02-infra/analysis-BedrockAgentCore.md
           - "MADworld": 02-infra/analysis-madworld.md
           - "TP-Link": 02-infra/analysis-tplink.md
-  
-  - 보안 아키텍처 설계:
-      - "바이브코딩 아키텍처 설계": 03-architecture/01-hobby.md
-      - "소규모 아키텍처 설계": 03-architecture/02-startup.md
-      - "중규모 아키텍처 설계": 03-architecture/03-growth.md
-      - "중대규모 아키텍처 설계": 03-architecture/04-enterprise.md
-      - "대규모 아키텍처 설계": 03-architecture/05-hyperscale.md
