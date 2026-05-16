@@ -91,7 +91,7 @@
 
     ---
 
-    프로젝트 총괄, 침해사고 사례 분석, 인프라 사례 분석, 보안 아키텍처 설계
+    침해사고 사례 분석, 인프라 사례 분석, 보안 아키텍처 설계
 
     [:fontawesome-brands-github:](https://github.com/Minsu00326)
     &nbsp;
@@ -103,7 +103,7 @@
 
     ---
 
-    프로젝트 총괄, 침해사고 사례 분석, 인프라 사례 분석, 보안 아키텍처 설계
+    침해사고 사례 분석, 인프라 사례 분석, 보안 아키텍처 설계
 
     [:fontawesome-brands-github:](https://github.com/jihyangleee)
     &nbsp;
@@ -115,7 +115,7 @@
 
     ---
 
-    프로젝트 총괄, 침해사고 사례 분석, 인프라 사례 분석, 보안 아키텍처 설계
+    침해사고 사례 분석, 인프라 사례 분석, 보안 아키텍처 설계
 
     [:fontawesome-brands-github:](https://github.com/lhywk)
     &nbsp;
