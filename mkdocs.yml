@@ -116,6 +116,7 @@ nav:
           - "Security Response Automation": 02-infra/analysis-SecurityResponseAuto.md
           - "OLX Europe": 02-infra/analysis-olx.md
           - "DreamSecurity": 02-infra/analysis-dreamsecurity.md
+          - "ERGO": 02-infra/analysis-ergo.md   
       - "CI/CD & DevSecOps":
           - "CI/CD": 02-infra/analysis-CICD.md
           - "AMI Lineage": 02-infra/analysis-AmiLineage.md
