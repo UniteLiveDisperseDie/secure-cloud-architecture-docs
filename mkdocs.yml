@@ -112,6 +112,8 @@ nav:
           - "ProGlove": 02-infra/analysis-Proglove.md
           - "Nintendo Systems": 02-infra/analysis-nintendosystem.md
           - "UNiDAYS": 02-infra/analysis-01-unidays.md
+          - "Multi Account": 02-infra/analysis-multiaccount.md
+          - "Kakao": 02-infra/analysis-kakao.md
       - "보안 자동화 & 위협 대응":
           - "Security Response Automation": 02-infra/analysis-SecurityResponseAuto.md
           - "OLX Europe": 02-infra/analysis-olx.md
