@@ -113,6 +113,8 @@ nav:
           - "TeamTNT": 01-incident/case-teamtnt.md
       - "소셜 엔지니어링 & 내부자 위협":
           - "Twilio": 01-incident/case-twilio.md
+      - "웹 & 애플리케이션 취약점 공격":
+          - "LexisNexis": 01-incident/case-lexisnexis.md
 
   - 인프라 사례 분석:
       - "멀티 계정 & 거버넌스":
