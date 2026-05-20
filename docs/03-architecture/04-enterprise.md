@@ -1,12 +1,12 @@
 # 중대규모 아키텍처 설계
 
-# 1. 전체 아키텍처
+## 1. 전체 아키텍처
 
 ![아키텍처](../images/architecture/enterprise/architecture.png)
 
 ![OU 아키텍처](../images/architecture/enterprise/ou_architecture.png)
 
-## 1.1 아키텍처 개요 및 설계 원칙
+### 1.1 아키텍처 개요 및 설계 원칙
 
 이 아키텍처는 MAU 700만 규모의 서비스와 약 300명의 임직원(AWS 실접근 인원 약 70~80명)이 운영하는 환경을 기반으로 설계된 AWS 클라우드 아키텍처입니다.
 
@@ -33,7 +33,7 @@
 
 다섯 번째 기준은 **SaaS 포함 통합 감사 가시성**입니다. AWS 내부 로그만으로는 임직원의 업무 환경 전체를 가시화할 수 없습니다. AppFabric을 통해 GitHub, Slack, Google Workspace 등 SaaS Audit 로그를 OCSF 포맷으로 정규화하여 AWS 로그와 단일 S3 데이터 레이크에 통합합니다.
 
-## 1.2 사용자 접근 흐름
+### 1.2 사용자 접근 흐름
 
 **(1) 일반 사용자 접근 흐름**
 
@@ -63,7 +63,7 @@ GuardDuty·Inspector·Config·IAM Access Analyzer·Firewall Manager의 Finding�
 
 EKS 컨테이너·애플리케이션 로그는 Fluent Bit가 수집하여 Log Archive S3로 중앙 전달합니다. 운영 모니터링(X-Ray·CloudWatch·AMP)에서 발생하는 알람은 SNS → Slack(운영 채널)으로 On-call 담당자에게 전달되며, 보안 이벤트는 별도 Jira 티켓 채널로 분리됩니다.
 
-## 1.3 월 예상 비용
+### 1.3 월 예상 비용
 
 - 아시아 태평양(서울, ap-northeast-2) 기준
 - 규모 기준: MAU 700만, EKS Worker Node 약 15대, 임직원 AWS 실접근 약 70~80명
@@ -71,13 +71,13 @@ EKS 컨테이너·애플리케이션 로그는 Fluent Bit가 수집하여 Log Ar
 
 ---
 
-### 규모 가정
+#### 규모 가정
 
 비용 산정의 핵심 가정은 다음과 같습니다. EKS Worker Node는 Karpenter 오토스케일링을 통해 피크 대응이 가능하므로 초기 진입 단계 기준 **15대**로 산정합니다. AppFabric은 AWS 실접근 임직원 70~80명을 기준으로 **100명**을 적용합니다. OpenSearch는 SIEM 초기 운영 수준에서 **r6g.large × 3노드(3-AZ)**로 충분하며, 트래픽 증가에 따라 r6g.xlarge로 스케일업할 수 있습니다. GuardDuty VPC Flow Logs는 15노드 기준 실측 평균 4 GB/노드/월, Route53 Query Logs는 CloudFront가 Route53 쿼리를 직접 생성하지 않으므로 내부 서비스 간 DNS 중심으로 산정합니다. AMP는 60초 수집 인터벌 기준으로 적용합니다.
 
 ---
 
-### 고정 비용 (월)
+#### 고정 비용 (월)
 
 | **서비스** | **단위** | **단가** | **수량** | **월 비용** |
 | --- | --- | --- | --- | --- |
@@ -99,7 +99,7 @@ EKS 컨테이너·애플리케이션 로그는 Fluent Bit가 수집하여 Log Ar
 
 ---
 
-### 요청/사용량 기반 비용
+#### 요청/사용량 기반 비용
 
 | **서비스** | **단위** | **단가** | **사용량** | **월 비용** | **산출 근거** |
 | --- | --- | --- | --- | --- | --- |
@@ -130,7 +130,7 @@ EKS 컨테이너·애플리케이션 로그는 Fluent Bit가 수집하여 Log Ar
 
 ---
 
-### 최종 정리
+#### 최종 정리
 
 | **구분** | **합계** |
 | --- | --- |
@@ -154,23 +154,23 @@ EKS 컨테이너·애플리케이션 로그는 Fluent Bit가 수집하여 Log Ar
 > **중요 7**: CloudTrail S3 데이터 이벤트는 **Write 이벤트만 기록**하는 것을 기본으로 설계했습니다. Read 이벤트(GetObject)를 포함하면 비용이 크게 증가하므로 보안 요건상 Read 기록이 필요한 경우 별도 산정이 필요합니다.
 >
 
-# 2. 서비스별 상세 설계
+## 2. 서비스별 상세 설계
 
-## 2.1 Golden AMI 파이프라인
+### 2.1 Golden AMI 파이프라인
 
 AMI 자체에 취약점이 존재하면 해당 이미지로부터 생성된 모든 인스턴스가 동일한 위험에 노출됩니다. 런타임 보안 통제만으로는 이미지 레벨 취약점을 근본적으로 해결할 수 없으므로 Golden AMI 파이프라인을 도입합니다.
 
-### 2.1.1 구성 요소 및 설정 방식
+#### 2.1.1 구성 요소 및 설정 방식
 
 ![Golden AMI 파이프라인](../images/architecture/enterprise/golden_ami.png)
 
 파이프라인은 다음의 흐름으로 동작합니다. 허용된 Source AMI(AWS Marketplace 또는 내부 베이스 이미지)가 파이프라인에 진입하면 Image Builder가 OS 패치 적용, 불필요한 서비스 비활성화, 에이전트 설치 등 보안 강화 작업을 자동으로 수행합니다. 빌드된 이미지는 Inspector의 CVE 기반 취약점 스캔을 거치며 CRITICAL/HIGH 취약점 발견 시 배포가 자동 차단됩니다. 스캔을 통과한 이미지만 SSM Parameter Store에 AMI ID가 등록되어 EKS 노드 프로비저닝 시 참조되며, 파이프라인 주요 이벤트는 SNS로 담당자에게 실시간 통보됩니다.
 
-### 2.1.2 설계 이유
+#### 2.1.2 설계 이유
 
 수동으로 AMI를 관리할 경우 이미지 간 설정 불일치, 패치 누락, 검증 절차 미준수 등의 문제가 발생할 수 있습니다. 자동화된 파이프라인은 인적 오류를 줄이고 모든 이미지가 동일한 보안 기준을 거쳐 생성됨을 보장합니다.
 
-### 2.1.3 반영된 보안 요소
+#### 2.1.3 반영된 보안 요소
 
 - Shared Services Account 격리로 파이프라인 자체에 대한 접근을 최소화하고 무단 변경을 방지합니다.
 - Inspector CVE 스캔 자동화로 취약한 이미지가 운영 환경에 배포되는 것을 차단합니다.
@@ -178,19 +178,19 @@ AMI 자체에 취약점이 존재하면 해당 이미지로부터 생성된 모�
 
 ---
 
-## 2.2 CI/CD
+### 2.2 CI/CD
 
 GitHub Actions를 오케스트레이터로 사용하며 브랜치 전략에 따라 트리거를 분리합니다. `main` 병합 시 프로덕션 배포, `develop` 푸시 시 스테이징 배포가 수행되고, PR 단계에서는 빌드·테스트만 실행하여 검증되지 않은 코드가 운영 환경에 반영되는 것을 방지합니다.
 
-### 2.2.1 구성 요소 및 설정 방식
+#### 2.2.1 구성 요소 및 설정 방식
 
 AWS 인증은 OIDC(OpenID Connect)로 처리합니다. AWS 자격증명을 Secrets에 저장하는 대신 워크플로우 실행 시 STS에서 수명이 제한된 임시 자격증명을 발급받으며, IAM Trust Policy에 특정 리포지토리·브랜치 조건을 명시하여 허용된 워크플로우에서만 Role을 Assume할 수 있도록 제한합니다. 빌드된 컨테이너 이미지는 ECR 프라이빗 레지스트리에 Git 커밋 SHA 태그로 저장되며 Push 시점에 Inspector가 자동으로 취약점 스캔을 수행합니다. 스캔을 통과한 이미지는 `kubectl` 또는 Helm으로 EKS에 배포되며, GitHub Actions Role에는 최소 권한만 부여하고 EKS 내에서도 RBAC으로 배포 대상 Namespace를 제한합니다.
 
-### 2.2.2 설계 이유
+#### 2.2.2 설계 이유
 
 GitHub Actions Secrets에 AWS Access Key를 저장하면 유효 기간 제한이 없는 장기 자격증명이 노출될 위험이 있습니다. OIDC 기반 임시 자격증명은 워크플로우 실행 시에만 유효하고 자동 만료되므로 자격증명 탈취로 인한 피해 범위를 근본적으로 제한합니다. 외부 레지스트리(Docker Hub 등) 이미지를 그대로 사용하면 이미지 무결성을 보장할 수 없으므로 ECR 프라이빗 레지스트리로 이미지 출처를 단일화합니다.
 
-### 2.2.3 반영된 보안 요소
+#### 2.2.3 반영된 보안 요소
 
 - OIDC 기반 임시 자격증명으로 장기 Access Key를 GitHub 환경에 저장하지 않아 자격증명 탈취 시 피해 범위를 원천 차단합니다.
 - ECR 프라이빗 레지스트리로 이미지 출처를 단일화하여 공급망 공격(Supply Chain Attack)을 방어합니다.
@@ -198,13 +198,13 @@ GitHub Actions Secrets에 AWS Access Key를 저장하면 유효 기간 제한이
 
 ---
 
-## 2.3 모니터링 파이프라인
+### 2.3 모니터링 파이프라인
 
 ![모니터링 파이프라인](../images/architecture/enterprise/monitoring.png)
 
 X-Ray·CloudWatch·AMP(Amazon Managed Prometheus) 세 도구를 조합하여 애플리케이션부터 인프라까지 관측 데이터를 수집하고, CloudWatch Alarm → SNS → Slack으로 운영 알림을 전달합니다. 보안 이벤트 알림(Lambda → Jira)과 채널을 명확히 분리하여 운영 노이즈가 보안 알림을 덮지 않도록 합니다.
 
-### 2.3.1 구성 요소 및 설정 방식
+#### 2.3.1 구성 요소 및 설정 방식
 
 | 도구 | 역할 |
 | --- | --- |
@@ -212,11 +212,11 @@ X-Ray·CloudWatch·AMP(Amazon Managed Prometheus) 세 도구를 조합하여 애
 | **CloudWatch** | AWS 인프라 전반의 메트릭·로그·이벤트 수집. 임계값 초과 시 알람 트리거. Logs Insights로 로그 기반 이상 탐지 쿼리 운용 |
 | **AMP (Prometheus)** | 컨테이너·쿠버네티스 환경 전용 메트릭 수집. CloudWatch가 커버하지 못하는 세분화된 애플리케이션 메트릭 보완 |
 
-### 2.3.2 설계 이유
+#### 2.3.2 설계 이유
 
 X-Ray를 도입한 배경은 MSA 환경에서 단순 로그만으로는 장애 지점을 특정하기 어렵다는 점에 있습니다. 트레이스 데이터로 서비스 간 요청 흐름 전체를 추적할 수 있어 보안 사고 발생 시에도 어느 서비스·시점에서 이상이 발생했는지 재구성이 가능합니다. CloudWatch와 AMP를 병행하는 이유는 단일 도구로는 인프라 전반과 컨테이너 레벨 메트릭을 동시에 커버하기 어렵기 때문입니다.
 
-### 2.3.3 반영된 보안 요소
+#### 2.3.3 반영된 보안 요소
 
 - X-Ray 분산 추적 데이터를 보안 사고 포렌식 증적으로 활용하여 사후 원인 분석에 직접 사용합니다.
 - 수집된 모니터링 데이터는 보안 정책에 따라 보존 기간을 설정하여 사고 시점 이전 데이터까지 소급 분석이 가능합니다.
@@ -224,11 +224,11 @@ X-Ray를 도입한 배경은 MSA 환경에서 단순 로그만으로는 장애 �
 
 ---
 
-## 2.4 WAF + Firewall Manager
+### 2.4 WAF + Firewall Manager
 
 ![Firewall Manager](../images/architecture/enterprise/firewall_manager.png)
 
-### 2.4.1 중규모 대비 달라진 점
+#### 2.4.1 중규모 대비 달라진 점
 
 중규모에서는 각 계정이 WAF를 개별적으로 생성하고 관리했습니다. 계정이 늘어날수록 보안 담당자가 계정마다 WAF 설정을 직접 확인해야 하고, 신규 계정 생성 시 WAF 없는 공백 시간이 발생하는 구조적 한계가 있었습니다.
 
@@ -236,7 +236,7 @@ X-Ray를 도입한 배경은 MSA 환경에서 단순 로그만으로는 장애 �
 
 ---
 
-### 2.4.2 Firewall Manager 사전 요구사항
+#### 2.4.2 Firewall Manager 사전 요구사항
 
 Firewall Manager는 아래 세 가지 전제조건이 충족되어야 동작합니다.
 
@@ -250,7 +250,7 @@ Config가 비활성화된 계정에서는 Firewall Manager가 신규 리소스�
 
 ---
 
-### 2.4.3 관리자 계정 지정
+#### 2.4.3 관리자 계정 지정
 
 Security Tooling Account를 Firewall Manager 위임 관리자로 지정합니다. Management Account는 조직 관리 전용으로 유지하고 실제 보안 운영은 Security Tooling 계정에서만 수행합니다.
 
@@ -266,7 +266,7 @@ Security Tooling Account (위임 관리자)
 
 ---
 
-### 2.4.4 Pre / Middle / Post 정책 구조
+#### 2.4.4 Pre / Middle / Post 정책 구조
 
 Firewall Manager WAF 정책은 PreProcess Rule Group과 PostProcess Rule Group을 강제 정의하고, 각 멤버 계정 팀이 그 사이(Middle)에 자체 규칙을 추가할 수 있는 구조입니다. 보안팀이 공통 가드레일을 잠그면서도 각 팀의 커스터마이징 유연성을 동시에 확보하는 방식입니다.
 
@@ -299,7 +299,7 @@ Firewall Manager WAF 정책은 PreProcess Rule Group과 PostProcess Rule Group�
 
 ---
 
-### 2.4.5 배포 정책 구성 — 2개 정책으로 분리
+#### 2.4.5 배포 정책 구성 — 2개 정책으로 분리
 
 CloudFront에 WAF를 적용하려면 WAF를 반드시 Global(us-east-1)에 생성해야 하고, ALB에 적용하려면 ALB가 위치한 리전(ap-northeast-2)에 생성해야 합니다. 하나의 Firewall Manager 정책은 하나의 리전만 담당하므로 정책을 2개로 분리합니다.
 
@@ -329,7 +329,7 @@ CloudFront에 WAF를 적용하려면 WAF를 반드시 Global(us-east-1)에 생�
 
 ---
 
-### 2.4.6 규정 준수 모니터링 및 Finding 연계
+#### 2.4.6 규정 준수 모니터링 및 Finding 연계
 
 Firewall Manager는 WAF가 연결되지 않은 리소스를 자동 탐지하고 Finding을 Security Hub로 전송합니다.
 
@@ -345,7 +345,7 @@ EventBridge Rule
 
 ---
 
-### 2.4.7 Count 모드 운영 전략
+#### 2.4.7 Count 모드 운영 전략
 
 신규 Rule 추가 시 오탐으로 정상 트래픽이 차단되는 것을 방지하기 위해 단계적으로 전환합니다.
 
@@ -362,16 +362,16 @@ CloudWatch로 차단될 요청 모니터링 + 오탐 확인
 
 ---
 
-## 2.5 Security Hub (CSPM)
+### 2.5 Security Hub (CSPM)
 
-### 2.5.1 중규모 대비 달라진 점
+#### 2.5.1 중규모 대비 달라진 점
 
 중규모에서는 Security Hub를 도입하지 않았습니다. GuardDuty·Inspector·Config·Access Analyzer를 각각 개별 콘솔에서 확인하는 구조였고, 보안 담당자가 여러 콘솔을 오가며 Finding을 수동으로 취합해야 했습니다. 심각도 우선순위화와 자동 대응 연계가 어려운 한계가 있었습니다.
 중대규모에서는 Security Hub를 신규 도입합니다. Security Tooling Account를 위임 관리자로 지정하고 Central Configuration으로 OU별 정책을 다르게 적용합니다. Inspector·GuardDuty·Access Analyzer·Config·Firewall Manager의 Finding이 모두 Security Hub로 수렴하는 단일 집계 구조를 구성하고, EventBridge 기반 자동 대응 파이프라인과 Jira 티켓 연동을 함께 구축합니다.
 
 ---
 
-### 2.5.2 계정 구조 연계 (위임 관리자 설정)
+#### 2.5.2 계정 구조 연계 (위임 관리자 설정)
 
 Management Account는 Security Hub 위임 관리자로 사용하지 않습니다. AWS는 보안 운영과 조직 관리를 분리하기 위해 전용 Security Tooling 계정을 위임 관리자로 사용합니다.
 
@@ -388,7 +388,7 @@ Security Tooling Account (위임 관리자)
 
 ---
 
-### 2.5.3 Finding 소스 통합
+#### 2.5.3 Finding 소스 통합
 
 Security Hub는 아래 5개 서비스의 Finding을 중앙 집계합니다.
 
@@ -402,7 +402,7 @@ AWS Firewall Manager ┘
 
 ---
 
-### 2.5.4 Central Configuration — OU별 정책
+#### 2.5.4 Central Configuration — OU별 정책
 
 Central Configuration은 위임 관리자가 단일 계정에서 전체 조직의 Security Hub를 구성할 수 있게 해줍니다. Configuration Policy를 OU별로 다르게 적용할 수 있어 멀티 계정 환경에서 가장 효율적인 방식입니다.
 
@@ -416,7 +416,7 @@ Central Configuration은 위임 관리자가 단일 계정에서 전체 조직�
 
 ---
 
-### 2.5.5 활성화할 Security Standards
+#### 2.5.5 활성화할 Security Standards
 
 | Standard | 활성화 이유 | 적용 범위 |
 | --- | --- | --- |
@@ -425,7 +425,7 @@ Central Configuration은 위임 관리자가 단일 계정에서 전체 조직�
 
 ---
 
-### 2.5.6 Automation Rules 운영
+#### 2.5.6 Automation Rules 운영
 
 Security Hub Automation Rules는 Finding이 수집될 때 자동으로 처리합니다. 억제·심각도 조정·노트 추가 등으로 보안 워크플로우를 자동화하고 노이즈를 줄입니다.
 
@@ -438,7 +438,7 @@ Security Hub Automation Rules는 Finding이 수집될 때 자동으로 처리합
 
 ---
 
-### 2.5.7 Finding 대응 흐름
+#### 2.5.7 Finding 대응 흐름
 
 ```bash
 Security Hub (Finding 집계·우선순위화)
@@ -453,7 +453,7 @@ EventBridge
 
 ---
 
-### 2.5.8 심각도별 대응 기준
+#### 2.5.8 심각도별 대응 기준
 
 | 심각도 | 대응 방식 |
 | --- | --- |
@@ -466,7 +466,7 @@ HIGH Finding의 자동 대응 여부는 자동 대응 실행 시 서비스 영�
 
 ---
 
-### 2.5.9 Finding 보존
+#### 2.5.9 Finding 보존
 
 - Security Hub Finding → Log Archive 계정 S3 (security-logs/) 자동 내보내기
 - Security Hub 내 보관: 30일
@@ -474,11 +474,11 @@ HIGH Finding의 자동 대응 여부는 자동 대응 실행 시 서비스 영�
 
 ---
 
-## 2.6 Lambda / SSM Automation + Jira (자동 대응 및 티켓 연동)
+### 2.6 Lambda / SSM Automation + Jira (자동 대응 및 티켓 연동)
 
 ![Lambda + Jira](../images/architecture/enterprise/bridge_lambda.png)
 
-### 2.6.1 전체 대응 구조
+#### 2.6.1 전체 대응 구조
 
 보안 이벤트 발생 시 자동 대응이 무조건 좋은 것은 아닙니다. 자동 대응이 오히려 검증 과정 없이 실행될 경우 운영 장애로 이어질 수 있습니다. 이 구조에서는 서비스 영향 여부를 기준으로 자동 대응과 수동 대응을 분리합니다.
 
@@ -496,7 +496,7 @@ Lambda (자동 대응 라우터)
 
 ---
 
-### 2.6.2 멀티 계정 자동 대응 구조
+#### 2.6.2 멀티 계정 자동 대응 구조
 
 Security Tooling Account의 Lambda가 CrossAccount AssumeRole로 멤버 계정 리소스를 직접 수정합니다.
 
@@ -514,7 +514,7 @@ Security Tooling Account
 
 ---
 
-### 2.6.3 Critical — 전체 자동 대응
+#### 2.6.3 Critical — 전체 자동 대응
 
 공격이 진행 중인 상태이므로 즉시 자동 대응합니다. 대응 완료 후 Jira 티켓이 자동 생성되어 보안 담당자가 사후 확인합니다.
 
@@ -533,7 +533,7 @@ Security Tooling Account
 
 ---
 
-### 2.6.4 High — 자동 대응 또는 수동 대응
+#### 2.6.4 High — 자동 대응 또는 수동 대응
 
 서비스 영향 없이 즉시 자동 대응 가능한 것과 담당팀 확인이 필요한 것을 분리합니다.
 
@@ -555,7 +555,7 @@ Security Tooling Account
 
 ---
 
-### 2.6.5 Medium — Jira 티켓 생성 후 수동 대응
+#### 2.6.5 Medium — Jira 티켓 생성 후 수동 대응
 
 즉각적 보안 위협은 아니지만 방치 시 취약점으로 악용될 수 있습니다. Jira 티켓이 생성되고 주간 리포트에서 검토합니다.
 
@@ -574,7 +574,7 @@ Security Tooling Account
 
 ---
 
-### 2.6.6 Jira 연동 구조
+#### 2.6.6 Jira 연동 구조
 
 자동 대응 완료 후 또는 수동 대응이 필요한 경우 모두 Jira 티켓이 자동 생성됩니다.
 
@@ -597,9 +597,9 @@ OpenSearch Detection → Jira 흐름은 로그 분석 기반 이상 탐지에서
 
 ---
 
-## 2.7 OpenSearch (SIEM)
+### 2.7 OpenSearch (SIEM)
 
-### 2.7.1 구성 요소 및 설정 방식
+#### 2.7.1 구성 요소 및 설정 방식
 
 OpenSearch는 Security Tooling 계정에 위치하는 AWS 관리형 SIEM입니다. Log Archive 계정 S3에 원본 로그가 장기 보존되고, OpenSearch는 Security Hub Finding 및 각종 로그를 OSI(OpenSearch Ingestion)로 인덱싱하여 보안 로그 분석·이상 탐지·대시보드 역할을 담당합니다. 이상 패턴 탐지 시 Jira 티켓을 자동 생성하며, Security Hub Finding 기반 Jira 흐름과 병행 운영합니다.
 
@@ -610,27 +610,27 @@ OpenSearch는 Security Tooling 계정에 위치하는 AWS 관리형 SIEM입니�
 | 보안 탐지·분석 | OpenSearch | Jira 티켓 |
 | 운영 모니터링 | X-Ray·CloudWatch·Prometheus AMP | Slack |
 
-### 2.7.2 설계 이유
+#### 2.7.2 설계 이유
 
 AWS 네이티브 보안 서비스(GuardDuty·Inspector 등)의 Finding만으로는 로그 간 상관 분석이 어렵습니다. OpenSearch를 SIEM으로 운영하면 CloudTrail·VPC Flow Logs·EKS 앱 로그·Security Hub Finding을 단일 인덱스에서 연계하여 단일 이벤트로는 식별하기 어려운 다단계 공격 패턴을 탐지할 수 있습니다.
 
-### 2.7.3 반영된 보안 요소
+#### 2.7.3 반영된 보안 요소
 
 - Log Archive S3 원본 보존 + OpenSearch 인덱싱 이중 구조로 로그 무결성과 분석 가시성을 동시에 확보합니다.
 - 보안 알림(Jira)과 운영 알림(Slack) 채널 분리로 보안 이벤트가 운영 노이즈에 묻히지 않습니다.
 - OpenSearch 접근은 P2(보안담당자)로 한정하여 보안 로그 무단 열람을 차단합니다.
 
-## 2.8 로깅
+### 2.8 로깅
 
 AWS 인프라 환경에서의 모든 활동을 기록하고 한 곳으로 모아 상관분석을 진행한 후 로그에 이상이 있는 경우 알림을 보내는 것으로 구성하였습니다.
 
 ![로깅](../images/architecture/enterprise/logging.png)
 
-### 2.8.1 Security Hub Findings
+#### 2.8.1 Security Hub Findings
 
 **Inspector, GuardDuty, Access Analyzer, Config, AWS Firewall Manager** 에서 발생한 Findings를 **Security Hub**로 중앙 집계합니다. Security Hub Finding도 Logging S3를 거쳐 OpenSearch로 전달되어 다른 로그들과 연계됩니다.
 
-### 2.8.2 Logging S3로 전달되는 로그
+#### 2.8.2 Logging S3로 전달되는 로그
 
 **AWS 서비스 로그는 직접 S3에 저장됩니다.**
 
@@ -645,16 +645,16 @@ AWS 인프라 환경에서의 모든 활동을 기록하고 한 곳으로 모아
 
 - GitHub, Slack, Google Workspace Audit 로그를 OCSF 포맷으로 정규화하여 저장
 
-### 2.8.3 Logging S3 이후 흐름
+#### 2.8.3 Logging S3 이후 흐름
 
 Logging S3에 수집된 로그는 두 가지 경로로 활용됩니다.
 
 - **OpenSearch 인덱싱**: 실시간 보안 분석·이상 탐지·대시보드에 활용합니다. Detection 발생 시 Jira 티켓을 자동 생성합니다.
 - **Athena 쿼리**: 장기 보존된 원본 로그를 대상으로 포렌식 분석·감사 증적 조회에 활용합니다. 보안 담당자(P2)와 감사팀(P6)이 주로 사용합니다.
 
-## 2.9 AWS AppFabric
+### 2.9 AWS AppFabric
 
-### 2.9.1 설정 방식
+#### 2.9.1 설정 방식
 
 AppFabric은 GitHub, Slack, Google Workspace 등 SaaS 서비스의 Audit 로그를 수집하여 OCSF(Open Cybersecurity Schema Framework) 포맷으로 정규화한 뒤 Log Archive S3로 전송합니다.
 
@@ -672,19 +672,19 @@ AppFabric은 GitHub, Slack, Google Workspace 등 SaaS 서비스의 Audit 로그�
 | 암호화 | S3 저장 시 KMS CMK |
 | 접근 권한 | P2(보안담당자), P6(감사팀) ReadOnly |
 
-### 2.9.2 설계 이유
+#### 2.9.2 설계 이유
 
 AWS 내부 로그만으로는 임직원의 업무 환경 전체를 가시화할 수 없습니다. GitHub 코드 유출 시도, Slack 외부 공유, Google Drive 민감 파일 접근 등 SaaS에서 발생하는 보안 이벤트를 탐지하려면 Audit 로그 수집이 필요합니다. AppFabric은 SaaS별로 다른 로그 포맷을 OCSF로 자동 정규화하므로, 소스가 다른 로그를 단일 쿼리로 상관 분석할 수 있습니다. 직접 구현 시 SaaS별 파싱 코드를 별도로 작성·유지해야 하는 부담을 제거합니다.
 
-### 2.9.3 반영된 보안 요소
+#### 2.9.3 반영된 보안 요소
 
 - SaaS Audit 로그를 AWS 로그와 동일한 Log Archive S3에 통합하여 단일 지점에서 전체 감사 증적을 확보합니다.
 - OCSF 정규화로 소스가 다른 로그 간 상관 분석을 가능하게 하여 내부자 위협 탐지에 활용합니다.
 - AppFabric-Ingestion-Role에 SaaS API ReadOnly 권한만 부여하고, Log Archive S3 접근을 P2·P6로 한정하여 최소 권한 원칙을 유지합니다.
 
-## 2.10 EKS (Elastic Kubernetes Service)
+### 2.10 EKS (Elastic Kubernetes Service)
 
-### 2.10.1 설정 방식
+#### 2.10.1 설정 방식
 
 EKS는 EC2 기반 노드 그룹으로 구성하며, 노드 프로비저닝은 Karpenter를 통해 자동화합니다. 컨트롤 플레인은 AWS가 관리하고, 워커 노드는 Private Subnet에만 배치합니다. 모든 노드는 Golden AMI 파이프라인을 통해 검증된 이미지만 사용합니다. 노드 접근은 SSH를 허용하지 않으며 SSM Session Manager를 통해서만 접근합니다. kubectl 접근은 P1(인프라), P5(SRE On-call)에게만 허용하며, P3(개발자)는 GitHub Actions OIDC를 통한 배포만 수행합니다.
 
@@ -697,11 +697,11 @@ EKS는 EC2 기반 노드 그룹으로 구성하며, 노드 프로비저닝은 Ka
 
 EKS Control Plane 로그(API Server, Audit, Authenticator, Controller Manager, Scheduler)는 CloudWatch Logs로 전송하며, 이후 Log Archive S3로 Export합니다.
 
-### 2.10.2 설계 이유
+#### 2.10.2 설계 이유
 
 중규모 ECS에서 EKS로 전환한 핵심 이유는 Pod 단위 보안 격리와 세밀한 리소스 제어입니다. IRSA로 Pod마다 별도 IAM Role을 부여하여 하나의 서비스가 침해되더라도 다른 서비스의 AWS 리소스에 접근할 수 없도록 격리합니다. NetworkPolicy로 허용된 경로만 화이트리스트로 관리하여 컨테이너 탈출 이후 횡이동(Lateral Movement)을 차단하며, SSH 제거 후 SSM으로 대체하여 인바운드 포트 없이 모든 접근 이력을 CloudTrail에 기록합니다.
 
-### 2.10.3 반영된 보안 요소
+#### 2.10.3 반영된 보안 요소
 
 - IRSA 기반 Pod별 최소 권한 IAM Role로 자격증명 탈취 시 영향 범위를 해당 서비스로 한정합니다.
 - NetworkPolicy Deny-all 기본 정책 및 Namespace RBAC 분리로 횡이동 공격과 서비스 간 권한 경계를 통제합니다.
@@ -710,9 +710,9 @@ EKS Control Plane 로그(API Server, Audit, Authenticator, Controller Manager, S
 
 ---
 
-## 2.11 Aurora (Amazon Aurora MySQL)
+### 2.11 Aurora (Amazon Aurora MySQL)
 
-### 2.11.1 설정 방식
+#### 2.11.1 설정 방식
 
 Aurora는 Multi-AZ 구성으로 배포하며, Writer 인스턴스는 AZ1, Reader 인스턴스는 AZ2의 DB Subnet에 배치합니다. 애플리케이션 서비스의 Main Service DB 역할을 담당합니다.
 
@@ -727,11 +727,11 @@ Aurora는 Multi-AZ 구성으로 배포하며, Writer 인스턴스는 AZ1, Reader
 
 DB 접근 인증은 IAM Database Authentication을 우선 사용하며, 패스워드 인증이 필요한 경우 Secrets Manager에서 런타임에 크리덴셜을 주입합니다. 개발자 직접 접근은 차단하고 배포된 애플리케이션 Pod(IRSA)를 통해서만 접근합니다. GuardDuty RDS Protection을 활성화하여 Aurora 접근 패턴의 이상 징후를 Finding으로 수집합니다.
 
-### 2.11.2 설계 이유
+#### 2.11.2 설계 이유
 
 중규모 단일 RDS에서 MAU 증가에 따른 읽기 트래픽 분산을 위해 Writer/Reader 분리 구조로 전환합니다. IAM Database Authentication으로 패스워드 없는 인증을 구현하여 크리덴셜 유출 위험을 제거하고, Secrets Manager 30일 자동 로테이션으로 장기 노출 위험을 최소화합니다.
 
-### 2.11.3 반영된 보안 요소
+#### 2.11.3 반영된 보안 요소
 
 - Private Subnet 배치 및 Security Group으로 EKS Pod에서만 접근을 허용합니다.
 - KMS CMK 암호화로 스냅샷 포함 저장 데이터를 보호합니다.
@@ -740,9 +740,9 @@ DB 접근 인증은 IAM Database Authentication을 우선 사용하며, 패스�
 
 ---
 
-## 2.12 DynamoDB
+### 2.12 DynamoDB
 
-### 2.12.1 설정 방식
+#### 2.12.1 설정 방식
 
 DynamoDB는 Micro Service DB 역할로 사용하며 세션, 행동 데이터, 이벤트 로그 등 고속 읽기/쓰기가 필요한 데이터를 서비스별 전용 테이블로 저장합니다.
 
@@ -756,11 +756,11 @@ DynamoDB는 Micro Service DB 역할로 사용하며 세션, 행동 데이터, �
 
 각 서비스 Pod의 IRSA Role에는 해당 서비스가 소유한 테이블에만 접근 권한을 부여하며, `dynamodb:LeadingKeys` 조건으로 행 단위 접근을 제한합니다.
 
-### 2.12.2 설계 이유
+#### 2.12.2 설계 이유
 
 MSA 구조에서 세션·행동 데이터 등 고속 읽기/쓰기가 필요한 데이터는 RDB보다 NoSQL이 적합합니다. 서비스별 전용 테이블 구성으로 한 서비스의 침해가 다른 서비스 데이터에 영향을 주지 않도록 격리하며, VPC Gateway Endpoint로 트래픽이 AWS 내부 네트워크만 경유하도록 합니다.
 
-### 2.12.3 반영된 보안 요소
+#### 2.12.3 반영된 보안 요소
 
 - IRSA 기반 테이블 단위 접근 제어로 서비스 간 데이터 격리를 구현합니다.
 - KMS CMK 암호화 및 VPC Gateway Endpoint로 저장·전송 데이터를 보호합니다.
@@ -768,9 +768,9 @@ MSA 구조에서 세션·행동 데이터 등 고속 읽기/쓰기가 필요한 
 
 ---
 
-## 2.13 Redshift
+### 2.13 Redshift
 
-### 2.13.1 설정 방식
+#### 2.13.1 설정 방식
 
 Redshift는 데이터 분석 전용 웨어하우스로, Production Data 계정의 Private Subnet에 배치합니다. Aurora에 직접 접근하지 않으며 MSK CDC를 통해 데이터를 수신합니다.
 
@@ -782,11 +782,11 @@ Redshift는 데이터 분석 전용 웨어하우스로, Production Data 계정�
 | 접근 대상 | P4(데이터 엔지니어) — VPN 필수, 마스킹 데이터만 접근 |
 | 로그 | 쿼리 로그, 접속 로그 → S3 |
 
-### 2.13.2 설계 이유
+#### 2.13.2 설계 이유
 
 데이터 엔지니어가 Aurora에 직접 접근하면 운영 DB에 부하를 주거나 데이터를 변조할 위험이 있습니다. MSK CDC → Redshift 파이프라인으로 분석 데이터를 별도 수신하여 운영 DB를 보호하고, 대용량 분석 쿼리는 컬럼형 스토리지인 Redshift에서 처리합니다.
 
-### 2.13.3 반영된 보안 요소
+#### 2.13.3 반영된 보안 요소
 
 - Private Subnet 배치 및 VPN 필수 접근으로 외부 노출을 원천 차단합니다.
 - KMS CMK 암호화 및 Persona별 권한 분리(SELECT/INSERT/DDL)로 최소 권한 원칙을 적용합니다.
@@ -794,9 +794,9 @@ Redshift는 데이터 분석 전용 웨어하우스로, Production Data 계정�
 
 ---
 
-## 2.14 MSK (Amazon Managed Streaming for Apache Kafka)
+### 2.14 MSK (Amazon Managed Streaming for Apache Kafka)
 
-### 2.14.1 설정 방식
+#### 2.14.1 설정 방식
 
 MSK는 서비스 간 비동기 이벤트 스트리밍 및 Aurora CDC 데이터 파이프라인에 사용합니다. VPC 내부 Private Subnet에만 배치하며 외부 접근을 허용하지 않습니다.
 
@@ -816,11 +816,11 @@ MSK는 서비스 간 비동기 이벤트 스트리밍 및 Aurora CDC 데이터 �
 
 Aurora CDC는 MSK Connect를 통해 변경 데이터를 MSK로 스트리밍하며, Redshift가 해당 Topic을 소비하여 데이터 웨어하우스에 적재합니다.
 
-### 2.14.2 설계 이유
+#### 2.14.2 설계 이유
 
 MSA 구조에서 서비스 간 직접 API 호출은 장애 전파 및 강결합 문제를 야기합니다. MSK를 이벤트 버스로 도입하여 느슨한 결합을 유지하고, Aurora CDC를 MSK로 수신하여 데이터 엔지니어가 운영 DB에 직접 접근하지 않고도 분석 데이터를 확보할 수 있습니다.
 
-### 2.14.3 반영된 보안 요소
+#### 2.14.3 반영된 보안 요소
 
 - VPC 내부 전용 배치 및 TLS 전송·KMS 저장 암호화를 동시에 적용합니다.
 - IAM 인증 기반 Topic ACL로 Producer/Consumer 역할을 분리하고, 데이터 엔지니어의 Produce 권한을 차단하여 운영 이벤트 스트림 오염을 방지합니다.
@@ -828,9 +828,9 @@ MSA 구조에서 서비스 간 직접 API 호출은 장애 전파 및 강결합 
 
 ---
 
-## 2.15 AWS Backup
+### 2.15 AWS Backup
 
-### 2.15.1 설정 방식
+#### 2.15.1 설정 방식
 
 AWS Backup은 Backup 계정에 중앙화하여 운영하며, Production 계정의 주요 데이터 리소스를 Cross-account 복사하여 보관합니다. 백업 볼트에는 Vault Lock을 적용하여 보존 기간 내 변경 불가 상태로 유지하며, 복구 권한은 JIT 방식으로만 부여합니다.
 
@@ -840,11 +840,11 @@ AWS Backup은 Backup 계정에 중앙화하여 운영하며, Production 계정�
 | DynamoDB | PITR (35일) | Cross-account 보관 | 주 1회 | 35일 | KMS CMK |
 | EBS 볼륨 | 없음 | 유일한 백업 수단 | 매일 | 7일 | KMS CMK (ebs-cmk) |
 
-### 2.15.2 설계 이유
+#### 2.15.2 설계 이유
 
 Aurora·DynamoDB는 PITR로 세밀한 복구가 보장되지만, PITR 데이터는 운영 계정 내에만 존재하므로 계정 침해나 SCP 우회로 데이터가 파괴되면 복구가 불가능합니다. Backup 계정 Cross-account 복사로 이 상황을 대비하며, Vault Lock으로 랜섬웨어·내부자 위협에도 백업 데이터를 보호합니다. EBS는 자체 연속 백업 기능이 없어 AWS Backup이 유일한 백업 수단입니다.
 
-### 2.15.3 반영된 보안 요소
+#### 2.15.3 반영된 보안 요소
 
 - Backup 계정 Cross-account 보관 및 Vault Lock으로 운영 계정 침해 시에도 복구 기점과 데이터 불변성을 보장합니다.
 - KMS CMK 암호화로 백업 저장 데이터를 보호합니다.
@@ -852,19 +852,19 @@ Aurora·DynamoDB는 PITR로 세밀한 복구가 보장되지만, PITR 데이터�
 
 ---
 
-## 2.16 AWS Client VPN
+### 2.16 AWS Client VPN
 
-### 2.16.1 구성 요소 및 설정 방식
+#### 2.16.1 구성 요소 및 설정 방식
 
 AWS Client VPN Endpoint는 VPC에 연결된 관리형 VPN 서버로, 임직원 디바이스와 AWS 내부 네트워크 사이에 OpenVPN 기반의 암호화 터널을 생성합니다. 인증 방식은 IAM Identity Center(SSO)와 연동하여 기업 IdP 기반 인증을 사용하며, 인가되지 않은 사용자의 접속을 원천적으로 차단합니다.
 
 접속 이후의 접근 범위는 Authorization Rule을 통해 세밀하게 제어합니다. 개발팀은 개발 VPC 서브넷에만, 데이터팀은 Redshift·MSK가 위치한 분석 서브넷에만 접근이 허용되도록 구성하여 내부 네트워크 접근에서도 최소 권한 원칙을 유지합니다.
 
-### 2.16.2 설계 이유
+#### 2.16.2 설계 이유
 
 임직원 100명 규모에서는 보안 그룹과 IAM 정책만으로 접근 통제가 충분했으나, 300명으로 성장하면서 재택근무가 제도화되고 가정용 인터넷·공용 Wi-Fi 등 다양한 외부 네트워크에서의 접근이 일상화되었습니다. 이러한 환경은 패킷 도청·중간자 공격(MITM) 등의 위협에 취약하며, 인원 증가에 따라 퇴사자 접근 차단·부서 이동 권한 변경 등을 보안 그룹 단위로 관리하는 것도 한계에 이릅니다. AWS Client VPN은 모든 접근을 암호화된 터널로 강제하고 인증·인가를 중앙에서 관리하여 이 문제들을 동시에 해결합니다.
 
-### 2.16.3 반영된 보안 요소
+#### 2.16.3 반영된 보안 요소
 
 - VPN 터널 TLS 암호화로 외부 네트워크에서의 패킷 도청 및 중간자 공격을 원천 차단합니다.
 - 내부 리소스를 VPN 접속을 통해서만 도달 가능하도록 구성하여 EC2, Aurora, EKS 등의 공격 표면을 줄입니다.
@@ -874,7 +874,7 @@ AWS Client VPN Endpoint는 VPC에 연결된 관리형 VPN 서버로, 임직원 �
 
 ---
 
-## 2.17 인프라 IaC 파이프라인 보안
+### 2.17 인프라 IaC 파이프라인 보안
 
 ![IaC 파이프라인 보안](../images/architecture/enterprise/iac_security.png)
 
@@ -884,21 +884,21 @@ terraform plan 단계에서는 `terraform plan -out=tfplan.binary && terraform s
 
 terraform apply 이후에는 AWS CloudTrail로 모든 API 호출을 기록하고, AWS Config Rules를 통해 배포된 인프라가 보안 정책을 준수하는지 지속적으로 감사·기록합니다.
 
-## 2.18 AWS Control Tower + Organization 관리
+### 2.18 AWS Control Tower + Organization 관리
 
 ![조직 구조](../images/architecture/enterprise/organization.png)
 
-### 2.18.1 Control Tower
+#### 2.18.1 Control Tower
 
 Organizations + IDC + Config + CloudTrail + Landing Zone 자동화를 묶어 관리하는 오케스트레이터이며 Management Account에서 활성화하면 아래 구성요소들이 자동으로 셋업됩니다.
 
-### 자동 생성 리소스
+#### 자동 생성 리소스
 
 - Security OU 하위에 **Log Archive 계정**, **Audit 계정** 자동 생성
 - **Organization-level CloudTrail** 자동 생성 → 전 계정 API 로그가 Log Archive 계정 S3로 중앙 집중
 - **IAM Identity Center(IDC)** 자동 활성화 및 Organizations 연동
 
-### Account Factory
+#### Account Factory
 
 새 계정을 수동으로 만들지 않고 Control Tower의 Account Factory를 통해 표준화된 설정으로 찍어냅니다.
 
@@ -906,7 +906,7 @@ Organizations + IDC + Config + CloudTrail + Landing Zone 자동화를 묶어 관
 - 미리 정의한 태그, 네트워크, 로깅 설정 자동 적용. Account Factory 계정 생성 시 Tag Policy에 따라 태그가 자동 부착되며, Production OU에서 리소스 생성 시에도 SCP로 태그를 강제하여 비용 및 현황 추적이 가능합니다.
 - Dev Team, Prod App, Staging App/Data, Sandbox 등 모든 계정이 Account Factory로 생성됩니다. **Account Factory for Terraform(AFT)** 사용 시 계정 생성을 IaC로 관리할 수 있습니다.
 
-### Controls
+#### Controls
 
 Control Tower가 관리하는 SCP + Config Rules의 묶음. 아래 SCP 섹션의 내용들이 Controls로 적용됩니다.
 
@@ -916,7 +916,7 @@ Control Tower가 관리하는 SCP + Config Rules의 묶음. 아래 SCP 섹션의
 | Detective | Config Rules로 위반 탐지 후 알림 | MFA 미설정 계정 탐지, 퍼블릭 S3 탐지 |
 | Proactive | CloudFormation Guard(cfn-guard) 기반 Hook으로 배포 전 차단. Control Tower가 자체 관리하며 일반 CloudFormation Hook과 다름 | 암호화 없는 RDS 배포 사전 차단 |
 
-### Delegated Administrator
+#### Delegated Administrator
 
 GuardDuty, Security Hub, Config 등 보안 서비스의 중앙 관리를 Management Account가 아닌 **Security Tooling 계정**에 위임합니다.
 
@@ -924,7 +924,7 @@ GuardDuty, Security Hub, Config 등 보안 서비스의 중앙 관리를 Managem
 - 신규 계정이 생성되면 GuardDuty / Security Hub가 자동으로 활성화되고 Security Tooling 계정으로 결과가 집계됨
 - 보안 담당자는 Security Tooling 계정에서 전 계정 탐지 결과를 한 곳에서 확인
 
-### Organization Trail (CloudTrail)
+#### Organization Trail (CloudTrail)
 
 ```bash
 각 계정 API 호출
@@ -940,9 +940,9 @@ Athena 또는 CloudWatch Logs로 조회
 
 ---
 
-## 2.19 OU별 SCP 설계
+### 2.19 OU별 SCP 설계
 
-### 2.19.1 SCP 운영 관리 및 프로세스
+#### 2.19.1 SCP 운영 관리 및 프로세스
 
 ```bash
 보안 담당자: SCP 도입 필요성 검토 및 요건 정의
@@ -960,7 +960,7 @@ GitHub Actions 자동 트리거 (main 브랜치 Merge 시)
 
 Foundation SCP에 IAM User 및 Access Key 생성이 기본 차단되어 있으므로, 임직원의 AWS 접근은 IAM Identity Center를 통한 임시 자격증명으로만 이루어집니다. 다만 외부 시스템 연동이나 레거시 서비스 호환 등의 이유로 IAM User가 반드시 필요한 경우에는 예외 프로세스를 통해 조건부로 허용합니다. 예외 허용 대상은 Shared Services 계정 또는 Production 계정으로 한정하며, 보안팀의 검토와 승인을 거쳐야 합니다. 허용 시에도 Permission Boundary를 반드시 부착하여 해당 User가 획득할 수 있는 최대 권한을 명시적으로 제한하고, MFA 설정을 필수로 적용합니다.
 
-### 2.19.2 Foundation SCP
+#### 2.19.2 Foundation SCP
 
 | SCP | 차단 대상 | 설계 이유 |
 | --- | --- | --- |
@@ -975,7 +975,7 @@ Foundation SCP에 IAM User 및 Access Key 생성이 기본 차단되어 있으�
 | IAM 패스워드 정책 보호 | 패스워드 정책 삭제 및 변경 | 컴플라이언스 패스워드 정책 약화 방지 |
 | Identity Perimeter 강제 | 조직 외부 계정의 API 호출 | 외부 AWS 계정의 리소스 접근 차단 |
 
-### 2.19.3 Security OU
+#### 2.19.3 Security OU
 
 | SCP | 차단 대상 | 설계 이유 |
 | --- | --- | --- |
@@ -983,13 +983,13 @@ Foundation SCP에 IAM User 및 Access Key 생성이 기본 차단되어 있으�
 | Security Hub/ GuardDuty 비활성화/ 삭제 차단 | 주요 보안 모니터링 서비스 비활성화 및 삭제 | 보안 감사 대응, 서비스 보안 점검 및 알림 |
 | 워크로드 리소스 (EC2, RDS, Lambda) 생성 차단 | 워크로드 리소스 | 보안 전용 계정에 워크로드 혼재 방지. 감사 무결성 보호 (보안 운영과 상관없는 일반 워크로드가 보안 계정에 존재하면 공격 표면 확대) |
 
-### 2.19.4 Infrastructure OU
+#### 2.19.4 Infrastructure OU
 
 - Network 계정: VPC, TransitGateway, Route53 외 서비스 차단
 - Backup 계정: 백업 볼트 삭제 차단, 외부 쓰기 차단
 - Shared Services 계정: 워크로드 직접 배포 차단
 
-### 2.19.5 Production OU
+#### 2.19.5 Production OU
 
 | SCP | 차단 대상 | 설계 이유 |
 | --- | --- | --- |
@@ -1003,20 +1003,20 @@ Foundation SCP에 IAM User 및 Access Key 생성이 기본 차단되어 있으�
 | Lambda/ECR 퍼블릭 액세스 차단 | 외부 접근 | 외부에서 내부 서비스 접근 차단 |
 | Secrets Manager 보호 | 삭제 차단 | 비밀번호 및 key 관리 서비스 삭제 차단 |
 
-### 2.19.6 Non-Production OU (Staging)
+#### 2.19.6 Non-Production OU (Staging)
 
 - Production 수준의 서비스 허용
 - Production 백업 복원 허용
 - 예산 한도 완화 (Production의 30% 수준)
 
-### 2.19.7 Non-Production OU (Development)
+#### 2.19.7 Non-Production OU (Development)
 
 - 고비용 인스턴스 차단
 - Reserved Instances / Savings Plans 구매 차단
 - 고비용 네트워크 차단
 - 계정별 월 예산 한도 적용
 
-### 2.19.8 Sandbox OU
+#### 2.19.8 Sandbox OU
 
 | SCP | 차단 대상 | 설계 이유 |
 | --- | --- | --- |
@@ -1028,7 +1028,7 @@ Foundation SCP에 IAM User 및 Access Key 생성이 기본 차단되어 있으�
 
 ---
 
-### 2.19.9 Production 접근 원칙
+#### 2.19.9 Production 접근 원칙
 
 - 평상시: ReadOnly만 허용
 - 장애/배포 시: JIT(Just-in-Time) 임시 권한 승인
@@ -1037,11 +1037,11 @@ Foundation SCP에 IAM User 및 Access Key 생성이 기본 차단되어 있으�
 
 ---
 
-## 2.20 Persona별 Permission Set + Permission Boundary
+### 2.20 Persona별 Permission Set + Permission Boundary
 
 규모 기준: MAU 700만, 직원 300명 / AWS 실접근 인원 약 70~80명
 
-### Persona 1 - 인프라 담당자 (약 10명) - devops 포함
+#### Persona 1 - 인프라 담당자 (약 10명) - devops 포함
 
 용도: Organizations 관리, SCP 배포, IDC 관리, CI/CD 파이프라인 구축, 인프라 배포 (Terraform), 네트워크 관리
 
@@ -1061,7 +1061,7 @@ Permission Set : infra_readonly, infra_admin
 | Development OU (Dev Team) | infra_admin | **인프라 리소스**: 개발용 생성·수정·삭제 허용. **CI/CD**: 파이프라인 구성·테스트 허용. **Terraform**: 모듈 개발·검증 허용. **EKS**: 클러스터 설정 조정 허용. Management Account 접근, Production·Staging OU 리소스 변경, IAM 권한 경계 외부 Role 생성, 과도한 비용 유발 리소스 생성 차단 (예산 알림 적용) |
 | Sandbox OU (Dev Sandbox) | infra_admin | 세션 8시간. Sandbox 내 리소스 생성·수정·삭제 자유도 부여. **비용**: 월 예산 한도 초과 시 SCP 알림 적용 |
 
-### Persona 2 - 보안 담당자 (약 5명)
+#### Persona 2 - 보안 담당자 (약 5명)
 
 용도: 보안 모니터링, GuardDuty·Security Hub 운영, 로그 분석, 인시던트 대응, 컴플라이언스 감사, SCP 설계
 
@@ -1081,7 +1081,7 @@ Permission Set: security_readonly, security_log_archive, security_tooling_admin,
 | Infrastructure OU — Network | security_readonly | **VPC·라우팅·SG·NACL**: 구성 조회 허용. 네트워크 리소스 변경 차단 |
 | Sandbox OU | 없음 | IAM Identity Center에서 Permission Set 할당 없음. 접근 불가 |
 
-### Persona 3 - 백엔드/프론트엔드 개발자 (약 40명)
+#### Persona 3 - 백엔드/프론트엔드 개발자 (약 40명)
 
 용도: 애플리케이션 개발, Dev 환경 직접 조작, Staging 배포 결과 확인
 
@@ -1103,7 +1103,7 @@ Permission Set: developer_staging_readonly, developer_power_user, developer_sand
 | Development OU — Dev Team | developer_power_user | 세션 8시간. Secrets Manager /dev/* prefix만. CloudWatch Logs, OpenSearch(Fluent Bit) Dev 계정만. RDS/DocumentDB IAM 인증 강제. EKS 자기 Namespace만. MSK Produce/Consume 허용. Backup 생성/복구 허용 |
 | Development OU — Dev Sandbox | developer_sandbox_admin | 세션 8시간. 타 계정 네트워크 연결 차단. 람다 등의 리소스를 만들고 접근을 위해 IAM Role 생성 허용 |
 
-### Persona 4 - 데이터 엔지니어 (약 5명)
+#### Persona 4 - 데이터 엔지니어 (약 5명)
 
 용도: 데이터 파이프라인 개발·운영. S3·Redshift 서비스 한정
 
@@ -1116,7 +1116,7 @@ Permission Set: data_engineer_readonly, data_engineer_power_user
 | Development OU — Dev Team | data_engineer_power_user | 세션 8시간. 파이프라인 개발·테스트 전 권한 허용. 고비용 인스턴스·리소스 생성 차단 (예산 알림 적용) |
 | 기타 계정 | 없음 | 접근 불필요 |
 
-### Persona 5 - SRE / On-call 담당자 (약 5명)
+#### Persona 5 - SRE / On-call 담당자 (약 5명)
 
 용도: 서비스 가용성 모니터링, 장애 대응, EKS 운영
 
@@ -1128,7 +1128,7 @@ Permission Set: sre_readonly, sre_ops
 | Staging OU | sre_readonly | 배포 결과·로그 조회만. 리소스 변경 차단 |
 | Security OU — Security Tooling | 없음 | 접근 불필요. 보안 이벤트 의심 시 보안팀 에스컬레이션 |
 
-### Persona 6 - 감사팀 (약 5명)
+#### Persona 6 - 감사팀 (약 5명)
 
 용도: ISMS 감사, 컴플라이언스 증적 수집, 외부 감사 대응
 
@@ -1149,9 +1149,9 @@ Permission Set: auditor_access
 
 ---
 
-## 2.21 Cross Account 흐름
+### 2.21 Cross Account 흐름
 
-### 로그 수집 흐름 (Security OU — Log Archive Account 에서 수집)
+#### 로그 수집 흐름 (Security OU — Log Archive Account 에서 수집)
 
 ```bash
 Production / Staging / Development / Security Tooling Account
@@ -1167,7 +1167,7 @@ Production / Staging / Development / Security Tooling Account
 └── AppFabric (SaaS Audit 로그)       → Log Archive Account S3 (saas-audit-logs/)
 ```
 
-### 보안 탐지 흐름 (Security OU — Security Tooling Account에서 탐지 및 대응)
+#### 보안 탐지 흐름 (Security OU — Security Tooling Account에서 탐지 및 대응)
 
 ```bash
 [Security Tooling Account — 보안 탐지 및 대응 흐름]
@@ -1202,7 +1202,7 @@ EventBridge
                 └── 정책 수정 (SG, IAM 등)
 ```
 
-### 운영 모니터링 및 장애 대응 흐름 (On call 담당자, Infrastructure 담당자가 탐지 및 대응)
+#### 운영 모니터링 및 장애 대응 흐름 (On call 담당자, Infrastructure 담당자가 탐지 및 대응)
 
 ```bash
 X-Ray / CloudWatch / Prometheus(AMP)
@@ -1229,7 +1229,7 @@ SNS → Slack (Operational Alerts)
                                 └── 보안 대응 후 Oncall에 공유
 ```
 
-### CI/CD / AMI 파이프라인 배포 Role 권한
+#### CI/CD / AMI 파이프라인 배포 Role 권한
 
 앱 배포와 AMI 파이프라인
 
@@ -1277,13 +1277,13 @@ SNS → Slack (Operational Alerts)
 
 ---
 
-# 3. 위협 모델링
+## 3. 위협 모델링
 
-## 3.1 위협 다이어그램
+### 3.1 위협 다이어그램
 
 ![위협 모델링](../images/architecture/enterprise/threat.png)
 
-## 3.2 방어 가능한 위협
+### 3.2 방어 가능한 위협
 
 | 위협 | 위협 설명 | 방어 방법 | 방어 방법 상세 설명 |
 | --- | --- | --- | --- |
@@ -1295,7 +1295,7 @@ SNS → Slack (Operational Alerts)
 | 데이터 플랫폼 접근 오남용(Redshift) | 대규모 데이터 웨어하우스 접근을 통한 대량 데이터 유출 | Private Subnet + IAM 인증 + 접근 통제 | Redshift를 Private Subnet에 배치하고 IAM 기반 접근 제어 및 최소 허용 Security Group 정책 적용 |
 | 멀티계정·멀티클러스터 권한 오남용 | 다수 계정·클러스터 운영 중 권한 경계 붕괴 가능 | IRSA + SCP + Access Analyzer | 서비스 계정별 최소 권한 적용, 조직 단위 SCP 제한 및 교차 계정 권한 탐지 |
 
-## 3.3 감수한 위협
+### 3.3 감수한 위협
 
 | 위협 | 현재 한계 | 현재 대응 방식 및 향후 계획 |
 | --- | --- | --- |
@@ -1305,9 +1305,9 @@ SNS → Slack (Operational Alerts)
 | 완전한 물리적 격리 미적용 | 서비스별 별도 클러스터/VPC 단위까지는 분리하지 않음 | 현재는 네임스페이스·노드풀·Security Group 기반 논리적 격리를 적용하며, 향후 멀티테넌트 환경에 맞춰 단계적 분리 예정 |
 | 중앙 보안 분석 체계 한계 | 현재 구조에서 위협 인텔리전스 연동 부분과 대응 후 검증 루프가 없음 | 현재는 AWS 네이티브 보안 서비스를 중심으로 SIEM/SOAR을 운영하며, 향후 상용 SIEM 기반 통합 보안 전문 관제 체계로 확장 예정(마이터 어택 연동 등) |
 
-# 4. 한계점 및 향후 개선 방향
+## 4. 한계점 및 향후 개선 방향
 
-## 4.1 현재 아키텍처의 한계
+### 4.1 현재 아키텍처의 한계
 
 현재 아키텍처는 MAU 700만 규모의 서비스가 EKS 기반 MSA 구조에서 보안성·운영 효율·거버넌스 자동화를 균형 있게 달성하는 것을 목표로 설계하였습니다. Control Tower와 Firewall Manager를 통한 정책 중앙화, Security Hub + Lambda 기반 자동 격리를 도입했으나, 현재 보안 설계 관점에서 아래와 같은 구조적 한계가 존재합니다.
 
@@ -1318,19 +1318,19 @@ SNS → Slack (Operational Alerts)
 | **위협 인텔리전스 미연동** | GuardDuty·Security Hub의 Finding이 MITRE ATT&CK 프레임워크와 자동 연동되지 않습니다. Finding이 발생해도 어떤 전술·기법에 해당하는지 자동으로 매핑되지 않아 보안 담당자가 수동으로 분석해야 하며, 개별 Finding 간 상관 분석의 정교함이 제한됩니다. 단일 이벤트로는 식별하기 어려운 다단계 공격 캠페인(초기 침투 → 권한 상승 → 횡이동 → 데이터 유출)을 자동으로 탐지하는 체계가 부재합니다. |
 | **HIGH 이하 Finding 자동 대응 공백** | HIGH Finding 중 서비스 영향 가능성이 있는 항목(EKS API 서버 퍼블릭 노출, Root 액세스 키 존재 등)은 Jira 티켓 생성 후 담당자가 수동 대응하는 구조로 야간·공휴일 등 대응이 지연되는 상황에서 공격자에게 노출 시간이 길어질 수 있습니다. 자동 대응 범위를 넓히면 오탐으로 인한 서비스 장애 리스크가 생기는 구조적 트레이드오프가 존재합니다. |
 
-## 4.2 추가 도입 권고 항목
+### 4.2 추가 도입 권고 항목
 
 보안 요구 수준과 운영 성숙도가 높아지는 시점에 아래 항목의 순차적 도입을 권고합니다.
 
-### 4.2.1 Shield Advanced 도입
+#### 4.2.1 Shield Advanced 도입
 
 MAU가 현재 규모를 크게 상회하거나 서비스가 DDoS 공격의 명확한 표적이 되는 시점에 도입을 검토합니다. Shield Advanced는 월 $3,000의 고정 비용이 발생하나, AWS DDoS Response Team(DRT) 24시간 대응 지원과 공격으로 인한 WAF·CloudFront·ALB 비용 환급(Cost Protection)을 제공합니다. 현재는 WAF AntiDDoSRuleSet과 Rate-based Rule로 운영하며, 공격 임계값을 지속적으로 모니터링하고 조정합니다.
 
-### 4.2.2 Amazon Macie 기반 민감데이터 자동 분류
+#### 4.2.2 Amazon Macie 기반 민감데이터 자동 분류
 
 S3 버킷 내 개인정보(PII)·금융정보·자격증명 등 민감데이터를 자동으로 식별·분류하는 체계를 구축합니다. 단, Macie는 현재 S3 스캔에 한정되므로 RDS·Redshift 내 민감데이터는 애플리케이션 레벨 마스킹과 병행 적용이 필요합니다. Log Archive 계정과 Production Data 계정에 Macie를 활성화하고, Finding을 Security Hub로 집계하여 기존 대응 파이프라인과 통합합니다.
 
-### 4.2.3 상용 SIEM · SOAR 도입
+#### 4.2.3 상용 SIEM · SOAR 도입
 
 현재 OpenSearch 기반 SIEM은 AWS 네이티브 로그 소스 중심으로 구성되어 있어, 외부 위협 인텔리전스 피드(STIX/TAXII) 연동이 기본 지원되지 않고 다단계 공격 캠페인을 자동 상관 분석하는 룰 엔진의 표현력이 제한적입니다. 개별 Finding을 보안 담당자가 수동으로 연결해 공격 흐름을 파악해야 하는 운영 부담도 존재합니다.
 
