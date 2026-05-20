@@ -476,6 +476,8 @@ HIGH Finding의 자동 대응 여부는 자동 대응 실행 시 서비스 영�
 
 ## 2.6 Lambda / SSM Automation + Jira (자동 대응 및 티켓 연동)
 
+![Lambda + Jira](../images/architecture/enterprise/bridge_lambda.png)
+
 ### 2.6.1 전체 대응 구조
 
 보안 이벤트 발생 시 자동 대응이 무조건 좋은 것은 아닙니다. 자동 대응이 오히려 검증 과정 없이 실행될 경우 운영 장애로 이어질 수 있습니다. 이 구조에서는 서비스 영향 여부를 기준으로 자동 대응과 수동 대응을 분리합니다.
