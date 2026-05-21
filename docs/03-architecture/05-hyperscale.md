@@ -362,7 +362,7 @@ GuardDuty Finding과 연계하여 IP·IAM Role·EC2 인스턴스 단위의 행�
 
 ![데이터 파이프라인](../images/architecture/hyperscale/data_pipeline.png)
 
-### 2.10.1 전체 흐름
+#### 2.10.1 전체 흐름
 
 ```bash
 [수집]
@@ -380,7 +380,7 @@ Athena: S3 대상 서버리스 ad-hoc 쿼리
 Redshift: Curated 데이터 대규모 정형 분석
 ```
 
-### 2.10.2 보안 요소
+#### 2.10.2 보안 요소
 
 Lake Formation으로 테이블/컬럼/행 수준의 Fine-grained Access Control을 적용하고 역할별 접근 범위를 분리합니다. AWS Macie로 S3 버킷 내 PII를 자동 탐지하여 Security Hub 및 SIEM에 연동합니다. Backup Vault Lock의 WORM 정책 적용으로 백업 삭제·수정을 방지하여 랜섬웨어 공격에 대응합니다. S3·Aurora·DynamoDB는 SSE-KMS로 암호화하고, MSK에는 TLS를 강제합니다.
 
@@ -440,7 +440,7 @@ Management Account에 IAM Identity Center를 통해 접근 가능한 인원은 �
 | IAM Identity Center 인스턴스 | IAM Identity Center | 인스턴스는 이 계정에 상주, 일상 운영은 Security Prod 위임 |
 | Control Tower 활성화 | Control Tower | Landing Zone 구성·Mandatory Controls 자동 적용 |
 
-### 2.13.2 접근 원칙
+#### 2.13.2 접근 원칙
 
 Management Account 접근은 시니어 인프라 담당자 1~2명으로 제한하며, 일상 운영에서는 직접 접근하지 않습니다.
 
@@ -458,7 +458,7 @@ GitHub Actions의 접근 방식
 
 워크로드 리소스(EC2, RDS, Lambda 등)는 이 계정에 절대 배포하지 않습니다. Management Account가 침해되면 전체 조직의 SCP와 거버넌스가 무력화되기 때문입니다.
 
-### 2.13.3 Control Tower가 자동으로 처리하는 항목
+#### 2.13.3 Control Tower가 자동으로 처리하는 항목
 
 신규 계정이 Control Tower Account Factory로 생성될 때 아래 항목이 자동 적용됩니다.
 
@@ -477,7 +477,7 @@ GitHub Actions의 접근 방식
 
 ![Security Team](../images/architecture/hyperscale/security_team.png)
 
-### 2.14.1 4개 계정 역할
+#### 2.14.1 4개 계정 역할
 
 중대규모의 Security OU는 Log Archive·Audit·Security Tooling 3개 계정으로 구성되어 있었습니다. Security Tooling 단일 계정이 GuardDuty 관리·보안 자동화를 모두 담당하면서, GRC Team이 GuardDuty 설정을 변경하거나 SOC Tier 1이 원본 감사 로그에 접근하는 구조적 허점이 존재했습니다. 대규모에서는 Security Tooling을 Security Prod·Security Dev 2개로 추가 분리하여 총 4개 계정 구조로 전환합니다.
 
@@ -488,7 +488,7 @@ GitHub Actions의 접근 방식
 | **Security Prod** | GuardDuty·Security Hub Delegated Admin, Firewall Manager 중앙 관리, IAM Identity Center 일상 운영 | CSE (Admin), SOC 전 Tier, Network Security, GRC |
 | **Security Dev** | 보안 자동화 코드 (Lambda·EventBridge), SOAR 플레이북 테스트 전용 개발 환경 | CSE (Admin), SOC Tier 2·3, Network Security |
 
-### 2.14.2 보안 팀 계정 접근 권한 매트릭스
+#### 2.14.2 보안 팀 계정 접근 권한 매트릭스
 
 | 팀 | Log Archive | Audit | Security Prod | Security Dev |
 | --- | --- | --- | --- | --- |
@@ -500,7 +500,7 @@ GitHub Actions의 접근 방식
 
 ---
 
-### 2.14.3 계정별 상세 권한 설계
+#### 2.14.3 계정별 상세 권한 설계
 
 ### Log Archive 계정
 
@@ -565,7 +565,7 @@ GitHub Actions의 접근 방식
 
 ---
 
-### 2.14.4 Security OU Permission Set 목록
+#### 2.14.4 Security OU Permission Set 목록
 
 | Permission Set | 대상 팀 | 대상 계정 | MFA | 세션 |
 | --- | --- | --- | --- | --- |
