@@ -136,6 +136,7 @@ nav:
           - "Banfico": 02-infra/analysis-banfico.md
           - "Santander": 02-infra/analysis-santander.md
           - "Hitachi": 02-infra/analysis-hitachi.md
+          - "Brandi" : 02-infra/analysis-brandi.md
       - "컨테이너 & 서버리스":
           - "Artera": 02-infra/analysis-artera.md
           - "RStudio / Shiny": 02-infra/analysis-rstudio_shiny.md
