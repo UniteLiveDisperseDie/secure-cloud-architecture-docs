@@ -104,6 +104,7 @@ nav:
           - "Bignum NPM": 01-incident/case-bignumNPM.md
           - "DarkLab": 01-incident/case-DarkLab.md
           - "NPM": 01-incident/case-NPM.md
+          - "PolitiFact": 01-incident/case-politifact.md
       - "데이터 유출 & 스토리지 오설정":
           - "Sisense": 01-incident/case-sisense.md
           - "ONUS": 01-incident/case-onus.md
