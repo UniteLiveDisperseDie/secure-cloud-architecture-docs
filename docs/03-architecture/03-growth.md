@@ -670,6 +670,7 @@ Dev OU SCP에 추가로 적용하여 완전 격리를 구현합니다.
 | 1 | 기본 서비스만 허용 + 초소형 인스턴스만 허용 | EC2, S3, Lambda, DynamoDB 등 기본 서비스 외 차단. 인스턴스는 t2/t3.micro·small만 허용 |
 | 2 | 외부 네트워크 연결 금지 | VPC Peering · Transit Gateway 연결 차단. Production/Staging 완전 격리 |
 | 3 | RAM 리소스 공유 금지 | 다른 계정과 리소스 공유/수락 불가. 격리 유지 |
+| 4 | 크로스 계정 AssumeRole 금지 | Sandbox Admin 권한으로 타 계정 Role 탈취(횡적 이동) 차단. aws:ResourceAccount 조건으로 Sandbox 계정 외 STS AssumeRole 불가 |
 
 ---
 
