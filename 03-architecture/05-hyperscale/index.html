@@ -1,0 +1,8409 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../04-enterprise/">
+      
+      
+        <link rel="next" href="../../01-incident/case-01-drizly/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>대규모 아키텍처 설계 - 클라우드 보안 아키텍처 문서화</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="클라우드 보안 아키텍처 문서화" class="md-header__button md-logo" aria-label="클라우드 보안 아키텍처 문서화" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            클라우드 보안 아키텍처 문서화
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              대규모 아키텍처 설계
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="다크 모드로 전환"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="다크 모드로 전환" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="라이트 모드로 전환"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="라이트 모드로 전환" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01-hobby/" class="md-tabs__link">
+          
+  
+  
+  보안 아키텍처 설계
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01-incident/case-01-drizly/" class="md-tabs__link">
+          
+  
+  
+  침해사고 사례 분석
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../02-infra/analysis-Proglove/" class="md-tabs__link">
+          
+  
+  
+  인프라 사례 분석
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="클라우드 보안 아키텍처 문서화" class="md-nav__button md-logo" aria-label="클라우드 보안 아키텍처 문서화" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    클라우드 보안 아키텍처 문서화
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    보안 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    보안 아키텍처 설계
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-hobby/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    바이브코딩 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-startup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    소규모 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-growth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    중규모 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    중대규모 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    대규모 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    대규모 아키텍처 설계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 전체 아키텍처
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 전체 아키텍처">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 아키텍처 개요 및 설계 원칙
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 사용자 접근 흐름
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 월 예상 비용
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        규모 가정
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        고정 비용 (월)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요청/사용량 기반 비용
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        최종 정리
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 서비스별 상세 설계
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 서비스별 상세 설계">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-twingate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 네트워크 접근 제어 설계 (Twingate)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.1 네트워크 접근 제어 설계 (Twingate)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#211" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1.1 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#212" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#213" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-transit-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Transit Gateway
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 Transit Gateway">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#221" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#222" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#223" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-shield-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Shield Advanced
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 Shield Advanced">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#231" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#232" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#233" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-waf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 WAF
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.4 WAF">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#241" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#242" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#243" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-global-accelerator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Global Accelerator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.5 Global Accelerator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#251" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#252" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#253" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-multi-region-access-point-s3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Multi-Region Access Point (S3)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.6 Multi-Region Access Point (S3)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#261" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#262" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#263" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-ecr-cross-region-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 ECR Cross-Region Replication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.7 ECR Cross-Region Replication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#271" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#272" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#273" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-siemsoar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 SIEM/SOAR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.8 SIEM/SOAR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#281" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#282" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#283" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#29-aws-detective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9 AWS Detective
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.9 AWS Detective">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#291" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#292" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#293" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#210" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10 데이터 파이프라인
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.10 데이터 파이프라인">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10.1 전체 흐름
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10.2 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#211-artifact-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11 Artifact - 감사 대응(컴플라이언스)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.11 Artifact - 감사 대응(컴플라이언스)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2111" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2112" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#212-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12 OU 구조
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.12 OU 구조">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2121-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12.1 전체 OU 트리
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2122" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12.2 이 구조를 선택한 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#213-management-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.13 Management Account
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.13 Management Account">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2131" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.13.1 역할
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2132" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.13.2 접근 원칙
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2133-control-tower" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.13.3 Control Tower가 자동으로 처리하는 항목
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#214-security-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.14 Security OU 상세
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.14 Security OU 상세">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2141-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.14.1 4개 계정 역할
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2142" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.14.2 보안 팀 계정 접근 권한 매트릭스
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2143" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.14.3 계정별 상세 권한 설계
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-archive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Archive 계정
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit 계정
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-prod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Prod 계정
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-dev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Dev 계정
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Dev 계정">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2144-security-ou-permission-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.14.4 Security OU Permission Set 목록
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#215-infrastructure-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.15 Infrastructure OU 상세
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.15 Infrastructure OU 상세">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2151-global-network-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.15.1 Global Network OU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        계정별 역할
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        접근 권한 요약
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2152-shared-services-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.15.2 Shared Services OU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2153-cicd-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.15.3 CI/CD OU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        계정별 역할
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI/CD 배포 흐름
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        접근 권한 요약
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#216-workloads-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.16 Workloads OU 상세
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.16 Workloads OU 상세">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2161-production-workloads-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.16.1 Production Workloads OU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-region-1-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Region 1 OU (국내 서비스)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-region-2-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Region 2 OU (해외 서비스)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2162-non-production-workloads-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.16.2 Non-Production Workloads OU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sandbox-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sandbox OU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development-ou-dev-team-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Development OU — Dev Team OU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#staging-ou-staging-region-1-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Staging OU — Staging Region 1 OU
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#217-suspended-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.17 Suspended OU 상세
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#218-permission-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.18 페르소나별 Permission Set 설계
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.18 페르소나별 Permission Set 설계">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        임직원 역할 분류
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-1-15-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 1 — 인프라 담당자 (국내 약 15명 / 해외 약 5명)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        국내 인프라 담당자 계정별 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        해외 인프라 담당자 계정별 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-2-15-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 2 — 보안 조직 (국내 약 15명 / 해외 약 3명)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-2a-cloud-security-engineering-cse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 2a — Cloud Security Engineering (CSE)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-2b-soc-security-operations-center" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 2b — SOC (Security Operations Center)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-2c-network-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 2c — Network Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-2d-grc-governance-risk-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 2d — GRC (Governance, Risk &amp; Compliance)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-3-80-50" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 3 — 백엔드 / 프론트엔드 개발자 (국내 약 80명 / 해외 약 50명)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        국내 개발자 계정별 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        해외 개발자 계정별 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-4-10-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 4 — 데이터 엔지니어 (국내 약 10명 / 해외 약 5명)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        국내 데이터 엔지니어 계정별 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        해외 데이터 엔지니어 계정별 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-5-sre-on-call-10-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 5 — SRE / On-call (국내 약 10명 / 해외 약 5명)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        국내 SRE 계정별 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sre_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        해외 SRE 계정별 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-6-finops-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 6 — FinOps 담당자 (국내 약 3명)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-7-3-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 7 — 감사 / 컴플라이언스 담당자 (국내 약 3명 / 해외 약 2명)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-8-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 8 — 경영진 (국내 약 10명)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 위협 모델링
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 위협 모델링">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 위협 다이어그램
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 방어 가능한 위협
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 한계점 및 향후 개선 방향
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 한계점 및 향후 개선 방향">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 현재 아키텍처의 한계
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 추가 도입 권고 항목
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    침해사고 사례 분석
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    침해사고 사례 분석
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IAM & 권한 오남용
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IAM & 권한 오남용
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-01-drizly/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drizly
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-02-capitalone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capital One
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-tesla/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tesla
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-ubiquiti/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubiquiti
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-firstrepublicbank/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FirstRepublicBank
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-juspay/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Juspay
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-kiranapro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KiranaPro
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    자격증명 & 시크릿 노출
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    자격증명 & 시크릿 노출
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-microsoft-sastoken/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microsoft SAS Token Exposure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-mcgrawhill/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    McGraw Hill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-malindoair/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Malindoair
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-codefinger/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codefinger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    공급망 & 오픈소스 공격
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    공급망 & 오픈소스 공격
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-bybit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bybit / Safe Wallet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-ami/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Community AMI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-bignumNPM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bignum NPM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-DarkLab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DarkLab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-NPM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NPM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-politifact/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PolitiFact
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    데이터 유출 & 스토리지 오설정
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    데이터 유출 & 스토리지 오설정
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-sisense/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sisense
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-onus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ONUS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-liveactioneers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LiveAuctioneers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-lastpass/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lastpass
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    랜섬웨어 & 크립토마이닝
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    랜섬웨어 & 크립토마이닝
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-teamtnt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TeamTNT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    소셜 엔지니어링 & 내부자 위협
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    소셜 엔지니어링 & 내부자 위협
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-twilio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Twilio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-Mandiant-InsiderThreat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mandiant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    웹 & 애플리케이션 취약점 공격
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    웹 & 애플리케이션 취약점 공격
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-incident/case-lexisnexis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LexisNexis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    인프라 사례 분석
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    인프라 사례 분석
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    멀티 계정 & 거버넌스
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    멀티 계정 & 거버넌스
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-Proglove/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ProGlove
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-nintendosystem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nintendo Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-01-unidays/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UNiDAYS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-multiaccount/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi Account
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-kakao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kakao
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    보안 자동화 & 위협 대응
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    보안 자동화 & 위협 대응
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-SecurityResponseAuto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Response Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-olx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OLX Europe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-dreamsecurity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DreamSecurity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-ergo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ERGO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CI/CD & DevSecOps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CI/CD & DevSecOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-CICD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CI/CD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-AmiLineage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AMI Lineage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    데이터 보호 & 컴플라이언스
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    데이터 보호 & 컴플라이언스
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-pallycon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PallyCon
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-banfico/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banfico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-santander/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Santander
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-hitachi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hitachi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-brandi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brandi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    컨테이너 & 서버리스
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    컨테이너 & 서버리스
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-artera/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Artera
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-rstudio_shiny/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RStudio / Shiny
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-npixel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NPIXEL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-midasit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MIDAS IT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-blux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blux
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-opencampus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenCampus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI/ML & 신기술
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI/ML & 신기술
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-BedrockAgentCore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bedrock AgentCore
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-madworld/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MADworld
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-infra/analysis-tplink/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP-Link
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 전체 아키텍처
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 전체 아키텍처">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 아키텍처 개요 및 설계 원칙
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 사용자 접근 흐름
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 월 예상 비용
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        규모 가정
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        고정 비용 (월)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요청/사용량 기반 비용
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        최종 정리
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 서비스별 상세 설계
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 서비스별 상세 설계">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-twingate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 네트워크 접근 제어 설계 (Twingate)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.1 네트워크 접근 제어 설계 (Twingate)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#211" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1.1 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#212" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#213" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-transit-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Transit Gateway
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 Transit Gateway">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#221" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#222" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#223" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-shield-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Shield Advanced
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 Shield Advanced">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#231" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#232" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#233" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-waf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 WAF
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.4 WAF">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#241" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#242" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#243" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-global-accelerator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Global Accelerator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.5 Global Accelerator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#251" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#252" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#253" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-multi-region-access-point-s3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Multi-Region Access Point (S3)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.6 Multi-Region Access Point (S3)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#261" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#262" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#263" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-ecr-cross-region-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 ECR Cross-Region Replication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.7 ECR Cross-Region Replication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#271" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#272" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#273" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-siemsoar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 SIEM/SOAR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.8 SIEM/SOAR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#281" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#282" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#283" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#29-aws-detective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9 AWS Detective
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.9 AWS Detective">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#291" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#292" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#293" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#210" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10 데이터 파이프라인
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.10 데이터 파이프라인">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10.1 전체 흐름
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10.2 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#211-artifact-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11 Artifact - 감사 대응(컴플라이언스)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.11 Artifact - 감사 대응(컴플라이언스)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2111" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11.1 구성 요소 및 설정 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2112" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11.2 설계 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11.3 반영된 보안 요소
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#212-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12 OU 구조
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.12 OU 구조">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2121-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12.1 전체 OU 트리
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2122" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12.2 이 구조를 선택한 이유
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#213-management-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.13 Management Account
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.13 Management Account">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2131" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.13.1 역할
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2132" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.13.2 접근 원칙
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2133-control-tower" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.13.3 Control Tower가 자동으로 처리하는 항목
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#214-security-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.14 Security OU 상세
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.14 Security OU 상세">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2141-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.14.1 4개 계정 역할
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2142" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.14.2 보안 팀 계정 접근 권한 매트릭스
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2143" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.14.3 계정별 상세 권한 설계
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-archive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Archive 계정
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit 계정
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-prod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Prod 계정
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-dev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Dev 계정
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Dev 계정">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2144-security-ou-permission-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.14.4 Security OU Permission Set 목록
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#215-infrastructure-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.15 Infrastructure OU 상세
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.15 Infrastructure OU 상세">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2151-global-network-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.15.1 Global Network OU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        계정별 역할
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        접근 권한 요약
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2152-shared-services-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.15.2 Shared Services OU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2153-cicd-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.15.3 CI/CD OU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        계정별 역할
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI/CD 배포 흐름
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        접근 권한 요약
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#216-workloads-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.16 Workloads OU 상세
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.16 Workloads OU 상세">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2161-production-workloads-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.16.1 Production Workloads OU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-region-1-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Region 1 OU (국내 서비스)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-region-2-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Region 2 OU (해외 서비스)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2162-non-production-workloads-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.16.2 Non-Production Workloads OU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sandbox-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sandbox OU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development-ou-dev-team-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Development OU — Dev Team OU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#staging-ou-staging-region-1-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Staging OU — Staging Region 1 OU
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#217-suspended-ou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.17 Suspended OU 상세
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#218-permission-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.18 페르소나별 Permission Set 설계
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.18 페르소나별 Permission Set 설계">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        임직원 역할 분류
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-1-15-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 1 — 인프라 담당자 (국내 약 15명 / 해외 약 5명)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        국내 인프라 담당자 계정별 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        해외 인프라 담당자 계정별 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-2-15-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 2 — 보안 조직 (국내 약 15명 / 해외 약 3명)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-2a-cloud-security-engineering-cse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 2a — Cloud Security Engineering (CSE)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-2b-soc-security-operations-center" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 2b — SOC (Security Operations Center)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-2c-network-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 2c — Network Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-2d-grc-governance-risk-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 2d — GRC (Governance, Risk &amp; Compliance)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-3-80-50" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 3 — 백엔드 / 프론트엔드 개발자 (국내 약 80명 / 해외 약 50명)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        국내 개발자 계정별 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        해외 개발자 계정별 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-4-10-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 4 — 데이터 엔지니어 (국내 약 10명 / 해외 약 5명)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        국내 데이터 엔지니어 계정별 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        해외 데이터 엔지니어 계정별 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-5-sre-on-call-10-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 5 — SRE / On-call (국내 약 10명 / 해외 약 5명)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        국내 SRE 계정별 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sre_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        해외 SRE 계정별 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-6-finops-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 6 — FinOps 담당자 (국내 약 3명)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-7-3-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 7 — 감사 / 컴플라이언스 담당자 (국내 약 3명 / 해외 약 2명)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persona-8-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 8 — 경영진 (국내 약 10명)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 위협 모델링
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 위협 모델링">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 위협 다이어그램
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 방어 가능한 위협
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 한계점 및 향후 개선 방향
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 한계점 및 향후 개선 방향">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 현재 아키텍처의 한계
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 추가 도입 권고 항목
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="네비게이션" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../01-hobby/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    보안 아키텍처 설계
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="_1">대규모 아키텍처 설계</h1>
+<h2 id="1">1. 전체 아키텍처</h2>
+<p><img alt="아키텍처1" src="../../images/architecture/hyperscale/architecture1.png" /></p>
+<p><img alt="image.png" src="../../images/architecture/hyperscale/architecture2.png" /></p>
+<h3 id="11">1.1 아키텍처 개요 및 설계 원칙</h3>
+<p>이 아키텍처는 MAU 1,000만 규모의 서비스와 약 2,000명의 임직원(AWS 실접근 인원 약 200명 이상)이 글로벌 환경에서 운영하는 AWS 클라우드 아키텍처입니다.</p>
+<p>중대규모 아키텍처에서 EKS 전환과 Control Tower 기반 계정 거버넌스 자동화, Security Hub + Lambda 자동 격리까지 구축했으나, 서비스가 글로벌로 확장되면서 구조적으로 다른 문제가 드러났습니다. 국내 단일 리전에서는 보안 설정의 일관성을 사람이 직접 검증할 수 있었지만, 멀티리전·멀티계정 구조에서는 <strong>공격 포인트 자체가 글로벌로 분산</strong>됩니다. 리전 하나의 설정 불일치가 전체 조직의 침투 진입점이 되고, VPN 기반 접근 구조에서는 탈취된 계정 하나로 내부 네트워크 전체를 수평 이동할 수 있습니다. 보안 팀 또한 단일 계정에 집중되면서 SOC 분석가가 원본 감사 로그에 접근하거나 GRC 담당자가 GuardDuty 설정을 변경할 수 있는 구조적 허점이 생겼습니다.</p>
+<p>대규모 아키텍처는 이러한 문제를 해결하는 것을 핵심 설계 방향으로 삼았습니다.</p>
+<p>사용하는 주요 서비스는 다음과 같습니다.</p>
+<ul>
+<li>엣지 계층: Route 53, CloudFront, AWS Global Accelerator</li>
+<li>컴퓨팅 계층: Amazon EKS (멀티리전), Amazon ECS</li>
+<li>데이터 계층: Aurora (Global DB), DynamoDB, ElastiCache, MSK, Redshift, S3 Multi-Region Access Point</li>
+<li>보안 서비스: WAF, Firewall Manager, Shield Advanced, ACM, IAM Identity Center, KMS, Secrets Manager, AWS Config, GuardDuty (Extended Threat Detection), Amazon Inspector, IAM Access Analyzer, Security Hub, AWS Detective, Amazon Macie, Amazon Security Lake</li>
+<li>거버넌스: AWS Organizations, Control Tower, SCP, Account Factory for Terraform (AFT)</li>
+<li>네트워크: Transit Gateway (멀티리전 Peering), Twingate (ZTNA)</li>
+<li>CI/CD: GitHub Actions (OIDC), ECR (Cross-Region Replication)</li>
+<li>운영 도구: SSM, AWS Backup (Cross-Region), X-Ray, CloudWatch, AMP (Amazon Managed Prometheus)</li>
+<li>로깅 및 관제: CloudTrail (Organization Trail), VPC Flow Logs, Fluent Bit, Security Lake, AppFabric, Enterprise SIEM/SOAR, AWS Detective</li>
+</ul>
+<p>설계의 첫 번째 기준은 <strong>글로벌 공격 포인트 통제</strong>입니다. 멀티리전 환경에서는 어느 리전 하나의 보안 설정 공백이 전체 조직의 침투 진입점이 됩니다. Config Aggregator와 Terraform으로 보안 규칙을 전 리전에 일괄 배포하고, SCP로 미승인 리전에서의 리소스 생성을 원천 차단합니다.</p>
+<p>두 번째 기준은 <strong>VPN에서 ZTNA로 전환</strong>입니다. VPN은 인증만 통과하면 내부 네트워크 전체를 신뢰하는 구조입니다. Twingate를 도입하여 임직원 접근을 IP:Port 단위로 최소화하고, 허가된 리소스 외에는 네트워크 경로 자체를 차단합니다.</p>
+<p>네 번째 기준은 <strong>전사 통합 가시성</strong>입니다. AWS 내부 로그와 GitHub, Slack, Google Drive 등 SaaS 감사 로그를 AppFabric으로 OCSF 정규화하여 Security Lake에 통합합니다. 온프레미스 서버 로그는 Fluent Bit로 수집하여 동일한 데이터 레이크에 병합합니다. 이를 Enterprise SIEM/SOAR에 연동하여 글로벌 환경 전체를 단일 관점에서 분석합니다.</p>
+<p>다섯 번째 기준은 <strong>글로벌 서비스 연속성</strong>입니다. Global Accelerator와 Aurora Global DB, S3 Multi-Region Access Point, ECR Cross-Region Replication을 조합하여 단일 리전 장애 시에도 수초 내 자동 전환이 이루어지도록 설계합니다. Shield Advanced를 조직 단위로 활성화하여 대규모 DDoS 공격에도 서비스가 유지되도록 보호합니다.</p>
+<hr />
+<h3 id="12">1.2 사용자 접근 흐름</h3>
+<p><strong>(1) 일반 사용자 접근 흐름</strong></p>
+<p>사용자가 도메인에 접속하면 Route 53이 DNS 쿼리를 처리하여 CloudFront로 라우팅합니다. CloudFront는 ACM 인증서를 통해 HTTPS 통신을 보장하며, 정적 콘텐츠는 OAC를 통해 S3 Multi-Region Access Point에서 지리적으로 가장 가까운 버킷으로 자동 라우팅하여 제공합니다. S3 버킷은 퍼블릭 접근이 차단되어 CloudFront를 통해서만 접근 가능합니다.</p>
+<p>동적 요청은 Global Accelerator를 경유하여 AWS 글로벌 백본으로 진입한 뒤, 사용자와 가장 가까운 리전의 ALB로 전달됩니다. CloudFront 및 ALB에는 Firewall Manager가 중앙 배포한 WAF WebACL이 연결되어 있어 이중 방어 구조를 형성합니다. ALB는 X-Origin-Secret 커스텀 헤더를 검증하여 CloudFront·Global Accelerator를 거치지 않은 직접 요청을 차단합니다.</p>
+<p>ALB를 통과한 요청은 프라이빗 서브넷의 EKS Pod로 전달됩니다. EKS Pod는 IRSA를 통해 서비스별 전용 IAM Role로 Aurora, DynamoDB, S3, MSK에 접근하며, S3·DynamoDB 통신은 VPC Endpoint를 경유합니다.</p>
+<p><strong>(2) 임직원 접근 흐름</strong></p>
+<p>임직원은 IAM Identity Center에 MFA 인증 후 로그인하여 Persona에 맞는 Permission Set으로 각 계정에 접근합니다. 장기 Access Key 없이 임시 자격증명으로만 동작하며, 세션 만료 시 자동 차단됩니다.</p>
+<p>내부 리소스(Aurora, EKS API, ElastiCache 등) 접근은 Twingate ZTNA를 통해 IP:Port 단위로 제어됩니다. 노트북에 설치된 Twingate 클라이언트가 IdP 그룹 소속을 기반으로 접근 가능한 리소스를 결정하며, 허가되지 않은 리소스는 네트워크 경로 자체가 존재하지 않습니다. EC2 접근은 SSM Session Manager로 처리합니다.</p>
+<p><strong>(3) CI/CD 배포 흐름</strong></p>
+<p>GitHub Actions에서 코드가 병합되면 OIDC 기반 IAM Role로 AWS에 인증합니다. 빌드된 이미지는 Region A ECR에 Push되며, ECR Enhanced Scanning으로 CVE를 자동 탐지합니다. 취약점 임계값 초과 시 배포가 차단됩니다. 검증된 이미지는 ECR Cross-Region Replication으로 Region B에 복제되고, 각 리전 EKS가 로컬 ECR에서 이미지를 Pull하여 배포합니다.</p>
+<hr />
+<h3 id="13">1.3 월 예상 비용</h3>
+<ul>
+<li>아시아 태평양(서울, ap-northeast-2) 기준</li>
+<li>규모 기준: MAU 1,000만, EKS Worker Node 멀티리전(Region A·B) 합산 약 30대, 임직원 AWS 실접근 약 200명</li>
+<li>EKS, Aurora, DynamoDB, ElastiCache, MSK, Redshift, CloudFront, ALB, NAT Gateway, S3, AWS Backup 등 <strong>워크로드 운영 비용은 제외</strong>하며, 여기서는 <strong>보안·거버넌스·네트워크 인프라 서비스</strong> 중심으로 산정합니다.</li>
+</ul>
+<hr />
+<h3 id="_2">규모 가정</h3>
+<p>비용 산정의 핵심 가정은 다음과 같습니다. EKS Worker Node는 멀티리전(Region A·B) 합산 기준 <strong>30대</strong>로 산정합니다. AppFabric은 사용자수 <strong>200명</strong>을 적용합니다. Transit Gateway Attachment는 28개 계정의 VPC를 리전별 TGW에 연결하므로 리전당 <strong>15개 Attachment</strong>로 산정합니다. GuardDuty VPC Flow Logs는 30노드 기준 실측 평균 4 GB/노드/월로 산정합니다. Security Lake는 Organization Trail(28개 계정) 및 VPC Flow Logs·WAF 로그·Route 53 Query Logs를 포함하여 산정합니다. Shield Advanced는 Organizations 단위 $3,000/월 단일 과금이며, 구독 포함으로 WAF 요청 비용(월 500억 건 이내) 및 Firewall Manager WAF 정책 요금이 면제됩니다. AMP는 60초 수집 인터벌 기준으로 적용합니다.</p>
+<hr />
+<h3 id="_3">고정 비용 (월)</h3>
+<table>
+<thead>
+<tr>
+<th><strong>서비스</strong></th>
+<th><strong>단위</strong></th>
+<th><strong>단가</strong></th>
+<th><strong>수량</strong></th>
+<th><strong>월 비용</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AWS Shield Advanced</strong></td>
+<td>조직 단위</td>
+<td>$3,000.00 / 조직</td>
+<td>1 (Organizations Consolidated Billing)</td>
+<td>$3,000.00</td>
+</tr>
+<tr>
+<td><strong>Firewall Manager</strong></td>
+<td>WAF 정책·리전</td>
+<td>$100.00 / 정책·리전</td>
+<td>2개 정책 × 2리전 = 4 (Shield Advanced 구독 시 WAF 정책 요금 면제 → $0)</td>
+<td>$0.00</td>
+</tr>
+<tr>
+<td><strong>Global Accelerator</strong></td>
+<td>Accelerator 시간</td>
+<td>$0.025 / 시간</td>
+<td>1 Accelerator × 730시간</td>
+<td>$18.25</td>
+</tr>
+<tr>
+<td><strong>Transit Gateway</strong></td>
+<td>Attachment 시간</td>
+<td>$0.05 / 시간 / Attachment</td>
+<td>15 Attachment × 730시간 × 2리전</td>
+<td>$1,095.00</td>
+</tr>
+<tr>
+<td><strong>AppFabric</strong></td>
+<td>실사용자</td>
+<td>$3.00 / 사용자</td>
+<td>200명 (볼륨 할인 적용)</td>
+<td>$600.00</td>
+</tr>
+<tr>
+<td><strong>WAF</strong></td>
+<td>WebACL</td>
+<td>$5.00 / WebACL</td>
+<td>4개 (CloudFront Global × 2리전 + ALB × 2리전)</td>
+<td>$20.00</td>
+</tr>
+<tr>
+<td><strong>WAF</strong></td>
+<td>AWS 관리형 Rule Group</td>
+<td>$1.00 / 룰그룹</td>
+<td>CloudFront 6개 + ALB 5개 = 11개 × 2리전 = 22개</td>
+<td>$22.00</td>
+</tr>
+<tr>
+<td><strong>KMS CMK</strong></td>
+<td>키 보관</td>
+<td>$1.00 / 키</td>
+<td>10개 (aurora-cmk, dynamodb-cmk, redshift-cmk, s3-cmk, secrets-cmk, ebs-cmk, s3-log-cmk, msk-cmk, security-lake-cmk × 2리전)</td>
+<td>$10.00</td>
+</tr>
+<tr>
+<td><strong>Secrets Manager</strong></td>
+<td>시크릿 보관</td>
+<td>$0.40 / secret</td>
+<td>5개 (Aurora 크리덴셜, X-Origin-Secret, 외부 API Key, MSK 크리덴셜, Twingate Connector 토큰)</td>
+<td>$2.00</td>
+</tr>
+<tr>
+<td><strong>CloudWatch</strong></td>
+<td>경보 (표준 해상도)</td>
+<td>$0.10 / 경보</td>
+<td>30개 (Metric Filter 알람 18개 + 서비스 지표 알람 12개)</td>
+<td>$3.00</td>
+</tr>
+<tr>
+<td><strong>CloudTrail</strong></td>
+<td>관리 이벤트 (첫 번째 Trail)</td>
+<td>$0</td>
+<td>Organization Trail 1개</td>
+<td>$0</td>
+</tr>
+<tr>
+<td><strong>SSM Session Manager</strong></td>
+<td>세션 자체</td>
+<td>$0</td>
+<td>—</td>
+<td>$0</td>
+</tr>
+<tr>
+<td><strong>IAM Identity Center</strong></td>
+<td>—</td>
+<td>$0</td>
+<td>—</td>
+<td>$0</td>
+</tr>
+<tr>
+<td><strong>ACM</strong></td>
+<td>인증서</td>
+<td>$0</td>
+<td>—</td>
+<td>$0</td>
+</tr>
+<tr>
+<td><strong>IAM Access Analyzer</strong></td>
+<td>외부 액세스 분석기</td>
+<td>$0</td>
+<td>—</td>
+<td>$0</td>
+</tr>
+<tr>
+<td><strong>AWS Organizations / SCP / Control Tower</strong></td>
+<td>—</td>
+<td>$0</td>
+<td>Control Tower 자체 무료, 활성화 서비스 비용 별도</td>
+<td>$0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>고정 비용 소계: $4,770.25 / 월</strong></p>
+<hr />
+<h3 id="_4">요청/사용량 기반 비용</h3>
+<table>
+<thead>
+<tr>
+<th><strong>서비스</strong></th>
+<th><strong>단위</strong></th>
+<th><strong>단가</strong></th>
+<th><strong>사용량</strong></th>
+<th><strong>월 비용</strong></th>
+<th><strong>산출 근거</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>WAF</strong></td>
+<td>요청 수</td>
+<td>Shield Advanced 구독 포함 (월 500억 건 이내)</td>
+<td>—</td>
+<td>$0</td>
+<td>Shield Advanced 구독으로 WAF 요청 비용 면제</td>
+</tr>
+<tr>
+<td><strong>Transit Gateway</strong></td>
+<td>데이터 처리</td>
+<td>$0.02 / GB</td>
+<td>5,000 GB × 2리전</td>
+<td>$200.00</td>
+<td>28개 계정 간 내부 트래픽 합산</td>
+</tr>
+<tr>
+<td><strong>Transit Gateway</strong></td>
+<td>리전 간 Peering 데이터</td>
+<td>$0.02 / GB</td>
+<td>1,000 GB</td>
+<td>$20.00</td>
+<td>Region A ↔ B 피어링 트래픽</td>
+</tr>
+<tr>
+<td><strong>Global Accelerator</strong></td>
+<td>DT-Premium</td>
+<td>$0.035 / GB</td>
+<td>2,000 GB</td>
+<td>$70.00</td>
+<td>우세 방향(아시아 리전 → 엣지) 트래픽 기준</td>
+</tr>
+<tr>
+<td><strong>KMS</strong></td>
+<td>API 요청 (대칭키)</td>
+<td>$0.03 / 10,000건</td>
+<td>30만 건</td>
+<td>$0.90</td>
+<td>30노드 기준 Pod 기동·Secrets 조회·S3 Put/Get. S3 Bucket Key 적용으로 객체당 호출 최소화</td>
+</tr>
+<tr>
+<td><strong>Secrets Manager</strong></td>
+<td>API 요청</td>
+<td>$0.05 / 10,000건</td>
+<td>3만 건</td>
+<td>$0.15</td>
+<td>30 Pod × 일 10회 기동 × 30일 기준, 캐시 사용</td>
+</tr>
+<tr>
+<td><strong>CloudTrail</strong></td>
+<td>S3 데이터 이벤트 (Write 전용)</td>
+<td>$0.10 / 100,000건</td>
+<td>3만 건</td>
+<td>$0.03</td>
+<td>Read 이벤트 제외. Read 포함 시 추가 비용 발생</td>
+</tr>
+<tr>
+<td><strong>CloudWatch</strong></td>
+<td>로그 수집</td>
+<td>$0.76 / GB</td>
+<td>50 GB</td>
+<td>$38.00</td>
+<td>CloudTrail→CW Logs 2 GB + EKS 컨테이너 로그 30노드 × 1 GB + 여유분</td>
+</tr>
+<tr>
+<td><strong>SNS</strong></td>
+<td>이메일·Slack 알림</td>
+<td>$0</td>
+<td>소량</td>
+<td>$0</td>
+<td>월 1,000건 무료 범위 이내</td>
+</tr>
+<tr>
+<td><strong>GuardDuty</strong></td>
+<td>CloudTrail 관리 이벤트</td>
+<td>$4.00 / 100만 건 (첫 5억 건 티어)</td>
+<td>280만 건</td>
+<td>$11.20</td>
+<td>28개 계정 × 일 약 3,300건 × 30일 합산</td>
+</tr>
+<tr>
+<td><strong>GuardDuty</strong></td>
+<td>VPC Flow Logs</td>
+<td>$1.00 / GB (첫 500 GB 티어)</td>
+<td>120 GB</td>
+<td>$120.00</td>
+<td>30노드 × 4 GB/노드/월. Runtime Monitoring 활성화 시 면제 가능</td>
+</tr>
+<tr>
+<td><strong>GuardDuty</strong></td>
+<td>Route 53 Query Logs</td>
+<td>$1.00 / GB (첫 500 GB 티어)</td>
+<td>15 GB</td>
+<td>$15.00</td>
+<td>CloudFront는 Route 53 직접 쿼리 미생성. 내부 서비스 간 DNS 중심 산정</td>
+</tr>
+<tr>
+<td><strong>Security Hub</strong></td>
+<td>보안 체크 (CSPM)</td>
+<td>$0.0010 / 체크 (첫 100,000건)</td>
+<td>28,000건</td>
+<td>$28.00</td>
+<td>28개 계정 × 리소스 평균 1,000건 체크 (FSBP + CIS v5.0 기준)</td>
+</tr>
+<tr>
+<td><strong>Security Hub</strong></td>
+<td>Finding 인제스트</td>
+<td>$0.00003 / 건 (10,000건 초과분)</td>
+<td>45만 건</td>
+<td>$13.20</td>
+<td>10,000건 무료 티어 초과분 440,000건 × $0.00003</td>
+</tr>
+<tr>
+<td><strong>Security Lake</strong></td>
+<td>CloudTrail 로그 수집</td>
+<td>$0.75 / GB</td>
+<td>280 GB</td>
+<td>$210.00</td>
+<td>28개 계정 × 약 10 GB/월</td>
+</tr>
+<tr>
+<td><strong>Security Lake</strong></td>
+<td>기타 AWS 로그 (VPC Flow, WAF, Route 53 등)</td>
+<td>$0.25 / GB</td>
+<td>1,000 GB</td>
+<td>$250.00</td>
+<td>VPC Flow Logs·WAF 로그·Route 53 Query Logs 합산</td>
+</tr>
+<tr>
+<td><strong>Security Lake</strong></td>
+<td>데이터 정규화 (OCSF)</td>
+<td>$0.035 / GB</td>
+<td>1,280 GB</td>
+<td>$44.80</td>
+<td>CloudTrail 280 GB + 기타 1,000 GB 합산</td>
+</tr>
+<tr>
+<td><strong>Security Lake</strong></td>
+<td>S3 스토리지</td>
+<td>$0.025 / GB</td>
+<td>10,000 GB</td>
+<td>$250.00</td>
+<td>누적 약 1년치 보관 기준</td>
+</tr>
+<tr>
+<td><strong>AWS Config</strong></td>
+<td>구성 항목 기록</td>
+<td>$0.003 / 건</td>
+<td>28,000건</td>
+<td>$84.00</td>
+<td>28개 계정 × 리소스 100개 × 월 평균 10회 변경</td>
+</tr>
+<tr>
+<td><strong>AWS Config</strong></td>
+<td>Rule 평가</td>
+<td>$0.001 / 건</td>
+<td>280,000건</td>
+<td>$280.00</td>
+<td>30개 규칙 × 28개 계정 × 약 333 리소스 평가. Firewall Manager Config Rules 포함</td>
+</tr>
+<tr>
+<td><strong>Inspector</strong></td>
+<td>EC2 인스턴스 스캔</td>
+<td>$1.258 / 인스턴스</td>
+<td>30대</td>
+<td>$37.74</td>
+<td>EKS on EC2 Worker Node 멀티리전 30대 기준</td>
+</tr>
+<tr>
+<td><strong>Inspector</strong></td>
+<td>ECR 이미지 Push 스캔</td>
+<td>$0.09 / Push</td>
+<td>400회</td>
+<td>$36.00</td>
+<td>2리전 × 일 약 7회 배포 기준</td>
+</tr>
+<tr>
+<td><strong>Inspector</strong></td>
+<td>자동 재스캔 (신규 CVE)</td>
+<td>$0.01 / 재스캔</td>
+<td>1,000회</td>
+<td>$10.00</td>
+<td>신규 CVE 발표 시 멀티리전 자동 재평가</td>
+</tr>
+<tr>
+<td><strong>AWS Detective</strong></td>
+<td>데이터 수집·분석</td>
+<td>$2.00 / GB (첫 1,000 GB 티어)</td>
+<td>500 GB</td>
+<td>$1,000.00</td>
+<td>Security Prod 계정 중심, CloudTrail·VPC Flow·GuardDuty Finding 합산</td>
+</tr>
+<tr>
+<td><strong>AMP (Amazon Managed Prometheus)</strong></td>
+<td>메트릭 샘플 수집</td>
+<td>$0.90 / 1,000만 샘플</td>
+<td>약 13.1억 샘플</td>
+<td>$117.90</td>
+<td>30노드 × 1,000 metrics × 60초 인터벌 × 730시간 ≈ 13.1억 샘플</td>
+</tr>
+<tr>
+<td><strong>AMP</strong></td>
+<td>메트릭 스토리지</td>
+<td>$0.03 / GB</td>
+<td>30 GB</td>
+<td>$0.90</td>
+<td>30노드 기준 30일 보관</td>
+</tr>
+<tr>
+<td><strong>AWS X-Ray</strong></td>
+<td>트레이스 수집·스캔</td>
+<td>$5.00 / 100만 트레이스</td>
+<td>1,000만 트레이스</td>
+<td>$50.00</td>
+<td>EKS Pod 멀티리전 분산 추적, 최초 100만 트레이스 무료</td>
+</tr>
+<tr>
+<td><strong>VPC Flow Logs</strong></td>
+<td>S3 저장</td>
+<td>$0.025 / GB</td>
+<td>100 GB</td>
+<td>$2.50</td>
+<td>Log Archive Account S3 기준 (멀티리전 합산)</td>
+</tr>
+<tr>
+<td><strong>S3</strong></td>
+<td>저장 + 요청</td>
+<td>$0.025 / GB</td>
+<td>200 GB</td>
+<td>$5.00</td>
+<td>Log Archive 용도 (Security Lake S3 제외)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>요청/사용량 기반 합계: 약 $2,864 / 월</strong></p>
+<hr />
+<h3 id="_5">최종 정리</h3>
+<table>
+<thead>
+<tr>
+<th><strong>구분</strong></th>
+<th><strong>합계</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>고정 비용</strong></td>
+<td><strong>$4,770.25 / 월</strong></td>
+</tr>
+<tr>
+<td><strong>요청/사용량 기반 비용</strong></td>
+<td><strong>$2,864 / 월</strong></td>
+</tr>
+<tr>
+<td><strong>보안·거버넌스·네트워크 인프라 서비스 총합 (추정)</strong></td>
+<td><strong>약 $7,634 / 월</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>중요 1</strong>: 위 금액은 보안·거버넌스·네트워크 인프라 서비스만의 추정치입니다. EKS, Aurora (Global DB), DynamoDB, ElastiCache, MSK, Redshift, CloudFront, ALB, NAT Gateway, S3 (일반), AWS Backup 등 워크로드 운영 비용은 인스턴스 타입과 워크로드 규모에 따라 크게 달라지므로 별도 산정이 필요합니다.</p>
+<p><strong>중요 2</strong>: <strong>Shield Advanced ($3,000)</strong> 는 Organizations 단위 단일 과금으로, WAF 요청 비용(월 500억 건 이내)과 Firewall Manager WAF 정책 요금이 구독에 포함됩니다. WAF 요청량이 매우 많은 MAU 1,000만 환경에서는 Shield Advanced 미적용 시 WAF 요청 비용이 별도로 수백 달러 이상 발생할 수 있어 실질적인 절감 효과가 있습니다.</p>
+<p><strong>중요 3</strong>: <strong>AWS Config ($364)</strong> 는 Firewall Manager WAF 정책이 자동으로 Config Rules를 생성하므로 계정 수·리소스 수·변경 빈도가 늘수록 빠르게 증가합니다. 핵심 보안 규칙 위주로 Rule 수를 제한하고 주기적으로 미사용 Rule을 정리하는 것을 권고합니다.</p>
+<p><strong>중요 4</strong>: <strong>GuardDuty EKS Runtime Monitoring</strong> 을 활성화하면 Runtime Agent가 설치된 노드의 VPC Flow Logs 분석 비용($120)이 면제됩니다. Runtime Monitoring 자체 비용(vCPU당 과금)과 비교하여 순절감 여부를 운영 초기에 검토하는 것을 권고합니다.</p>
+<p><strong>중요 5</strong>: <strong>Enterprise SIEM/SOAR</strong> (Splunk, Microsoft Sentinel 등 상용 제품) 라이선스 비용은 별도 계약으로 산정합니다. Security Lake를 데이터 소스로 연동하는 구조이므로 SIEM 자체 수집 비용은 절감할 수 있습니다.
+</p>
+</blockquote>
+<hr />
+<h2 id="2">2. 서비스별 상세 설계</h2>
+<h3 id="21-twingate">2.1 네트워크 접근 제어 설계 (Twingate)</h3>
+<p><img alt="ZTNA" src="../../images/architecture/hyperscale/ztna.png" width="300" /></p>
+<h4 id="211">2.1.1 설정 방식</h4>
+<p>Twingate는 세 가지 구성 요소로 동작합니다. 첫째, 접근 대상 VPC마다 Connector를 Private Subnet에 배포합니다. Connector는 아웃바운드 연결만 맺으므로 인바운드 포트를 열지 않아도 됩니다. 둘째, Twingate 콘솔에서 접근 대상 리소스를 IP:Port 단위로 등록하고 각 리소스를 어떤 Connector가 중계할지 지정합니다. 셋째, Okta 또는 Google 등 기존 IdP와 연동하여 그룹 정보를 동기화하고 그룹별 접근 가능 리소스를 매핑합니다.</p>
+<p>사용자는 노트북에 Twingate 클라이언트를 설치하고 IdP 계정으로 인증합니다. 이후 등록된 리소스 IP로 트래픽이 발생하면 클라이언트가 암호화 터널을 통해 Connector로 전달하고, Connector가 VPC 내부에서 리소스에 접근합니다.</p>
+<p>EC2 접근은 SSM Session Manager로 처리하므로 Twingate Resource 등록 대상에서 제외합니다.</p>
+<p><strong>Resource 등록 및 팀별 접근 분리</strong></p>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>IP:Port 예시</th>
+<th>접근 허용 팀</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>regionA-eks-api</td>
+<td>10.0.1.x:443</td>
+<td>인프라팀, SRE</td>
+<td>kubectl 엔드포인트</td>
+</tr>
+<tr>
+<td>regionA-aurora</td>
+<td>10.0.2.x:5432</td>
+<td>DBA, SRE On-call</td>
+<td>평상시 DBA만</td>
+</tr>
+<tr>
+<td>regionA-dynamodb-ep</td>
+<td>10.0.2.x:443</td>
+<td>DBA, 백엔드팀</td>
+<td>VPC Endpoint 경유</td>
+</tr>
+<tr>
+<td>regionA-elasticache</td>
+<td>10.0.2.x:6379</td>
+<td>SRE On-call</td>
+<td>상시 접근 금지</td>
+</tr>
+<tr>
+<td>regionA-ecs-admin</td>
+<td>10.0.1.x:8080</td>
+<td>인프라팀, SRE</td>
+<td>관리 인터페이스</td>
+</tr>
+<tr>
+<td>regionB-eks-api</td>
+<td>10.1.1.x:443</td>
+<td>인프라팀, SRE</td>
+<td>kubectl 엔드포인트</td>
+</tr>
+<tr>
+<td>regionB-aurora</td>
+<td>10.1.2.x:5432</td>
+<td>DBA</td>
+<td>Region B 복제본</td>
+</tr>
+</tbody>
+</table>
+<h4 id="212">2.1.2 설계 이유</h4>
+<p>기존 VPN 방식은 인증 통과 시 VPC 전체 네트워크 접근이 허용되어, 계정 탈취 시 내부 리소스 수평 이동이 가능합니다. Twingate는 허가된 리소스 외에는 네트워크 경로 자체가 존재하지 않으므로 횡이동 경로를 구조적으로 차단합니다. 멀티계정 환경에서는 계정마다 Connector를 배포하여 접근 경계를 물리적으로 구분합니다. SRE On-call처럼 긴급 시 임시 접근이 필요한 경우 IdP 그룹 멤버십을 일시적으로 부여하는 방식으로 처리합니다.</p>
+<h4 id="213">2.1.3 반영된 보안 요소</h4>
+<p>Connector의 아웃바운드 전용 연결 구조로 VPC에 인바운드 포트를 열지 않습니다. 리소스의 Security Group은 Connector Security Group ID만 허용하므로 사용자 IP가 리소스에 직접 노출되지 않습니다. IdP에서 계정이 비활성화되거나 그룹에서 제거되면 Twingate 접근도 즉시 차단됩니다.</p>
+<hr />
+<h3 id="22-transit-gateway">2.2 Transit Gateway</h3>
+<h4 id="221">2.2.1 구성 요소 및 설정 방식</h4>
+<p>AWS Transit Gateway를 Region A·B 각각에 생성하고 TGW Peering으로 연결합니다. Resource Access Manager(RAM)를 통해 TGW를 전체 계정에 공유하여 각 계정의 VPC가 단일 TGW에 연결되도록 구성합니다. 프로덕션·개발·공유 서비스 VPC를 각각 별도 Attachment로 연결하고 TGW Route Table을 분리하여 계정 간 허용 트래픽 경로를 명시적으로 제어합니다. 온프레미스 연결이 필요한 경우 Direct Connect Gateway를 TGW에 연결하여 단일 경로로 처리합니다.</p>
+<h4 id="222">2.2.2 설계 이유</h4>
+<p>TGW는 허브-스포크 구조로 계정이 추가되어도 Attachment 하나만 추가하면 됩니다.</p>
+<h4 id="223">2.2.3 반영된 보안 요소</h4>
+<p>TGW Route Table 분리로 프로덕션-개발 간 직접 통신을 차단하고 허가된 경로만 허용합니다. VPC Flow Logs를 TGW 레벨에서 활성화하여 계정 간 트래픽을 Security Lake로 수집합니다. RAM 기반 공유로 각 계정이 독립적으로 TGW를 생성하지 못하도록 하여 승인되지 않은 네트워크 경로 생성을 방지합니다.</p>
+<hr />
+<h3 id="23-shield-advanced">2.3 Shield Advanced</h3>
+<h4 id="231">2.3.1 구성 요소 및 설정 방식</h4>
+<p>AWS Shield Advanced를 Organizations 기반으로 전체 계정에 일괄 적용합니다. CloudFront, ALB, Route 53, Global Accelerator를 Shield Advanced 보호 그룹에 등록합니다. CloudWatch 알람을 연동하여 DDoSDetected, DDoSAttackBitsPerSecond 메트릭 기반 알람을 구성합니다. DDoS 공격으로 인한 Auto Scaling 비용 보호를 활성화합니다.</p>
+<h4 id="232">2.3.2 설계 이유</h4>
+<p>MAU 1,000만 규모 서비스는 L3/L4 DDoS 공격의 주요 타깃이 됩니다. Shield Standard는 자동 완화만 제공하며 공격 가시성과 DRT 지원이 없습니다. Advanced는 실시간 공격 가시성과 AWS DDoS Response Team(DRT) 전문가 지원을 제공합니다. Global Accelerator와 함께 사용 시 AWS 엣지에서 트래픽을 흡수하여 오리진 보호 효과를 극대화합니다.</p>
+<h4 id="233">2.3.3 반영된 보안 요소</h4>
+<p>L3/L4 DDoS 자동 완화로 서비스 중단을 방지합니다. Security Hub 및 CloudWatch와 연동하여 공격 탐지 이벤트를 SIEM으로 전달합니다.</p>
+<hr />
+<h3 id="24-waf">2.4 WAF</h3>
+<h4 id="241">2.4.1 구성 요소 및 설정 방식</h4>
+<p>Managed Rules를 PreProcess/PostProcess 계층으로 분리하여 적용합니다. PreProcess에는 IP 평판·DDoS·공통 웹 공격·봇 탐지 룰셋을 배포하고, PostProcess에는 SQLi·알려진 악성 입력·관리자 보호·계정 탈취(ATP)·계정 생성 어뷰징(ACFP) 룰셋과 Rate-based Rule을 배포합니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>외부<span class="w"> </span>사용자<span class="w"> </span>트래픽<span class="w">                    </span>임직원<span class="w"> </span>트래픽
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">      </span>↓<span class="w">                                    </span>↓
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>CloudFront<span class="w">                    </span>Twingate<span class="w"> </span>/<span class="w"> </span>Verified<span class="w"> </span>Access
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span>↓<span class="w">                                    </span>↓
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="o">[</span>Public<span class="w"> </span>ALB<span class="o">]</span><span class="w">                        </span><span class="o">[</span>Internal<span class="w"> </span>ALB<span class="o">]</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span>↓<span class="w">                                    </span>↓
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>전체<span class="w"> </span>WAF<span class="w"> </span>룰<span class="w"> </span>적용<span class="w">                  </span>완화된<span class="w"> </span>별도<span class="w"> </span>Web<span class="w"> </span>ACL<span class="w"> </span>적용
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span>↓<span class="w">                                    </span>↓
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>서비스<span class="w"> </span>앱<span class="w">                              </span>Admin<span class="w"> </span>앱
+</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>트래픽<span class="w"> </span>인입
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">      </span>↓
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">[</span>PreProcess<span class="w"> </span>-<span class="w"> </span>Firewall<span class="w"> </span>Manager<span class="w"> </span>강제<span class="w"> </span>배포,<span class="w"> </span>보안<span class="w"> </span>담당자만<span class="w"> </span>수정<span class="w"> </span>가능<span class="o">]</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>├──<span class="w"> </span>AWSManagedRulesAmazonIpReputationList
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>├──<span class="w"> </span>AWSManagedRulesAntiDDoSRuleSet
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>├──<span class="w"> </span>AWSManagedRulesCommonRuleSet
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>└──<span class="w"> </span>AWSManagedRulesBotControlRuleSet<span class="w"> </span><span class="o">(</span>Targeted<span class="w"> </span>모드<span class="o">)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="o">[</span>Middle<span class="w"> </span>-<span class="w"> </span>각<span class="w"> </span>계정<span class="w"> </span>팀<span class="w"> </span>자율<span class="w"> </span>추가<span class="w"> </span>영역<span class="o">]</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>└──<span class="w"> </span>서비스별<span class="w"> </span>커스텀<span class="w"> </span>Rule<span class="w"> </span>허용<span class="w"> </span><span class="o">(</span>PreProcess/PostProcess<span class="w"> </span>변경<span class="w"> </span>불가<span class="o">)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="o">[</span>PostProcess<span class="w"> </span>-<span class="w"> </span>Firewall<span class="w"> </span>Manager<span class="w"> </span>강제<span class="w"> </span>배포,<span class="w"> </span>보안<span class="w"> </span>담당자만<span class="w"> </span>수정<span class="w"> </span>가능<span class="o">]</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>├──<span class="w"> </span>AWSManagedRulesSQLiRuleSet
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>├──<span class="w"> </span>AWSManagedRulesKnownBadInputsRuleSet
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>├──<span class="w"> </span>AWSManagedRulesAdminProtectionRuleSet
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>├──<span class="w"> </span>AWSManagedRulesATPRuleSet
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>├──<span class="w"> </span>AWSManagedRulesACFPRuleSet
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>└──<span class="w"> </span>Rate-based<span class="w"> </span>Rules
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">      </span>↓
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>트래픽<span class="w"> </span>통과<span class="w"> </span>or<span class="w"> </span>차단
+</code></pre></div>
+<h4 id="242">2.4.2 설계 이유</h4>
+<p>CloudFront에 적용하여 엣지에서 먼저 악성 요청을 차단하고, ALB에도 중복 적용하여 CloudFront 우회 접근을 방어합니다. BotControlRuleSet Targeted 모드로 크리덴셜 스터핑과 스크래핑에 대응하고, ATPRuleSet·ACFPRuleSet으로 계정 탈취 및 가짜 계정 대량 생성을 탐지합니다. 임직원 트래픽은 Internal ALB로 분리하여 Admin 엔드포인트가 외부 WAF 룰 대상에서 제외되도록 구성합니다.</p>
+<h4 id="243">2.4.3 반영된 보안 요소</h4>
+<p>임직원 Admin 트래픽을 Internal ALB로 분리하여 외부 공격자의 Admin 엔드포인트 접근 경로를 원천 차단합니다.</p>
+<hr />
+<h3 id="25-global-accelerator">2.5 Global Accelerator</h3>
+<h4 id="251">2.5.1 구성 요소 및 설정 방식</h4>
+<p>Accelerator를 생성하여 Static Anycast IP 2개를 할당하고, 엔드포인트 그룹을 Region A·B에 각각 구성합니다. 각 리전의 ALB를 엔드포인트로 등록하고 가중치 기반 트래픽 분배를 설정합니다. 30초 간격 TCP 헬스 체크를 통해 임계값 3회 실패 시 자동으로 장애를 조치합니다. Shield Advanced와 자동 통합하여 Global Accelerator 리소스를 Shield 보호 그룹에 포함합니다.</p>
+<h4 id="252">2.5.2 설계 이유</h4>
+<p>AWS 글로벌 백본 네트워크를 활용하여 퍼블릭 인터넷 대신 AWS 내부 네트워크로 트래픽을 라우팅해 지연시간을 줄이고 패킷 손실을 최소화합니다. 한 리전 장애 시 수초 내 다른 리전으로 트래픽이 자동 전환됩니다. CloudFront와 달리 고정 IP를 제공하므로 방화벽 화이트리스트가 필요한 기업 고객 환경에 유리합니다.</p>
+<h3 id="253">2.5.3 반영된 보안 요소</h3>
+<p>Shield Advanced와 통합하여 Anycast IP 레벨에서 L3/L4 공격을 흡수합니다. 단일 리전 장애 시에도 서비스 연속성을 보장하며, AWS 백본 이용으로 퍼블릭 인터넷 구간 노출을 최소화합니다.</p>
+<hr />
+<h3 id="26-multi-region-access-point-s3">2.6 Multi-Region Access Point (S3)</h3>
+<h4 id="261">2.6.1 구성 요소 및 설정 방식</h4>
+<p>Region A·B 버킷을 하나의 글로벌 엔드포인트로 묶어 Multi-Region Access Point(MRAP)를 생성합니다. S3 Cross-Region Replication을 연동하여 두 리전 버킷 간 양방향 복제를 구성합니다. MRAP Access Policy와 IAM 정책으로 최소 권한 접근 제어를 적용합니다. 모든 버킷에 Public Access를 차단하고 SSE-KMS를 적용합니다.</p>
+<h4 id="262">2.6.2 설계 이유</h4>
+<p>단일 엔드포인트로 멀티리전에 접근하며, 코드 변경 없이 지리적으로 가장 가까운 버킷으로 자동 라우팅합니다. 리전 장애 시 복제된 버킷으로 자동 장애 조치가 이루어집니다.</p>
+<h4 id="263">2.6.3 반영된 보안 요소</h4>
+<p>SSE-KMS로 저장 데이터를 암호화합니다. MRAP 정책과 IAM 최소 권한으로 이중 접근 통제를 적용합니다. S3 Server Access Logging 및 CloudTrail Data Events 활성화로 모든 객체 접근을 로깅합니다.</p>
+<hr />
+<h3 id="27-ecr-cross-region-replication">2.7 ECR Cross-Region Replication</h3>
+<h4 id="271">2.7.1 구성 요소 및 설정 방식</h4>
+<p>ECR Cross-Region Replication을 설정하여 소스 리전 레지스트리에서 대상 리전으로 자동 복제하는 규칙을 구성합니다. 특정 레포지터리 prefix(예: prod/)에 한하여 복제를 허용합니다. ECR Enhanced Scanning을 활성화하여 이미지 취약점을 스캔하고, 이미지 서명 정책과 수명 주기 정책을 설정합니다.</p>
+<h4 id="272">2.7.2 설계 이유</h4>
+<p>Region B EKS/ECS가 로컬 ECR에서 이미지를 Pull하도록 하여 크로스 리전 데이터 전송 비용과 지연시간을 줄입니다. Region A 장애 시 Region B가 독립적으로 동일 이미지로 서비스를 가동합니다. 취약점 스캔 및 이미지 서명으로 CI/CD 파이프라인에서 검증된 이미지만 배포되도록 공급망 보안을 강화합니다.</p>
+<h4 id="273">2.7.3 반영된 보안 요소</h4>
+<p>Inspector v2 연동으로 OS 패키지 및 라이브러리 CVE를 실시간 탐지합니다. 서명된 이미지만 배포를 허용하여 공급망 공격을 방어합니다. ECR 레포지터리 정책으로 허용된 계정 및 역할만 이미지를 Pull하도록 제한합니다. CloudTrail을 통해 모든 ECR API 호출을 로깅합니다.</p>
+<hr />
+<h3 id="28-siemsoar">2.8 SIEM/SOAR</h3>
+<p><img alt="SIEM/SOAR" src="../../images/architecture/hyperscale/security.png" /></p>
+<h4 id="281">2.8.1 구성 요소 및 설정 방식</h4>
+<p>Amazon Security Lake를 구성하여 GuardDuty, Security Hub, CloudTrail, VPC Flow Logs, WAF 로그, Route 53 쿼리 로그를 수집하고 OCSF 방식으로 정규화합니다. Security Lake를 소스로 하여 Enterprise SIEM에 데이터를 전송합니다. SOAR를 연동하여 SIEM에서 알림 발생 시 플레이북을 자동으로 실행합니다. SOAR 플레이북에서 Slack, Jira, PagerDuty를 연동합니다.</p>
+<h4 id="282">2.8.2 설계 이유</h4>
+<p>다수의 AWS 서비스 로그를 단일 경로(Security Lake)로 집중하여 SIEM 연동 복잡도를 줄입니다. OCSF로 정규화하면 벤더 종속 없이 표준 스키마로 로그를 변환하므로 SIEM 교체 시에도 재가공이 불필요합니다. SOAR 자동화를 통해 플레이북 기반으로 1차 대응(IP 차단, 계정 비활성화 등)하고, 심각도에 따라 Slack·Jira·PagerDuty로 에스컬레이션합니다.</p>
+<h4 id="283">2.8.3 반영된 보안 요소</h4>
+<p>전체 AWS 환경 로그를 단일 데이터 레이크에서 분석하여 가시성을 확보합니다. SOAR 플레이북으로 위협 탐지 후 수동 개입 없이 격리·차단 조치를 실행합니다. Jira 티켓으로 모든 보안 이벤트의 이력 및 책임 소재를 기록합니다. Security Lake 버킷에 Object Lock 및 S3 버전 관리를 적용하여 로그 위변조를 방지합니다.</p>
+<hr />
+<h3 id="29-aws-detective">2.9 AWS Detective</h3>
+<h4 id="291">2.9.1 구성 요소 및 설정 방식</h4>
+<p>AWS Organizations 기반으로 Detective를 활성화하여 전체 계정을 관리 계정에서 중앙 관리합니다. GuardDuty를 소스로 연동하여 Finding 발생 시 관련 엔티티(IAM Role, EC2, IP)의 행동 그래프를 자동 구성합니다. Security Hub와 연동하여 Finding에서 Detective 조사 화면으로 직접 피벗할 수 있도록 구성합니다. 데이터 보존 기간은 최대 12개월로 장기 포렌식 분석을 지원합니다. Region A·B 각각에서 Detective를 활성화하고 관리 계정에서 두 리전의 Finding을 통합 조회합니다.</p>
+<h4 id="292">2.9.2 설계 이유</h4>
+<p>GuardDuty·Security Hub는 위협을 탐지하고 집계하지만, 탐지된 Finding이 실제 침해인지 오탐인지 판단하기 위한 조사 컨텍스트는 제공하지 않습니다. Detective는 VPC Flow Logs, CloudTrail, GuardDuty Finding을 상관분석하여 특정 IAM 엔티티나 인스턴스의 시계열 행동 패턴을 시각화합니다. SIEM/SOAR 자동화가 처리하지 못한 복잡한 침해 시나리오(장기간 저탐지 횡이동, 자격증명 이상 사용 등)에서 분석 시간을 단축합니다.</p>
+<h4 id="293">2.9.3 반영된 보안 요소</h4>
+<p>GuardDuty Finding과 연계하여 IP·IAM Role·EC2 인스턴스 단위의 행동 그래프를 자동 생성합니다. Security Hub → Detective 피벗 연동으로 Finding 발생부터 조사까지의 흐름을 단일 콘솔 내에서 처리합니다.</p>
+<hr />
+<h3 id="210">2.10 데이터 파이프라인</h3>
+<p><img alt="데이터 파이프라인" src="../../images/architecture/hyperscale/data_pipeline.png" /></p>
+<h4 id="2101">2.10.1 전체 흐름</h4>
+<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="o">[</span>수집<span class="o">]</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Aurora<span class="w"> </span>CDC<span class="w"> </span>/<span class="w"> </span>DynamoDB<span class="w"> </span>Streams<span class="w"> </span>→<span class="w"> </span>MSK<span class="w"> </span>Connect<span class="w"> </span>→<span class="w"> </span>MSK<span class="w"> </span>토픽<span class="w"> </span>→<span class="w"> </span>S3<span class="o">(</span>Raw<span class="o">)</span><span class="w"> </span>적재
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="o">[</span>변환<span class="w"> </span>및<span class="w"> </span>저장<span class="o">]</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Glue<span class="w"> </span>ETL:<span class="w"> </span>Raw<span class="w"> </span>→<span class="w"> </span>Processed<span class="w"> </span>→<span class="w"> </span>Curated<span class="w"> </span>레이어<span class="w"> </span>변환
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Glue<span class="w"> </span>Data<span class="w"> </span>Catalog:<span class="w"> </span>스키마/파티션<span class="w"> </span>메타데이터<span class="w"> </span>관리
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="o">[</span>백업<span class="o">]</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>AWS<span class="w"> </span>Backup:<span class="w"> </span>Aurora·DynamoDB<span class="w"> </span>스냅샷<span class="w"> </span>→<span class="w"> </span>Backup<span class="w"> </span>Vault<span class="w"> </span>보관
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="o">[</span>분석<span class="o">]</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>Athena:<span class="w"> </span>S3<span class="w"> </span>대상<span class="w"> </span>서버리스<span class="w"> </span>ad-hoc<span class="w"> </span>쿼리
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>Redshift:<span class="w"> </span>Curated<span class="w"> </span>데이터<span class="w"> </span>대규모<span class="w"> </span>정형<span class="w"> </span>분석
+</code></pre></div>
+<h4 id="2102">2.10.2 보안 요소</h4>
+<p>Lake Formation으로 테이블/컬럼/행 수준의 Fine-grained Access Control을 적용하고 역할별 접근 범위를 분리합니다. AWS Macie로 S3 버킷 내 PII를 자동 탐지하여 Security Hub 및 SIEM에 연동합니다. Backup Vault Lock의 WORM 정책 적용으로 백업 삭제·수정을 방지하여 랜섬웨어 공격에 대응합니다. S3·Aurora·DynamoDB는 SSE-KMS로 암호화하고, MSK에는 TLS를 강제합니다.</p>
+<hr />
+<h3 id="211-artifact-">2.11 Artifact - 감사 대응(컴플라이언스)</h3>
+<p><img alt="컴플라이언스" src="../../images/architecture/hyperscale/compliance.png" /></p>
+<h4 id="2111">2.11.1 구성 요소 및 설정 방식</h4>
+<p>AWS Artifact를 통해 SOC, ISO, PCI DSS 등 서드파티 감사 보고서를 온디맨드로 다운로드합니다. Artifact Agreements에서 AWS BAA를 체결하고 Organizations 단위로 전체 계정에 일괄 반영합니다. Config Conformance Pack을 통해 CIS AWS Foundations Benchmark, NIST 기반 규칙셋을 전 계정에 배포하고, 준수 현황을 Config Aggregator에서 중앙 집계하여 감사 증적으로 활용합니다.</p>
+<h4 id="2112">2.11.2 설계 이유</h4>
+<p>외부 감사 시 AWS 책임 영역의 보안 통제 증거는 AWS Artifact의 감사 보고서가 유일한 공식 증빙입니다. Config Conformance Pack과 연계하면 고객 책임 영역의 준수 현황을 자동으로 수집할 수 있어 수동 증적 수집 공수를 줄이고 상시 컴플라이언스 체계를 유지할 수 있습니다.</p>
+<h4 id="2113">2.11.3 반영된 보안 요소</h4>
+<p>AWS 책임 영역의 공식 감사 보고서를 온디맨드로 확보합니다. Config Conformance Pack으로 CIS Benchmark·NIST 기반 규칙을 전 계정에 일관 적용하고 중앙에서 집계합니다. Security Hub 컴플라이언스 스코어와 Config 준수 현황을 결합하여 감사 패키지를 구성합니다.</p>
+<hr />
+<h3 id="212-ou">2.12 OU 구조</h3>
+<h4 id="2121-ou">2.12.1 전체 OU 트리</h4>
+<p><img alt="계정구조도" src="../../images/architecture/hyperscale/account.png" /></p>
+<p><strong>총 계정 수</strong>: 약 27개 (Management Account 포함)</p>
+<hr />
+<h4 id="2122">2.12.2 이 구조를 선택한 이유</h4>
+<p>중대규모까지는 Security OU·Workloads OU 중심의 단순 계층으로 충분했습니다. 그러나 임직원 2,000명, 글로벌 서비스 운영 환경에서는 세 가지 문제가 발생합니다.</p>
+<p>첫째, <strong>네트워크와 애플리케이션이 같은 계정에 있으면 폭발 반경이 너무 넓습니다.</strong> VPC·Transit Gateway를 별도 Infrastructure OU에 분리하면 애플리케이션 계정이 침해되어도 네트워크 토폴로지가 변조되지 않습니다.</p>
+<p>둘째, <strong>글로벌 서비스는 리전별 데이터 레지던시 요건이 다릅니다.</strong> Production Workloads OU 아래 Region 1 OU와 Region 2 OU를 분리하면 리전별 SCP를 독립 적용할 수 있고, 해외 임직원 접근 범위도 OU 단위로 정확하게 제어할 수 있습니다.</p>
+<p>셋째, <strong>보안 계정 하나로 모든 역할을 담당하면 최소 권한 원칙이 무너집니다.</strong> 중대규모의 Security Tooling 단일 계정을 Security Prod·Security Dev 2개로 분리하여 기존 Log Archive·Audit과 합쳐 총 4개 계정으로 구성하고, 보안 팀마다 접근 가능한 계정을 다르게 설계합니다.</p>
+<hr />
+<h3 id="213-management-account">2.13 Management Account</h3>
+<h4 id="2131">2.13.1 역할</h4>
+<p>Management Account에 IAM Identity Center를 통해 접근 가능한 인원은 시니어 인프라 담당자 1~2명으로 제한하며, 일상 운영에서는 직접 접근하지 않고 SCPDeployRole AssumeRole 경유로만 관리합니다.</p>
+<table>
+<thead>
+<tr>
+<th>기능</th>
+<th>서비스</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>멤버 계정 생성·관리</td>
+<td>AWS Organizations</td>
+<td>Control Tower Account Factory 통해 자동화</td>
+</tr>
+<tr>
+<td>통합 빌링</td>
+<td>AWS Billing</td>
+<td>전체 계정 비용 단일 청구</td>
+</tr>
+<tr>
+<td>전체 조직 SCP 배포</td>
+<td>Organizations + Terraform</td>
+<td>GitHub Actions OIDC 경유, 직접 콘솔 배포 금지</td>
+</tr>
+<tr>
+<td>IAM Identity Center 인스턴스</td>
+<td>IAM Identity Center</td>
+<td>인스턴스는 이 계정에 상주, 일상 운영은 Security Prod 위임</td>
+</tr>
+<tr>
+<td>Control Tower 활성화</td>
+<td>Control Tower</td>
+<td>Landing Zone 구성·Mandatory Controls 자동 적용</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2132">2.13.2 접근 원칙</h4>
+<p>Management Account 접근은 시니어 인프라 담당자 1~2명으로 제한하며, 일상 운영에서는 직접 접근하지 않습니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>사람의<span class="w"> </span>접근<span class="w"> </span>방식
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span>IAM<span class="w"> </span>Identity<span class="w"> </span>Center<span class="w"> </span>→<span class="w"> </span>Management<span class="w"> </span>Account<span class="w"> </span>직접<span class="w"> </span>로그인<span class="w"> </span><span class="o">(</span>일상<span class="w"> </span>금지<span class="o">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>IAM<span class="w"> </span>Identity<span class="w"> </span>Center<span class="w"> </span>→<span class="w"> </span>Security<span class="w"> </span>Prod<span class="w"> </span>계정
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">        </span>→<span class="w"> </span>SCPDeployRole<span class="w"> </span>AssumeRole<span class="w"> </span><span class="o">(</span>Cross-account<span class="o">)</span><span class="w"> </span>→<span class="w"> </span>Management<span class="w"> </span>Account
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>GitHub<span class="w"> </span>Actions의<span class="w"> </span>접근<span class="w"> </span>방식
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span>OIDC<span class="w"> </span>토큰<span class="w"> </span>→<span class="w"> </span>Security<span class="w"> </span>Prod<span class="w"> </span>계정<span class="w"> </span>SCPTerraformRole<span class="w"> </span>Assume
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span>→<span class="w"> </span>Management<span class="w"> </span>Account<span class="w"> </span>SCPDeployRole<span class="w"> </span>Assume
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">            </span>→<span class="w"> </span>organizations:Policy<span class="w"> </span>관련<span class="w"> </span>API만<span class="w"> </span>허용<span class="w"> </span>→<span class="w"> </span>SCP<span class="w"> </span>배포<span class="w"> </span>실행
+</code></pre></div>
+<p>워크로드 리소스(EC2, RDS, Lambda 등)는 이 계정에 절대 배포하지 않습니다. Management Account가 침해되면 전체 조직의 SCP와 거버넌스가 무력화되기 때문입니다.</p>
+<h4 id="2133-control-tower">2.13.3 Control Tower가 자동으로 처리하는 항목</h4>
+<p>신규 계정이 Control Tower Account Factory로 생성될 때 아래 항목이 자동 적용됩니다.</p>
+<table>
+<thead>
+<tr>
+<th>자동 적용 항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GuardDuty 활성화</td>
+<td>Security Prod 계정을 Delegated Admin으로 자동 연결</td>
+</tr>
+<tr>
+<td>Security Hub 활성화</td>
+<td>신규 계정 Finding이 Security Prod로 자동 집계</td>
+</tr>
+<tr>
+<td>CloudTrail Organization Trail</td>
+<td>Log Archive 계정 S3로 자동 전송</td>
+</tr>
+<tr>
+<td>AWS Config 활성화</td>
+<td>Conformance Pack 규칙 자동 적용</td>
+</tr>
+<tr>
+<td>Foundation SCP 상속</td>
+<td>Root 레벨 SCP가 신규 계정에 즉시 적용</td>
+</tr>
+<tr>
+<td>IAM Identity Center 매핑</td>
+<td>해당 OU에 맞는 그룹·Permission Set 자동 할당</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="214-security-ou">2.14 Security OU 상세</h3>
+<p><img alt="Security Team" src="../../images/architecture/hyperscale/security_team.png" /></p>
+<h4 id="2141-4">2.14.1 4개 계정 역할</h4>
+<p>중대규모의 Security OU는 Log Archive·Audit·Security Tooling 3개 계정으로 구성되어 있었습니다. Security Tooling 단일 계정이 GuardDuty 관리·보안 자동화를 모두 담당하면서, GRC Team이 GuardDuty 설정을 변경하거나 SOC Tier 1이 원본 감사 로그에 접근하는 구조적 허점이 존재했습니다. 대규모에서는 Security Tooling을 Security Prod·Security Dev 2개로 추가 분리하여 총 4개 계정 구조로 전환합니다.</p>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>핵심 역할</th>
+<th>주 담당 팀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Log Archive</strong></td>
+<td>전사 CloudTrail·VPC Flow Logs·WAF Log 중앙 저장 (S3 + Security Lake). S3 Object Lock으로 삭제 불가</td>
+<td>CSE (ReadOnly), GRC (ReadOnly+Athena)</td>
+</tr>
+<tr>
+<td><strong>Audit</strong></td>
+<td>AWS Config Conformance Pack, AWS Artifact, 컴플라이언스 증적 관리</td>
+<td>GRC (Full Admin)</td>
+</tr>
+<tr>
+<td><strong>Security Prod</strong></td>
+<td>GuardDuty·Security Hub Delegated Admin, Firewall Manager 중앙 관리, IAM Identity Center 일상 운영</td>
+<td>CSE (Admin), SOC 전 Tier, Network Security, GRC</td>
+</tr>
+<tr>
+<td><strong>Security Dev</strong></td>
+<td>보안 자동화 코드 (Lambda·EventBridge), SOAR 플레이북 테스트 전용 개발 환경</td>
+<td>CSE (Admin), SOC Tier 2·3, Network Security</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2142">2.14.2 보안 팀 계정 접근 권한 매트릭스</h4>
+<table>
+<thead>
+<tr>
+<th>팀</th>
+<th>Log Archive</th>
+<th>Audit</th>
+<th>Security Prod</th>
+<th>Security Dev</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CSE</strong></td>
+<td>ReadOnly + Athena</td>
+<td>ReadOnly</td>
+<td><strong>Admin</strong> (MFA·4h)</td>
+<td><strong>Admin</strong> (8h)</td>
+</tr>
+<tr>
+<td><strong>SOC Tier 1</strong></td>
+<td>X</td>
+<td>X</td>
+<td>ReadOnly (8h)</td>
+<td>X</td>
+</tr>
+<tr>
+<td><strong>SOC Tier 2·3</strong></td>
+<td>ReadOnly + Athena (MFA·2h)</td>
+<td>X</td>
+<td>Finding 상태 변경 (4h)</td>
+<td>ReadOnly + Lambda 테스트 (4h)</td>
+</tr>
+<tr>
+<td><strong>Network Security</strong></td>
+<td>X</td>
+<td>X</td>
+<td>WAF·FM Full (8h)</td>
+<td>WAF 테스트 (4h)</td>
+</tr>
+<tr>
+<td><strong>GRC</strong></td>
+<td>ReadOnly + Athena (4h)</td>
+<td><strong>Full Admin</strong> (MFA·4h)</td>
+<td>ReadOnly (4h)</td>
+<td>X</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="2143">2.14.3 계정별 상세 권한 설계</h4>
+<h3 id="log-archive">Log Archive 계정</h3>
+<p><strong>계정 역할</strong>: 전사 CloudTrail, VPC Flow Logs, WAF 로그, ALB Access Log 중앙 수집. S3 + Amazon Security Lake 구성. S3 Object Lock(Compliance 모드)으로 어떤 역할도 삭제 불가.</p>
+<p><strong>SCP 보호</strong>: S3 버킷 정책 변경·객체 삭제·버킷 삭제 전체 차단. SCP와 Permission Boundary 이중 보호.</p>
+<table>
+<thead>
+<tr>
+<th>팀</th>
+<th>Permission Set</th>
+<th>허용 권한</th>
+<th>차단 (Deny)</th>
+<th>세션</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CSE</td>
+<td><code>CSE-LogReadOnly</code></td>
+<td>S3 GetObject·ListBucket, Athena 쿼리, Security Lake 조회</td>
+<td>S3 DeleteObject·DeleteBucket·버킷 정책 변경</td>
+<td>4h</td>
+</tr>
+<tr>
+<td>SOC Tier 1</td>
+<td>접근 없음</td>
+<td>SIEM 대시보드를 통해서만 로그 조회</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>SOC Tier 2·3</td>
+<td><code>SOC-Tier23-LogReadOnly</code></td>
+<td>S3 GetObject (특정 prefix), Athena 쿼리, Security Lake 조회</td>
+<td>S3 삭제 전체·버킷 정책 변경</td>
+<td>2h (MFA 필수)</td>
+</tr>
+<tr>
+<td>Network Security</td>
+<td>접근 없음</td>
+<td>SIEM 대시보드를 통해서만 WAF 로그 확인</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>GRC</td>
+<td><code>GRC-LogReadOnly</code></td>
+<td>S3 GetObject (전체), Athena 쿼리, CloudTrail Lake 쿼리</td>
+<td>S3 DeleteObject·버킷 정책 변경</td>
+<td>4h</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="audit">Audit 계정</h3>
+<p><strong>계정 역할</strong>: AWS Config Conformance Pack, AWS Artifact, 컴플라이언스 증적 관리 전담. GRC Team의 주 작업 공간.</p>
+<p><strong>SCP 보호</strong>: Config Rules 삭제·비활성화 차단, Security Hub 비활성화 차단.</p>
+<table>
+<thead>
+<tr>
+<th>팀</th>
+<th>Permission Set</th>
+<th>허용 권한</th>
+<th>차단 (Deny)</th>
+<th>세션</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CSE</td>
+<td><code>CSE-AuditReadOnly</code></td>
+<td>Config 규정 준수 현황 조회, Conformance Pack 결과 조회</td>
+<td>Config Rules 수정·삭제</td>
+<td>4h</td>
+</tr>
+<tr>
+<td>SOC 전 Tier</td>
+<td>접근 없음</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Network Security</td>
+<td>접근 없음</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>GRC</td>
+<td><code>GRC-AuditAdmin</code></td>
+<td>Config Conformance Pack 전체 (커스텀 Rules 포함), AWS Artifact 다운로드, Macie 리포트 조회</td>
+<td>컴퓨팅 리소스(EC2·EKS·Lambda) 생성 (SCP 강제)</td>
+<td>4h (MFA 필수)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="security-prod">Security Prod 계정</h3>
+<p><strong>계정 역할</strong>: GuardDuty·Security Hub·Inspector·Access Analyzer Delegated Admin, Firewall Manager 중앙 관리, IAM Identity Center 일상 운영.</p>
+<p><strong>SCP 보호</strong>: GuardDuty·Security Hub·Config 비활성화 차단, Firewall Manager 정책 삭제 차단, 워크로드 리소스(EC2·EKS·RDS) 생성 차단.</p>
+<table>
+<thead>
+<tr>
+<th>팀</th>
+<th>Permission Set</th>
+<th>허용 권한</th>
+<th>차단 (Deny)</th>
+<th>세션</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CSE</td>
+<td><code>CSE-SecProdAdmin</code></td>
+<td>GuardDuty Admin, Security Hub Admin, Inspector Admin, Access Analyzer Admin, IAM Identity Center 운영, KMS 키 관리, Secrets Manager <code>/security/*</code></td>
+<td>SCP 직접 배포 (GitHub Actions 경유만), 워크로드 리소스 생성</td>
+<td>4h (MFA 필수)</td>
+</tr>
+<tr>
+<td>SOC Tier 1</td>
+<td><code>SOC-Tier1-SecProdRO</code></td>
+<td>Security Hub Findings 조회, GuardDuty Findings 조회, Detective 그래프 조회</td>
+<td>Finding 상태 변경·설정 변경 일체</td>
+<td>8h</td>
+</tr>
+<tr>
+<td>SOC Tier 2·3</td>
+<td><code>SOC-Tier23-SecProdRW</code></td>
+<td>Security Hub Finding 상태 변경 (SUPPRESSED·RESOLVED·NOTIFIED), GuardDuty Finding 아카이브, Detective 심화 분석</td>
+<td>GuardDuty·Security Hub 설정 변경, IAM Identity Center 변경</td>
+<td>4h</td>
+</tr>
+<tr>
+<td>Network Security</td>
+<td><code>NetSec-SecProdAdmin</code></td>
+<td>Firewall Manager 정책 전체, WAF WebACL 생성·수정·삭제, Shield Advanced 관리</td>
+<td>IAM Identity Center 변경, GuardDuty 설정 변경, KMS 키 관리</td>
+<td>8h</td>
+</tr>
+<tr>
+<td>GRC</td>
+<td><code>GRC-SecProdReadOnly</code></td>
+<td>Security Hub 보안 현황 조회, 규정 준수 리포트 다운로드, Config 결과 조회</td>
+<td>설정 변경 일체</td>
+<td>4h</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="security-dev">Security Dev 계정</h3>
+<p><strong>계정 역할</strong>: 보안 자동화 코드(Lambda, EventBridge), SOAR 플레이북 연동 테스트, WAF 룰 테스트 전용 개발 환경. 프로덕션 데이터에 접근할 수 없습니다.</p>
+<p><strong>SCP 보호</strong>: Prod 계정 데이터 직접 접근 차단, 워크로드 애플리케이션 배포 차단.</p>
+<table>
+<thead>
+<tr>
+<th>팀</th>
+<th>Permission Set</th>
+<th>허용 권한</th>
+<th>차단 (Deny)</th>
+<th>세션</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CSE</td>
+<td><code>CSE-SecDevAdmin</code></td>
+<td>Lambda 전체, EventBridge 전체, CloudWatch Logs, IAM Role 생성 (보안 자동화용)</td>
+<td>Prod 계정 데이터 직접 접근, 워크로드 리소스 생성</td>
+<td>8h</td>
+</tr>
+<tr>
+<td>SOC Tier 1</td>
+<td>접근 없음</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>SOC Tier 2·3</td>
+<td><code>SOC-Tier23-SecDevRO</code></td>
+<td>Lambda 함수 목록 조회, 로그 조회, Lambda Invoke (테스트 실행만), SOAR 플레이북 실행 테스트</td>
+<td>Lambda 코드 수정·삭제, IAM Role 변경</td>
+<td>4h</td>
+</tr>
+<tr>
+<td>Network Security</td>
+<td><code>NetSec-SecDevRO</code></td>
+<td>WAF 룰 테스트 실행, WAF 시뮬레이션 조회</td>
+<td>WAF 룰 프로덕션 반영 (Security Prod 경유만 가능)</td>
+<td>4h</td>
+</tr>
+<tr>
+<td>GRC</td>
+<td>접근 없음</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="2144-security-ou-permission-set">2.14.4 Security OU Permission Set 목록</h4>
+<table>
+<thead>
+<tr>
+<th>Permission Set</th>
+<th>대상 팀</th>
+<th>대상 계정</th>
+<th>MFA</th>
+<th>세션</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CSE-LogReadOnly</code></td>
+<td>CSE</td>
+<td>Log Archive</td>
+<td>권고</td>
+<td>4h</td>
+</tr>
+<tr>
+<td><code>CSE-AuditReadOnly</code></td>
+<td>CSE</td>
+<td>Audit</td>
+<td>권고</td>
+<td>4h</td>
+</tr>
+<tr>
+<td><code>CSE-SecProdAdmin</code></td>
+<td>CSE</td>
+<td>Security Prod</td>
+<td><strong>필수</strong></td>
+<td>4h</td>
+</tr>
+<tr>
+<td><code>CSE-SecDevAdmin</code></td>
+<td>CSE</td>
+<td>Security Dev</td>
+<td>권고</td>
+<td>8h</td>
+</tr>
+<tr>
+<td><code>SOC-Tier1-SecProdRO</code></td>
+<td>SOC Tier 1</td>
+<td>Security Prod</td>
+<td>권고</td>
+<td>8h</td>
+</tr>
+<tr>
+<td><code>SOC-Tier23-LogReadOnly</code></td>
+<td>SOC Tier 2·3</td>
+<td>Log Archive</td>
+<td><strong>필수</strong></td>
+<td>2h</td>
+</tr>
+<tr>
+<td><code>SOC-Tier23-SecProdRW</code></td>
+<td>SOC Tier 2·3</td>
+<td>Security Prod</td>
+<td>권고</td>
+<td>4h</td>
+</tr>
+<tr>
+<td><code>SOC-Tier23-SecDevRO</code></td>
+<td>SOC Tier 2·3</td>
+<td>Security Dev</td>
+<td>권고</td>
+<td>4h</td>
+</tr>
+<tr>
+<td><code>NetSec-SecProdAdmin</code></td>
+<td>Network Security</td>
+<td>Security Prod</td>
+<td><strong>필수</strong></td>
+<td>8h</td>
+</tr>
+<tr>
+<td><code>NetSec-SecDevRO</code></td>
+<td>Network Security</td>
+<td>Security Dev</td>
+<td>권고</td>
+<td>4h</td>
+</tr>
+<tr>
+<td><code>GRC-LogReadOnly</code></td>
+<td>GRC</td>
+<td>Log Archive</td>
+<td>권고</td>
+<td>4h</td>
+</tr>
+<tr>
+<td><code>GRC-AuditAdmin</code></td>
+<td>GRC</td>
+<td>Audit</td>
+<td><strong>필수</strong></td>
+<td>4h</td>
+</tr>
+<tr>
+<td><code>GRC-SecProdReadOnly</code></td>
+<td>GRC</td>
+<td>Security Prod</td>
+<td>권고</td>
+<td>4h</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="215-infrastructure-ou">2.15 Infrastructure OU 상세</h3>
+<p>네트워크·공유 서비스·CI/CD를 Infrastructure OU 아래 3개 Sub-OU로 분리합니다. 이 OU의 계정들은 워크로드를 직접 호스팅하지 않으며, Workloads OU 계정이 공통으로 사용하는 인프라를 제공합니다.</p>
+<hr />
+<h4 id="2151-global-network-ou">2.15.1 Global Network OU</h4>
+<p><strong>역할</strong>: 전체 조직의 네트워크 토폴로지를 중앙 관리합니다. Transit Gateway를 이 OU에서 소유하여 모든 계정의 VPC 연결을 한 곳에서 제어합니다.</p>
+<h4 id="_6">계정별 역할</h4>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>역할</th>
+<th>주요 리소스</th>
+<th>설계 이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Network Hub</strong></td>
+<td>전체 조직 TGW 소유·관리. RAM으로 전 계정 공유</td>
+<td>TGW (Region A·B), TGW Peering, Route Table</td>
+<td>TGW를 워크로드 계정에 두면 해당 계정 침해 시 라우팅 테이블이 변조될 위험</td>
+</tr>
+<tr>
+<td><strong>Network Prod</strong></td>
+<td>프로덕션 VPC 인프라</td>
+<td>VPC, Subnet, NAT GW, NACL</td>
+<td>프로덕션 네트워크 토폴로지를 워크로드 계정과 분리</td>
+</tr>
+<tr>
+<td><strong>Network Dev</strong></td>
+<td>개발·스테이징 VPC 인프라</td>
+<td>VPC, Subnet</td>
+<td>개발 환경 네트워크 변경이 프로덕션에 영향을 주지 않도록 격리</td>
+</tr>
+<tr>
+<td><strong>DNS &amp; Firewall</strong></td>
+<td>전사 DNS 관리, Route 53 Resolver, DNS Firewall</td>
+<td>Route 53 Hosted Zone, Resolver, DNS Firewall Rule Group</td>
+<td>DNS Firewall로 전 계정 C2 통신·악성 도메인 조회를 중앙에서 차단</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_7">접근 권한 요약</h4>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>인프라 담당자</th>
+<th>CSE</th>
+<th>Network Security</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network Hub</td>
+<td><code>NetworkAdminAccess</code> (8h)</td>
+<td>ReadOnly</td>
+<td>ReadOnly</td>
+</tr>
+<tr>
+<td>Network Prod</td>
+<td><code>NetworkAdminAccess</code> (8h)</td>
+<td>ReadOnly</td>
+<td>WAF·DNS Firewall 관련 액션</td>
+</tr>
+<tr>
+<td>Network Dev</td>
+<td><code>NetworkAdminAccess</code> (8h)</td>
+<td>ReadOnly</td>
+<td>ReadOnly</td>
+</tr>
+<tr>
+<td>DNS &amp; Firewall</td>
+<td><code>NetworkAdminAccess</code> (8h)</td>
+<td>ReadOnly</td>
+<td>DNS Firewall Full (8h)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><code>NetworkAdminAccess</code>: VPC·TGW·Route53 관련 액션만 허용. EC2 컴퓨팅·RDS 생성 Deny.
+</p>
+</blockquote>
+<hr />
+<h4 id="2152-shared-services-ou">2.15.2 Shared Services OU</h4>
+<p><strong>역할</strong>: 전체 조직이 공통으로 사용하는 인프라를 중앙 관리합니다.</p>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>역할</th>
+<th>주요 리소스</th>
+<th>설계 이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Container Registry</strong></td>
+<td>전사 ECR 중앙 관리, ECR Cross-Region Replication</td>
+<td>ECR (Region A·B), Image Signing, Enhanced Scanning</td>
+<td>ECR을 워크로드 계정마다 분산하면 이미지 스캔 정책 불일치 발생</td>
+</tr>
+<tr>
+<td><strong>Data Lake</strong></td>
+<td>전사 분석 데이터 레이크</td>
+<td>S3 (Raw·Processed·Curated), Glue, Athena, Lake Formation</td>
+<td>데이터 엔지니어가 Prod DB 직접 접근 없이 분석 가능</td>
+</tr>
+<tr>
+<td><strong>Backup &amp; DR</strong></td>
+<td>전사 백업 정책 중앙 관리</td>
+<td>AWS Backup Vault, Cross-region 복제</td>
+<td>Backup Vault를 워크로드 계정에 두면 해당 계정 침해 시 백업도 함께 삭제될 위험</td>
+</tr>
+<tr>
+<td><strong>Cost Management</strong></td>
+<td>FinOps 중앙 관리 계정</td>
+<td>Cost Explorer, Budgets, RI·Savings Plans 구매</td>
+<td>RI·Savings Plans는 분산 구매 시 중복 약정 낭비 발생</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="2153-cicd-ou">2.15.3 CI/CD OU</h4>
+<p><strong>역할</strong>: 배포 자동화 전용 계정들입니다. GitHub Actions OIDC가 이 OU의 계정에서 Cross-account Role을 Assume하여 각 워크로드 계정에 배포합니다. 영구 컴퓨팅 리소스 배포는 SCP로 원천 차단합니다.</p>
+<h4 id="_8">계정별 역할</h4>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>역할</th>
+<th>주요 리소스</th>
+<th>설계 이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pipeline</strong></td>
+<td>CI/CD 파이프라인 실행 계정. GitHub Actions OIDC가 이 계정 Role을 Assume</td>
+<td>AppCICDRole, TerraformExecutionRole</td>
+<td>배포 Role을 한 계정에서 중앙 관리</td>
+</tr>
+<tr>
+<td><strong>Artifacts</strong></td>
+<td>빌드 산출물 저장</td>
+<td>S3 (빌드 아티팩트), CodeArtifact</td>
+<td>아티팩트를 중앙 저장하여 배포 추적·롤백 가능</td>
+</tr>
+<tr>
+<td><strong>Testing Tools</strong></td>
+<td>자동화 테스트 실행 환경</td>
+<td>테스트 러너, 부하 테스트 도구</td>
+<td>테스트 도구가 워크로드 계정에 있으면 테스트 실패 시 운영 리소스 영향 가능</td>
+</tr>
+</tbody>
+</table>
+<h4 id="cicd">CI/CD 배포 흐름</h4>
+<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>GitHub<span class="w"> </span>Actions<span class="w"> </span><span class="o">(</span>OIDC<span class="o">)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span>→<span class="w"> </span>CI/CD<span class="w"> </span>OU<span class="w"> </span>—<span class="w"> </span>Pipeline<span class="w"> </span>계정<span class="w"> </span><span class="o">(</span>AppCICDRole<span class="w"> </span>Assume<span class="o">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">        </span>├──<span class="w"> </span>Dev<span class="w"> </span>Team<span class="w"> </span><span class="m">1</span><span class="w"> </span>/<span class="w"> </span>Dev<span class="w"> </span>Team<span class="w"> </span><span class="m">2</span><span class="w"> </span>계정<span class="w"> </span>배포
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">        </span>│<span class="w">     </span>→<span class="w"> </span>테스트<span class="w"> </span>통과<span class="w"> </span>시
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">        </span>├──<span class="w"> </span>Staging<span class="w"> </span>App<span class="w"> </span>계정<span class="w"> </span>배포
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">        </span>│<span class="w">     </span>→<span class="w"> </span>수동<span class="w"> </span>승인<span class="w"> </span>게이트<span class="w"> </span><span class="o">(</span>팀장<span class="w"> </span>or<span class="w"> </span>인프라<span class="w"> </span>담당자<span class="o">)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span>└──<span class="w"> </span>Prod<span class="w"> </span>App<span class="w"> </span><span class="m">1</span><span class="w"> </span>/<span class="w"> </span>Prod<span class="w"> </span>App<span class="w"> </span><span class="m">2</span><span class="w"> </span>계정<span class="w"> </span>배포
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">              </span><span class="o">(</span>TerraformExecutionRole로<span class="w"> </span>인프라<span class="w"> </span>변경<span class="o">)</span>
+</code></pre></div>
+<h4 id="_9">접근 권한 요약</h4>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>인프라 담당자</th>
+<th>CSE</th>
+<th>개발자</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pipeline</td>
+<td><code>CICDAdminAccess</code> (8h)</td>
+<td>ReadOnly</td>
+<td>(GitHub Actions만 접근)</td>
+</tr>
+<tr>
+<td>Artifacts</td>
+<td><code>CICDAdminAccess</code> (8h)</td>
+<td>ReadOnly</td>
+<td>ReadOnly (빌드 결과 조회)</td>
+</tr>
+<tr>
+<td>Testing Tools</td>
+<td><code>CICDAdminAccess</code> (8h)</td>
+<td>ReadOnly</td>
+<td>ReadOnly</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><code>CICDAdminAccess</code>: CI/CD 관련 액션 허용. EC2 인스턴스 직접 생성 Deny. Prod 계정 데이터 서비스 직접 호출 Deny.
+</p>
+</blockquote>
+<hr />
+<h3 id="216-workloads-ou">2.16 Workloads OU 상세</h3>
+<p>실제 서비스 워크로드가 실행되는 계정들입니다. Production과 Non-Production을 물리적으로 분리하여 개발·실험 환경의 실수가 프로덕션에 영향을 주지 않도록 합니다.</p>
+<p><strong>Production 접근 원칙 (전체 공통)</strong></p>
+<ul>
+<li>평상시: 모든 페르소나 ReadOnly</li>
+<li>배포 시: CI/CD 파이프라인 전용 Role(<code>TerraformExecutionRole</code>, <code>AppCICDRole</code>)로만 변경 가능</li>
+<li>장애·긴급 시: JIT 임시 Permission Set 할당 → 작업 완료 후 즉시 회수</li>
+<li>Break-glass: 인프라 담당자·CSE 한정, 모든 접근 CloudTrail 기록</li>
+</ul>
+<hr />
+<h4 id="2161-production-workloads-ou">2.16.1 Production Workloads OU</h4>
+<h4 id="production-region-1-ou">Production Region 1 OU (국내 서비스)</h4>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>역할</th>
+<th>주요 리소스</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Prod App 1</strong></td>
+<td>주요 애플리케이션 서비스 계정</td>
+<td>EKS (Namespace A·B), ALB, Aurora</td>
+</tr>
+<tr>
+<td><strong>Prod App 2</strong></td>
+<td>보조 애플리케이션 서비스 계정 (트래픽 분산·서비스 격리)</td>
+<td>EKS (Namespace C·D), ALB</td>
+</tr>
+<tr>
+<td><strong>Prod Data</strong></td>
+<td>프로덕션 데이터 전용 계정</td>
+<td>Aurora (Primary), MSK, Redshift, DynamoDB</td>
+</tr>
+</tbody>
+</table>
+<p>Prod App 1·2를 분리하면 서비스별 폭발 반경이 계정 단위로 제한됩니다. Prod Data를 별도 계정으로 분리하면 데이터 엔지니어가 애플리케이션 계정에 접근하지 않고 데이터 파이프라인만 운영할 수 있습니다.</p>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>인프라 담당자</th>
+<th>CSE</th>
+<th>개발자</th>
+<th>데이터 엔지니어</th>
+<th>SRE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prod App 1</td>
+<td>ReadOnly / JIT (긴급)</td>
+<td>SecurityAudit ReadOnly</td>
+<td>X</td>
+<td>X</td>
+<td>ReadOnly / JIT (긴급, 2h)</td>
+</tr>
+<tr>
+<td>Prod App 2</td>
+<td>ReadOnly / JIT (긴급)</td>
+<td>SecurityAudit ReadOnly</td>
+<td>X</td>
+<td>X</td>
+<td>ReadOnly / JIT (긴급, 2h)</td>
+</tr>
+<tr>
+<td>Prod Data</td>
+<td>ReadOnly / JIT (긴급)</td>
+<td>SecurityAudit ReadOnly</td>
+<td>X</td>
+<td>ReadOnly (MSK·Redshift·S3 한정)</td>
+<td>ReadOnly / JIT (긴급, 2h)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="production-region-2-ou">Production Region 2 OU (해외 서비스)</h4>
+<p>해외 임직원은 이 OU에만 접근 가능하며 Region 1 OU 계정에는 접근하지 못합니다. Region 2 OU에는 <code>aws:RequestedRegion</code> 조건 SCP가 추가 적용되어 해당 리전 외 리소스 생성이 차단됩니다.</p>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>역할</th>
+<th>주요 리소스</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Prod App 3</strong></td>
+<td>해외 리전 애플리케이션 서비스 계정</td>
+<td>EKS, ALB, Aurora (Global)</td>
+</tr>
+<tr>
+<td><strong>Prod Data (Global)</strong></td>
+<td>해외 프로덕션 데이터 계정</td>
+<td>Aurora (Global DB Read Replica), MSK, S3</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>국내 인프라 담당자</th>
+<th><strong>해외 인프라 담당자</strong></th>
+<th>CSE</th>
+<th>국내 SRE</th>
+<th><strong>해외 SRE</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prod App 3</td>
+<td>ReadOnly</td>
+<td><strong>ReadOnly / JIT (긴급)</strong></td>
+<td>SecurityAudit ReadOnly</td>
+<td>X</td>
+<td><strong>ReadOnly / JIT (긴급, 2h)</strong></td>
+</tr>
+<tr>
+<td>Prod Data (Global)</td>
+<td>ReadOnly</td>
+<td><strong>ReadOnly / JIT (긴급)</strong></td>
+<td>SecurityAudit ReadOnly</td>
+<td>X</td>
+<td><strong>ReadOnly (MSK·S3 한정) / JIT</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="2162-non-production-workloads-ou">2.16.2 Non-Production Workloads OU</h4>
+<p>프로덕션 리소스 접근은 SCP로 전체 차단합니다.</p>
+<h4 id="sandbox-ou">Sandbox OU</h4>
+<p>개인 또는 팀 단위 자유 실험 공간입니다. SCP로 월 지출 $100~$200 한도, t2/t3 micro·small 외 인스턴스 차단, Prod·Staging 방향 TGW 연결 차단이 적용됩니다.</p>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>인프라 담당자</th>
+<th>개발자</th>
+<th>데이터 엔지니어</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sandbox 1</td>
+<td>AdministratorAccess (8h)</td>
+<td>AdministratorAccess (8h)</td>
+<td>AdministratorAccess (8h)</td>
+</tr>
+<tr>
+<td>Sandbox 2</td>
+<td>AdministratorAccess (8h)</td>
+<td>AdministratorAccess (8h)</td>
+<td>AdministratorAccess (8h)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="development-ou-dev-team-ou">Development OU — Dev Team OU</h4>
+<p>Dev Team OU라는 중간 계층을 두어 팀 단위 SCP를 한 번에 상속합니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Development<span class="w"> </span>OU
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>└──<span class="w"> </span>Dev<span class="w"> </span>Team<span class="w"> </span>OU<span class="w">  </span>←<span class="w"> </span>팀<span class="w"> </span>공통<span class="w"> </span>SCP<span class="w"> </span>적용<span class="w"> </span>계층
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">      </span>├──<span class="w"> </span>Dev<span class="w"> </span>Team<span class="w"> </span><span class="m">1</span><span class="w">  </span><span class="o">(</span>백엔드<span class="w"> </span>팀<span class="o">)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">      </span>└──<span class="w"> </span>Dev<span class="w"> </span>Team<span class="w"> </span><span class="m">2</span><span class="w">  </span><span class="o">(</span>프론트엔드<span class="w"> </span>+<span class="w"> </span>데이터<span class="w"> </span>팀<span class="o">)</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>인프라 담당자</th>
+<th>국내 개발자</th>
+<th>해외 개발자</th>
+<th>데이터 엔지니어</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dev Team 1</td>
+<td>PowerUserAccess (8h)</td>
+<td>PowerUserAccess, IAM 제외 (8h)</td>
+<td>PowerUserAccess, IAM 제외 (8h)</td>
+<td>X</td>
+</tr>
+<tr>
+<td>Dev Team 2</td>
+<td>PowerUserAccess (8h)</td>
+<td>PowerUserAccess, IAM 제외 (8h)</td>
+<td>PowerUserAccess, IAM 제외 (8h)</td>
+<td>PowerUserAccess·MSK·Redshift·S3 한정 (8h)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="staging-ou-staging-region-1-ou">Staging OU — Staging Region 1 OU</h4>
+<p>프로덕션 배포 전 최종 검증 환경입니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Staging<span class="w"> </span>OU
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>└──<span class="w"> </span>Staging<span class="w"> </span>Region<span class="w"> </span><span class="m">1</span><span class="w"> </span>OU
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">      </span>└──<span class="w"> </span>Staging<span class="w"> </span>App
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>인프라 담당자</th>
+<th>국내 개발자</th>
+<th>해외 개발자</th>
+<th>SRE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Staging App</td>
+<td>ReadOnly / TerraformExecutionRole (배포 시)</td>
+<td>ReadOnly (CloudWatch Logs·EKS 로그 조회)</td>
+<td>X (국내 Staging 접근 불가)</td>
+<td>ReadOnly</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="217-suspended-ou">2.17 Suspended OU 상세</h3>
+<p>종료된 프로젝트 계정, 퇴직자 전용 계정을 이 OU로 이동합니다. AWS 계정 삭제는 즉시 복구가 불가능하고, ISMS-P 감사 대응을 위해 감사 로그를 일정 기간 보존해야 하기 때문에 즉시 삭제하지 않습니다.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>SCP</th>
+<th>내용</th>
+<th>설계 이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>모든 API 호출 Deny</td>
+<td><code>"Action": "*"</code> 전체 Deny</td>
+<td>비활성 계정의 의도치 않은 리소스 생성·접근 차단</td>
+</tr>
+<tr>
+<td>2</td>
+<td>예외: 로그 조회 허용</td>
+<td>CloudTrail·S3 읽기만 허용</td>
+<td>ISMS-P 감사 로그 보존 및 조회 가능하도록 유지</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="218-permission-set">2.18 페르소나별 Permission Set 설계</h3>
+<p>SCP가 계정 수준의 가드레일을 정의한다면, Permission Set은 그 위에서 각 임직원이 어떤 계정에 어떤 권한으로 접근하는지를 정의합니다.</p>
+<h4 id="_10">임직원 역할 분류</h4>
+<table>
+<thead>
+<tr>
+<th>역할 그룹</th>
+<th>국내 인원</th>
+<th>해외 인원</th>
+<th>AWS 접근 여부</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>인프라 / DevOps 담당자</td>
+<td>약 15명</td>
+<td>약 5명</td>
+<td>있음 (핵심 관리자)</td>
+</tr>
+<tr>
+<td>보안 조직 (CSE·SOC·Network Security·GRC)</td>
+<td>약 15명</td>
+<td>약 3명</td>
+<td>있음 (보안 전담)</td>
+</tr>
+<tr>
+<td>백엔드 / 프론트엔드 개발자</td>
+<td>약 80명</td>
+<td>약 50명</td>
+<td>있음</td>
+</tr>
+<tr>
+<td>데이터 엔지니어</td>
+<td>약 10명</td>
+<td>약 5명</td>
+<td>있음</td>
+</tr>
+<tr>
+<td>SRE / On-call</td>
+<td>약 10명</td>
+<td>약 5명</td>
+<td>있음</td>
+</tr>
+<tr>
+<td>FinOps 담당자</td>
+<td>약 3명</td>
+<td>—</td>
+<td>있음 (비용 관리 전담)</td>
+</tr>
+<tr>
+<td>감사 / 컴플라이언스 담당자</td>
+<td>약 3명</td>
+<td>약 2명</td>
+<td>있음 (ReadOnly)</td>
+</tr>
+<tr>
+<td>경영진</td>
+<td>약 10명</td>
+<td>—</td>
+<td>일부 (Billing ReadOnly)</td>
+</tr>
+<tr>
+<td>기타 (영업, 마케팅 등)</td>
+<td>나머지</td>
+<td>—</td>
+<td>없음</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="persona-1-15-5">Persona 1 — 인프라 담당자 (국내 약 15명 / 해외 약 5명)</h4>
+<p>용도: SCP Terraform 코드 작성, CI/CD 파이프라인 구축, 인프라 배포(Terraform), 네트워크 관리, Organizations 운영</p>
+<p>Permission Set: <code>InfraAdminAccess</code></p>
+<blockquote>
+<p><strong>SCP 배포 구조에서 인프라 담당자의 역할</strong></p>
+<ul>
+<li>SCP Terraform 코드 작성 및 PR 등록</li>
+<li>CSE가 PR을 검토·승인하면 GitHub Actions가 자동 배포</li>
+<li>Management Account에 직접 로그인하지 않음</li>
+</ul>
+</blockquote>
+<h4 id="_11">국내 인프라 담당자 계정별 접근</h4>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>Permission Set</th>
+<th>Permission Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management Account</td>
+<td>없음</td>
+<td>직접 로그인 불가. SCPDeployRole AssumeRole로만 접근</td>
+</tr>
+<tr>
+<td>Security OU — Log Archive</td>
+<td>ReadOnly</td>
+<td>로그 조회만. 삭제 절대 불가 (SCP 강제)</td>
+</tr>
+<tr>
+<td>Security OU — Audit</td>
+<td>ReadOnly</td>
+<td>Config 규정 준수 결과 조회만</td>
+</tr>
+<tr>
+<td>Security OU — Security Prod</td>
+<td>ReadOnly</td>
+<td>보안 현황 조회만. 세션 4시간</td>
+</tr>
+<tr>
+<td>Security OU — Security Dev</td>
+<td>ReadOnly</td>
+<td>보안 자동화 현황 조회만</td>
+</tr>
+<tr>
+<td>Infrastructure OU — Global Network OU 전체</td>
+<td><code>NetworkAdminAccess</code> (커스텀)</td>
+<td>세션 8시간. VPC / TGW / Route53 관련 액션만 허용. EC2 컴퓨팅 / RDS 생성 Deny</td>
+</tr>
+<tr>
+<td>Infrastructure OU — Shared Services OU 전체</td>
+<td><code>SharedServicesAdminAccess</code> (커스텀)</td>
+<td>세션 8시간. ECR / Backup / Cost Explorer 관련 액션 허용. Secrets Manager: <code>/infra/*</code> prefix만 생성·회전 허용</td>
+</tr>
+<tr>
+<td>Infrastructure OU — CI/CD OU 전체</td>
+<td><code>CICDAdminAccess</code> (커스텀)</td>
+<td>세션 8시간. CI/CD 관련 액션 허용. Prod 데이터 직접 접근 Deny</td>
+</tr>
+<tr>
+<td>Production Workloads — Region 1 OU 전체</td>
+<td>ReadOnly</td>
+<td>배포 확인·로그 조회만. 인프라 변경은 TerraformExecutionRole 통해서만 가능</td>
+</tr>
+<tr>
+<td>Production Workloads — Region 2 OU 전체</td>
+<td>ReadOnly</td>
+<td>동일. 글로벌 확장 시 적용</td>
+</tr>
+<tr>
+<td>Non-Production — Staging Region 1 OU</td>
+<td>ReadOnly</td>
+<td>변경은 CI/CD 전용 Role로만 가능</td>
+</tr>
+<tr>
+<td>Non-Production — Development OU 전체</td>
+<td>PowerUserAccess</td>
+<td>세션 8시간. IAM 관리 제외</td>
+</tr>
+<tr>
+<td>Non-Production — Sandbox OU 전체</td>
+<td>AdministratorAccess</td>
+<td>세션 8시간</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Management Account SCPDeployRole 허용 액션 (최소 권한)</strong></p>
+<ul>
+<li><code>organizations:CreatePolicy</code> · <code>organizations:UpdatePolicy</code> · <code>organizations:DeletePolicy</code></li>
+<li><code>organizations:AttachPolicy</code> · <code>organizations:DetachPolicy</code></li>
+<li>AssumeRole 허용 Principal: Security Prod 계정 ARN만. 그 외 모든 액션 차단</li>
+</ul>
+<h4 id="_12">해외 인프라 담당자 계정별 접근</h4>
+<p>국내와 Permission Set 동일합니다. 접근 가능 계정 범위만 다릅니다.</p>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>Permission Set</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Security OU 전체</td>
+<td>ReadOnly</td>
+<td>국내와 동일</td>
+</tr>
+<tr>
+<td>Infrastructure OU 전체</td>
+<td>커스텀 (국내와 동일)</td>
+<td>국내와 동일</td>
+</tr>
+<tr>
+<td>Production Workloads — <strong>Region 2 OU만</strong></td>
+<td>ReadOnly</td>
+<td>Region 1 OU 접근 불가</td>
+</tr>
+<tr>
+<td>Non-Production 전체</td>
+<td>국내와 동일</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="persona-2-15-3">Persona 2 — 보안 조직 (국내 약 15명 / 해외 약 3명)</h4>
+<p>대규모에서는 보안 조직이 4개 팀으로 세분화됩니다.</p>
+<p><strong>Security OU 내 계정별 상세 접근 권한은 섹션 2.3을 참조합니다.</strong> 이 섹션에서는 Security OU 외 계정에 대한 각 팀의 접근 범위를 정의합니다.</p>
+<hr />
+<h4 id="persona-2a-cloud-security-engineering-cse">Persona 2a — Cloud Security Engineering (CSE)</h4>
+<p>용도: 보안 인프라 설계·운영, SCP 승인·검증, IAM Identity Center 운영, 보안 자동화 코드 배포</p>
+<p>Permission Set: <code>CSE-*</code> (계정별 별도 설정, 섹션 2.4 참조)</p>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>Permission Set</th>
+<th>Permission Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management Account</td>
+<td>ReadOnly</td>
+<td>계정 구조·SCP 조회만. IAM 변경 불가</td>
+</tr>
+<tr>
+<td>Security OU 전체</td>
+<td>섹션 2.4 참조</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Infrastructure OU 전체</td>
+<td>ReadOnly</td>
+<td>네트워크·인프라 보안 현황 조회만</td>
+</tr>
+<tr>
+<td>Production Workloads — Region 1 OU 전체</td>
+<td>SecurityAudit (ReadOnly)</td>
+<td>감사 목적 조회만. 배포·데이터 변경 불가</td>
+</tr>
+<tr>
+<td>Production Workloads — Region 2 OU 전체</td>
+<td>SecurityAudit (ReadOnly)</td>
+<td>동일</td>
+</tr>
+<tr>
+<td>Non-Production Workloads 전체</td>
+<td>ReadOnly</td>
+<td>보안 설정 검토만</td>
+</tr>
+<tr>
+<td>Sandbox OU</td>
+<td>없음</td>
+<td>감사 범위 외</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="persona-2b-soc-security-operations-center">Persona 2b — SOC (Security Operations Center)</h4>
+<p>용도: 보안 위협 탐지·분석·대응. Tier 1(1차 분류), Tier 2·3(심화 조사·인시던트 대응)으로 분리</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>계정</th>
+<th>Permission Set</th>
+<th>세션</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SOC Tier 1</strong></td>
+<td>Security Prod</td>
+<td><code>SOC-Tier1-SecProdRO</code></td>
+<td>8h</td>
+</tr>
+<tr>
+<td><strong>SOC Tier 2·3</strong></td>
+<td>Log Archive</td>
+<td><code>SOC-Tier23-LogReadOnly</code> (MFA 필수)</td>
+<td>2h</td>
+</tr>
+<tr>
+<td><strong>SOC Tier 2·3</strong></td>
+<td>Security Prod</td>
+<td><code>SOC-Tier23-SecProdRW</code></td>
+<td>4h</td>
+</tr>
+<tr>
+<td><strong>SOC Tier 2·3</strong></td>
+<td>Security Dev</td>
+<td><code>SOC-Tier23-SecDevRO</code></td>
+<td>4h</td>
+</tr>
+<tr>
+<td><strong>SOC 전 Tier</strong></td>
+<td>Production Workloads 전체</td>
+<td>없음</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>SOC는 Production 계정에 직접 접근하지 않습니다. Security Prod의 Security Hub·GuardDuty 콘솔과 SIEM 대시보드를 통해 탐지·분석 업무를 수행합니다.</p>
+<hr />
+<h4 id="persona-2c-network-security">Persona 2c — Network Security</h4>
+<p>용도: WAF 룰 관리, Firewall Manager 정책 배포, Shield Advanced 운영, DNS Firewall 관리</p>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>Permission Set</th>
+<th>Permission Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Security Prod</td>
+<td><code>NetSec-SecProdAdmin</code></td>
+<td>WAF·Firewall Manager·Shield Advanced 전체. IAM Identity Center·GuardDuty 설정 변경 불가</td>
+</tr>
+<tr>
+<td>Security Dev</td>
+<td><code>NetSec-SecDevRO</code></td>
+<td>WAF 룰 테스트·시뮬레이션 조회만</td>
+</tr>
+<tr>
+<td>Infrastructure OU — DNS &amp; Firewall</td>
+<td><code>NetworkAdminAccess</code> (커스텀)</td>
+<td>DNS Firewall Rule Group 관리. TGW·VPC 설정 변경 불가</td>
+</tr>
+<tr>
+<td>Production Workloads 전체</td>
+<td>없음</td>
+<td>WAF 룰 변경은 Firewall Manager 경유만</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="persona-2d-grc-governance-risk-compliance">Persona 2d — GRC (Governance, Risk &amp; Compliance)</h4>
+<p>용도: ISMS-P 감사 대응, Config Conformance Pack 관리, AWS Artifact 증적 수집, 컴플라이언스 리포트 작성</p>
+<p>Permission Set: <code>GRC-*</code> (계정별 별도 설정, 섹션 2.4 참조)</p>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>Permission Set</th>
+<th>Permission Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management Account</td>
+<td>ReadOnly</td>
+<td>계정 구조·SCP·Organizations 정책 조회만</td>
+</tr>
+<tr>
+<td>Security OU 전체</td>
+<td>섹션 2.4 참조</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Infrastructure OU 전체</td>
+<td>ReadOnly</td>
+<td>CI/CD 파이프라인 구성·Backup 정책 조회만</td>
+</tr>
+<tr>
+<td>Production Workloads — Region 1 전체</td>
+<td>SecurityAudit (ReadOnly)</td>
+<td>CloudWatch Logs·RDS Audit Log 조회. 실제 데이터 직접 접근 차단</td>
+</tr>
+<tr>
+<td>Production Workloads — Region 2 전체</td>
+<td>SecurityAudit (ReadOnly)</td>
+<td>동일</td>
+</tr>
+<tr>
+<td>Non-Production Workloads 전체</td>
+<td>ReadOnly</td>
+<td>배포 이력·로그 조회만</td>
+</tr>
+<tr>
+<td>Sandbox OU</td>
+<td>없음</td>
+<td>감사 범위 외</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="persona-3-80-50">Persona 3 — 백엔드 / 프론트엔드 개발자 (국내 약 80명 / 해외 약 50명)</h4>
+<p>용도: 애플리케이션 개발, Dev 환경 직접 조작, Staging 배포 결과 확인</p>
+<p>Permission Set: <code>DeveloperAccess</code></p>
+<h4 id="_13">국내 개발자 계정별 접근</h4>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>Permission Set</th>
+<th>Permission Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Security OU 전체</td>
+<td>없음</td>
+<td>접근 불필요</td>
+</tr>
+<tr>
+<td>Infrastructure OU 전체</td>
+<td>없음</td>
+<td>접근 불필요</td>
+</tr>
+<tr>
+<td>Production Workloads 전체</td>
+<td>없음</td>
+<td>접근 차단. 배포는 CI/CD 파이프라인으로만</td>
+</tr>
+<tr>
+<td>Non-Production — Staging Region 1 OU — Staging App</td>
+<td>ReadOnly</td>
+<td>배포 결과·로그 확인만. CloudWatch Logs, EKS 로그 조회 권한</td>
+</tr>
+<tr>
+<td>Non-Production — Development OU — Dev Team 1</td>
+<td>PowerUserAccess (IAM 제외)</td>
+<td>세션 8시간. Secrets Manager: <code>/dev/*</code> prefix만 읽기 허용. Prod·Staging 시크릿 차단</td>
+</tr>
+<tr>
+<td>Non-Production — Development OU — Dev Team 2</td>
+<td>PowerUserAccess (IAM 제외)</td>
+<td>동일 조건</td>
+</tr>
+<tr>
+<td>Non-Production — Sandbox OU</td>
+<td>AdministratorAccess</td>
+<td>세션 8시간. SCP로 비용·서비스 범위 제한</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_14">해외 개발자 계정별 접근</h4>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>Permission Set</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production Workloads 전체</td>
+<td>없음</td>
+<td>접근 차단</td>
+</tr>
+<tr>
+<td>Non-Production — Staging Region 1 OU</td>
+<td>없음</td>
+<td>국내 Staging 접근 불가</td>
+</tr>
+<tr>
+<td>Non-Production — Development OU — Dev Team 1 / 2</td>
+<td>PowerUserAccess (IAM 제외)</td>
+<td>국내 팀과 동일 계정 사용</td>
+</tr>
+<tr>
+<td>Non-Production — Sandbox OU</td>
+<td>AdministratorAccess</td>
+<td>국내와 동일</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="persona-4-10-5">Persona 4 — 데이터 엔지니어 (국내 약 10명 / 해외 약 5명)</h4>
+<p>용도: 데이터 파이프라인 개발·운영. MSK / Redshift / S3 / Athena 서비스 한정</p>
+<p>Permission Set: <code>DataEngineerAccess</code></p>
+<blockquote>
+<p>데이터 파이프라인 구조: <strong>EKS → MSK(Kafka) → Redshift</strong>
+</p>
+</blockquote>
+<h4 id="_15">국내 데이터 엔지니어 계정별 접근</h4>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>Permission Set</th>
+<th>Permission Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Security OU 전체</td>
+<td>없음</td>
+<td>접근 불필요</td>
+</tr>
+<tr>
+<td>Infrastructure OU — Shared Services OU — Data Lake</td>
+<td>커스텀 (S3 / Athena 한정)</td>
+<td>S3 읽기 / Athena 쿼리만 허용</td>
+</tr>
+<tr>
+<td>Production Workloads — Region 1 — Prod Data</td>
+<td>ReadOnly (MSK / Redshift / S3 한정)</td>
+<td>MSK: 소비(GetRecords) 읽기만. Redshift: SELECT만. KMS 복호화: Prod 데이터 버킷 전용 키만</td>
+</tr>
+<tr>
+<td>Production Workloads — Region 2 — Prod Data (Global)</td>
+<td>없음</td>
+<td>해외 데이터 엔지니어 전담</td>
+</tr>
+<tr>
+<td>Non-Production — Staging App</td>
+<td>커스텀 (MSK / Redshift / S3 / Athena)</td>
+<td>MSK: 읽기·쓰기 허용. Redshift: SELECT·INSERT·UPDATE 허용. DDL·DELETE 차단</td>
+</tr>
+<tr>
+<td>Non-Production — Development OU — Dev Team 2</td>
+<td>커스텀 (MSK / Redshift / S3 / Athena)</td>
+<td>세션 8시간</td>
+</tr>
+<tr>
+<td>Non-Production — Sandbox OU</td>
+<td>AdministratorAccess</td>
+<td>세션 8시간. SCP 비용 한도 적용</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_16">해외 데이터 엔지니어 계정별 접근</h4>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>Permission Set</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Infrastructure OU — Data Lake</td>
+<td>커스텀 (S3 / Athena 한정)</td>
+<td>국내와 동일</td>
+</tr>
+<tr>
+<td>Production Workloads — Region 1 — Prod Data</td>
+<td>없음</td>
+<td>국내 데이터 엔지니어 전담</td>
+</tr>
+<tr>
+<td>Production Workloads — Region 2 — Prod Data (Global)</td>
+<td>ReadOnly (MSK / Redshift / S3 한정)</td>
+<td>Region 1 Prod Data 접근 불가</td>
+</tr>
+<tr>
+<td>Non-Production — Staging / Dev / Sandbox</td>
+<td>국내와 동일</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="persona-5-sre-on-call-10-5">Persona 5 — SRE / On-call (국내 약 10명 / 해외 약 5명)</h4>
+<p>용도: 장애 대응, 모니터링, Production 긴급 조치</p>
+<p>Permission Set: <code>SREAccess</code></p>
+<h4 id="sre">국내 SRE 계정별 접근</h4>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>Permission Set</th>
+<th>Permission Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Security OU — Security Prod</td>
+<td>ReadOnly</td>
+<td>GuardDuty 탐지 결과 조회만. 설정 변경 불가</td>
+</tr>
+<tr>
+<td>Security OU — Log Archive / Audit / Security Dev</td>
+<td>없음</td>
+<td>접근 불필요</td>
+</tr>
+<tr>
+<td>Infrastructure OU — Global Network OU</td>
+<td>ReadOnly</td>
+<td>VPC Flow Logs·라우팅 테이블 조회만</td>
+</tr>
+<tr>
+<td>Infrastructure OU — Shared Services OU</td>
+<td>ReadOnly</td>
+<td>CI/CD 파이프라인 구성 조회만</td>
+</tr>
+<tr>
+<td>Infrastructure OU — CI/CD OU</td>
+<td>없음</td>
+<td>접근 불필요</td>
+</tr>
+<tr>
+<td>Production Workloads — Region 1 — Prod App 1 / 2</td>
+<td>ReadOnly (평상시)</td>
+<td>CloudWatch Logs·X-Ray·EKS 조회. <strong>긴급 시 JIT</strong>: 세션 2시간, 모든 접근 CloudTrail 기록</td>
+</tr>
+<tr>
+<td>Production Workloads — Region 1 — Prod Data</td>
+<td>ReadOnly (평상시)</td>
+<td>RDS Read Replica만 접속 허용. 마스터 DB 직접 접속 차단. <strong>긴급 시 JIT</strong>: Secrets Manager DB 접속 정보 임시 조회</td>
+</tr>
+<tr>
+<td>Production Workloads — Region 2 전체</td>
+<td>없음</td>
+<td>해외 SRE 전담</td>
+</tr>
+<tr>
+<td>Non-Production — Staging App</td>
+<td>ReadOnly</td>
+<td>CloudWatch Logs·EKS 읽기</td>
+</tr>
+<tr>
+<td>Non-Production — Development OU</td>
+<td>ReadOnly</td>
+<td>CloudWatch Logs 조회만</td>
+</tr>
+<tr>
+<td>Non-Production — Sandbox OU</td>
+<td>없음</td>
+<td>접근 불필요</td>
+</tr>
+</tbody>
+</table>
+<h4 id="sre_1">해외 SRE 계정별 접근</h4>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>Permission Set</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Security OU — Security Prod</td>
+<td>ReadOnly</td>
+<td>국내와 동일</td>
+</tr>
+<tr>
+<td>Infrastructure OU</td>
+<td>ReadOnly</td>
+<td>국내와 동일</td>
+</tr>
+<tr>
+<td>Production Workloads — <strong>Region 2만</strong></td>
+<td>ReadOnly (평상시) / JIT (긴급 시)</td>
+<td>Region 1 접근 불가</td>
+</tr>
+<tr>
+<td>Non-Production 전체</td>
+<td>ReadOnly</td>
+<td>국내와 동일</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="persona-6-finops-3">Persona 6 — FinOps 담당자 (국내 약 3명)</h4>
+<p>용도: 조직 전체 AWS 비용 분석·최적화, Reserved Instances / Savings Plans 구매·관리, 예산 알림 운영</p>
+<p>Permission Set: <code>FinOpsAccess</code></p>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>Permission Set</th>
+<th>Permission Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management Account</td>
+<td>ReadOnly (Billing 한정)</td>
+<td>Cost Explorer·Billing 조회만. 조직 구조 변경 불가</td>
+</tr>
+<tr>
+<td>Infrastructure OU — Shared Services OU — Cost Management</td>
+<td>AdministratorAccess</td>
+<td>RI / Savings Plans 구매·관리. 예산 알림 설정. Cost Anomaly Detection 운영. 세션 8시간</td>
+</tr>
+<tr>
+<td>Security OU 전체</td>
+<td>없음</td>
+<td>접근 불필요</td>
+</tr>
+<tr>
+<td>Production Workloads 전체</td>
+<td>ReadOnly (Cost Explorer 한정)</td>
+<td>계정별 비용 조회만</td>
+</tr>
+<tr>
+<td>Non-Production Workloads 전체</td>
+<td>ReadOnly (Cost Explorer 한정)</td>
+<td>계정별 비용 조회만</td>
+</tr>
+<tr>
+<td>Sandbox OU</td>
+<td>ReadOnly (Cost Explorer 한정)</td>
+<td>개인 실험 비용 추적용</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="persona-7-3-2">Persona 7 — 감사 / 컴플라이언스 담당자 (국내 약 3명 / 해외 약 2명)</h4>
+<p>용도: ISMS-P 감사 대응, 컴플라이언스 증적 확인, 전 계정 ReadOnly</p>
+<p>Permission Set: <code>AuditorAccess</code></p>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>Permission Set</th>
+<th>Permission Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management Account</td>
+<td>ReadOnly</td>
+<td>계정 구조·SCP·Organizations 정책 조회만. IAM 변경 불가</td>
+</tr>
+<tr>
+<td>Security OU — Log Archive</td>
+<td>ReadOnly</td>
+<td>Athena 쿼리만 허용. CloudTrail Lake 읽기 전용. 삭제 절대 불가</td>
+</tr>
+<tr>
+<td>Security OU — Audit</td>
+<td>ReadOnly</td>
+<td>Config 규정 준수 결과·AWS Artifact·Config Conformance Pack 조회만</td>
+</tr>
+<tr>
+<td>Security OU — Security Prod / Dev</td>
+<td>없음</td>
+<td>감사 범위 외. 보안 운영은 CSE·SOC·GRC 전담</td>
+</tr>
+<tr>
+<td>Infrastructure OU — Global Network OU</td>
+<td>ReadOnly</td>
+<td>VPC·라우팅·TGW 구성 조회만</td>
+</tr>
+<tr>
+<td>Infrastructure OU — Shared Services / CI/CD OU</td>
+<td>ReadOnly</td>
+<td>CI/CD 파이프라인 구성·Backup 정책 조회만</td>
+</tr>
+<tr>
+<td>Production Workloads — Region 1 전체</td>
+<td>ReadOnly</td>
+<td>CloudWatch Logs·RDS Audit Log 조회. WAF 로그 Athena 쿼리 허용. 실제 데이터 직접 접근 차단</td>
+</tr>
+<tr>
+<td>Production Workloads — Region 2 전체</td>
+<td>ReadOnly</td>
+<td>동일. 글로벌 확장 시 적용</td>
+</tr>
+<tr>
+<td>Non-Production Workloads 전체</td>
+<td>ReadOnly</td>
+<td>배포 이력·로그 조회만</td>
+</tr>
+<tr>
+<td>Sandbox OU</td>
+<td>없음</td>
+<td>감사 범위 외</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="persona-8-10">Persona 8 — 경영진 (국내 약 10명)</h4>
+<p>용도: 전체 비용 현황 파악</p>
+<p>Permission Set: <code>ExecutiveReadOnly</code></p>
+<table>
+<thead>
+<tr>
+<th>계정</th>
+<th>Permission Set</th>
+<th>Permission Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management Account</td>
+<td>ReadOnly (Billing 한정)</td>
+<td>Cost Explorer·청구 현황 조회만</td>
+</tr>
+<tr>
+<td>그 외 모든 계정</td>
+<td>없음</td>
+<td>접근 불필요</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3">3. 위협 모델링</h2>
+<h3 id="31">3.1 위협 다이어그램</h3>
+<p><img alt="위협 모델링" src="../../images/architecture/hyperscale/threat.png" /></p>
+<h3 id="32">3.2 방어 가능한 위협</h3>
+<table>
+<thead>
+<tr>
+<th>위협</th>
+<th>위협 설명</th>
+<th>방어 방법</th>
+<th>방어 방법 상세 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>멀티리전 설정 불일치로 인한 보안 공백</td>
+<td>특정 리전에만 보안 설정이 누락되어 해당 리전이 공격 진입점이 됨</td>
+<td>Config Aggregator + Terraform + SCP</td>
+<td>Terraform으로 Config Rules를 전 리전에 일괄 배포, Config Aggregator로 전 계정 및 리전 준수 현황 중앙 집계, SCP로 미승인 리전 리소스 생성 차단</td>
+</tr>
+<tr>
+<td>교차 계정 Role trust policy 오남용</td>
+<td>다국적 멀티계정 구조에서 느슨하게 설정된 IAM Role Trust policy를 통해 타 계정, 타 리전 리소스로 권한이 확대</td>
+<td>IAM Access Analyzer + SCP</td>
+<td>Access Analyzer로 외부 접근 가능한 역할 탐지, SCP로 신뢰 관계 생성 권한을 중앙에서 제한</td>
+</tr>
+<tr>
+<td>VPN 과도한 네트워크 신뢰로 인한 내부망 침투</td>
+<td>VPN 연결 시 인증만 통과하면 내부 네트워크 전체에 접근 권한이 부여되어, 자격증명 탈취나 감염된 디바이스를 통한 횡이동 피해가 광범위하게 확산</td>
+<td>Twingate (ZTNA)</td>
+<td>VPN을 제거하고 Twingate 기반 ZTNA로 전환, 애플리케이션 단위 최소 권한 접근만 허용하여 횡이동 경로 원천 차단</td>
+</tr>
+<tr>
+<td>IdP 침해를 통한 ZTNA 우회</td>
+<td>IAM Identity Center 등 IdP가 침해되면 ZTNA의 신뢰 체계 전체가 무력화되어 전 리전 접근 가능</td>
+<td>MFA 강제 + GuardDuty</td>
+<td>모든 IdP 계정 MFA 필수 적용, GuardDuty로 비정상 로그인 및 자격증명 이상 사용 탐지</td>
+</tr>
+<tr>
+<td>S3 내 민감 데이터 노출 및 유출</td>
+<td>개인정보, 금융정보 등 PII가 S3에 암호화되지 않은 채 저장되거나 퍼블릭 버킷에 노출되어 데이터 유출로 이어질 위험</td>
+<td>AWS Macie</td>
+<td>Macie가 S3 버킷 전체를 자동 스캔하여 PII 포함 객체를 탐지</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4">4. 한계점 및 향후 개선 방향</h2>
+<h3 id="41">4.1 현재 아키텍처의 한계</h3>
+<table>
+<thead>
+<tr>
+<th>한계 항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Twingate IdP 침해 시 전 리전 노출</strong></td>
+<td>IdP가 침해되면 Twingate가 부여한 모든 리소스 접근 경로가 노출됩니다. MFA 강제·GuardDuty 탐지로 완화하고 있으나 구조적으로 차단하기 어렵습니다.</td>
+</tr>
+<tr>
+<td><strong>Macie의 RDS·Redshift 미지원</strong></td>
+<td>Macie는 S3만 자동 스캔합니다. RDS·Redshift·DynamoDB 내 민감 데이터는 애플리케이션 레벨 마스킹에 의존하며, 신규 데이터 소스 추가 시 누락 위험이 있습니다.</td>
+</tr>
+<tr>
+<td><strong>리전 간 실시간 데이터 경계 위반 탐지 한계</strong></td>
+<td>데이터가 허가되지 않은 리전으로 복제되는 상황을 실시간으로 탐지하기 어렵습니다. Config Aggregator 기반 사후 탐지와 S3 복제 정책 제한으로 보완하고 있으나 탐지 시간 차가 존재합니다.</td>
+</tr>
+<tr>
+<td><strong>GuardDuty Extended TD의 글로벌 상관분석 한계</strong></td>
+<td>Extended Threat Detection은 단일 계정 내 공격만 탐지합니다. 멀티계정·멀티리전에 걸친 공격 시퀀스(예: Region A 자격증명 탈취 → Region B 데이터 유출)는 SIEM에서 수동 상관분석이 필요합니다.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="42">4.2 추가 도입 권고 항목</h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>도입 목적</th>
+<th>도입 시점 기준</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>자체 데이터 분류 파이프라인</strong></td>
+<td>Macie가 지원하지 않는 RDS·Redshift 내 민감 데이터 탐지를 위해 Glue + Lambda 기반 분류 파이프라인 구축</td>
+<td>ISMS-P·GDPR 심층 감사 요건이 강화되는 시점</td>
+</tr>
+<tr>
+<td><strong>Cross-Account 공격 시퀀스 상관분석</strong></td>
+<td>멀티계정·멀티리전에 걸친 공격 시퀀스를 자동 탐지하는 커스텀 SIEM 룰셋 구축. Security Lake OCSF 데이터 활용</td>
+<td>SIEM 운영 성숙도가 높아지고 탐지 룰 전담 인력이 확보되는 시점</td>
+</tr>
+<tr>
+<td><strong>OPA(Open Policy Agent) / CloudFormation Guard</strong></td>
+<td>Checkov가 보안 베스트프랙티스 위반을 잡는다면, OPA는 조직 거버넌스 정책(SCP 의도·리전 제한·Firewall Manager 우회 등)을 Terraform PR 단계에서 사전 차단. 배포 실패 후 탐지가 아닌 코드 레벨 선제 차단</td>
+<td>Terraform 코드 기반 인프라 변경 빈도가 높아지고 SCP 위반 사고가 발생하는 시점</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../04-enterprise/" class="md-footer__link md-footer__link--prev" aria-label="이전: 중대규모 아키텍처 설계">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                중대규모 아키텍처 설계
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../01-incident/case-01-drizly/" class="md-footer__link md-footer__link--next" aria-label="다음: Drizly">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                Drizly
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/UniteLiveDisperseDie/secure-cloud-architecture-docs" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "navigation.footer", "toc.follow", "search.highlight", "search.suggest", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
