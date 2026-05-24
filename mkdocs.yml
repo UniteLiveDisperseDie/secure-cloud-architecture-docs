@@ -1,38 +1,152 @@
-site_name: 보안 클라우드 아키텍처 문서화
+site_name: 클라우드 보안 아키텍처 문서화
+
 theme:
   name: material
   language: ko
-  palette: 
+  logo: assets/logo.png
+  favicon: assets/logo.png
+  font:
+    text: Noto Sans KR
+    code: JetBrains Mono
+
+  palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: indigo 
+      primary: indigo
       accent: indigo
       toggle:
         icon: material/brightness-7
-        name: Switch to dark mode
+        name: 다크 모드로 전환
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: indigo
       accent: indigo
       toggle:
         icon: material/brightness-4
-        name: Switch to light mode
+        name: 라이트 모드로 전환
+
   features:
-    - navigation.tabs 
-    - navigation.sections 
-    - toc.follow  
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+    - content.tooltips
+
+markdown_extensions:
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      title: 목차
+  - pymdownx.highlight:
+      anchor_linenums: true
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.mark
+  - admonition
+
+plugins:
+  - search:
+      lang: ko
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/UniteLiveDisperseDie/secure-cloud-architecture-docs
+      name: GitHub
+  generator: false
+
+extra_css:
+  - stylesheets/extra.css
 
 nav:
   - Home: index.md
-  - 1. 침해사고 분석:
-      - "분석 사례 1": 01-incident/case-01.md
-      - "분석 사례 2": 01-incident/case-02.md
-  - 2. 인프라 분석:
-      - "보안 아키텍처 분석 1": 02-infra/analysis-01.md
-      - "보안 아키텍처 분석 2": 02-infra/analysis-02.md
-  - 3. 아키텍처 설계:
-      - "바이브 코딩 아키텍처 설계": 03-architecture/01-hobby.md
+
+  - 보안 아키텍처 설계:
+      - "바이브코딩 아키텍처 설계": 03-architecture/01-hobby.md
       - "소규모 아키텍처 설계": 03-architecture/02-startup.md
-      - "중소규모 아키텍처 설계": 03-architecture/03-growth.md
-      - "중규모 아키텍처 설계": 03-architecture/04-enterprise.md
+      - "중규모 아키텍처 설계": 03-architecture/03-growth.md
+      - "중대규모 아키텍처 설계": 03-architecture/04-enterprise.md
       - "대규모 아키텍처 설계": 03-architecture/05-hyperscale.md
+
+  - 침해사고 사례 분석:
+      - "IAM & 권한 오남용":
+          - "Drizly": 01-incident/case-01-drizly.md
+          - "Capital One": 01-incident/case-02-capitalone.md
+          - "Tesla": 01-incident/case-tesla.md
+          - "Ubiquiti": 01-incident/case-ubiquiti.md
+          - "FirstRepublicBank": 01-incident/case-firstrepublicbank.md
+          - "Juspay": 01-incident/case-juspay.md
+          - "KiranaPro": 01-incident/case-kiranapro.md
+      - "자격증명 & 시크릿 노출":
+          - "Microsoft SAS Token Exposure": 01-incident/case-microsoft-sastoken.md
+          - "McGraw Hill": 01-incident/case-mcgrawhill.md
+          - "Malindoair": 01-incident/case-malindoair.md
+          - "Codefinger": 01-incident/case-codefinger.md
+      - "공급망 & 오픈소스 공격":
+          - "Bybit / Safe Wallet": 01-incident/case-bybit.md
+          - "AWS Community AMI": 01-incident/case-ami.md
+          - "Bignum NPM": 01-incident/case-bignumNPM.md
+          - "DarkLab": 01-incident/case-DarkLab.md
+          - "NPM": 01-incident/case-NPM.md
+          - "PolitiFact": 01-incident/case-politifact.md
+      - "데이터 유출 & 스토리지 오설정":
+          - "Sisense": 01-incident/case-sisense.md
+          - "ONUS": 01-incident/case-onus.md
+          - "LiveAuctioneers": 01-incident/case-liveactioneers.md
+          - "Lastpass": 01-incident/case-lastpass.md
+      - "랜섬웨어 & 크립토마이닝":
+          - "TeamTNT": 01-incident/case-teamtnt.md
+      - "소셜 엔지니어링 & 내부자 위협":
+          - "Twilio": 01-incident/case-twilio.md
+          - "Mandiant": 01-incident/case-Mandiant-InsiderThreat.md
+      - "웹 & 애플리케이션 취약점 공격":
+          - "LexisNexis": 01-incident/case-lexisnexis.md
+
+  - 인프라 사례 분석:
+      - "멀티 계정 & 거버넌스":
+          - "ProGlove": 02-infra/analysis-Proglove.md
+          - "Nintendo Systems": 02-infra/analysis-nintendosystem.md
+          - "UNiDAYS": 02-infra/analysis-01-unidays.md
+          - "Multi Account": 02-infra/analysis-multiaccount.md
+          - "Kakao": 02-infra/analysis-kakao.md
+      - "보안 자동화 & 위협 대응":
+          - "Security Response Automation": 02-infra/analysis-SecurityResponseAuto.md
+          - "OLX Europe": 02-infra/analysis-olx.md
+          - "DreamSecurity": 02-infra/analysis-dreamsecurity.md
+          - "ERGO": 02-infra/analysis-ergo.md   
+      - "CI/CD & DevSecOps":
+          - "CI/CD": 02-infra/analysis-CICD.md
+          - "AMI Lineage": 02-infra/analysis-AmiLineage.md
+      - "데이터 보호 & 컴플라이언스":
+          - "PallyCon": 02-infra/analysis-pallycon.md
+          - "Banfico": 02-infra/analysis-banfico.md
+          - "Santander": 02-infra/analysis-santander.md
+          - "Hitachi": 02-infra/analysis-hitachi.md
+          - "Brandi" : 02-infra/analysis-brandi.md
+      - "컨테이너 & 서버리스":
+          - "Artera": 02-infra/analysis-artera.md
+          - "RStudio / Shiny": 02-infra/analysis-rstudio_shiny.md
+          - "NPIXEL": 02-infra/analysis-npixel.md
+          - "MIDAS IT": 02-infra/analysis-midasit.md
+          - "Blux": 02-infra/analysis-blux.md
+          - "OpenCampus": 02-infra/analysis-opencampus.md
+      - "AI/ML & 신기술":
+          - "Bedrock AgentCore": 02-infra/analysis-BedrockAgentCore.md
+          - "MADworld": 02-infra/analysis-madworld.md
+          - "TP-Link": 02-infra/analysis-tplink.md
